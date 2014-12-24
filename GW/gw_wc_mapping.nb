@@ -1,0 +1,291 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      9110,        281]
+NotebookOptionsPosition[      8666,        263]
+NotebookOutlinePosition[      9094,        280]
+CellTagsIndexPosition[      9051,        277]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"maxn", "=", "10"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"maxm", "=", "50"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"GrS", "=", 
+   RowBox[{"{", "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"For", "[", 
+   RowBox[{
+    RowBox[{"n", "=", "1"}], ",", 
+    RowBox[{"n", "\[LessEqual]", "maxn"}], ",", 
+    RowBox[{"n", "++"}], ",", "\[IndentingNewLine]", 
+    StyleBox[
+     RowBox[{"(*", " ", 
+      RowBox[{"Mapping", " ", "as", " ", "a", " ", "series"}], " ", "*)"}],
+     FontColor->RGBColor[0, 0, 1]], "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"SSS", "=", 
+      RowBox[{"Series", "[", 
+       RowBox[{
+        RowBox[{
+         FractionBox["1", "2"], 
+         RowBox[{"(", 
+          RowBox[{
+           SuperscriptBox[
+            RowBox[{"(", 
+             RowBox[{
+              FractionBox["2", 
+               RowBox[{"1", "-", 
+                RowBox[{"\[ImaginaryI]", "  ", "x"}]}]], "-", "1"}], ")"}], 
+            "n"], "+", 
+           SuperscriptBox[
+            RowBox[{"(", 
+             RowBox[{
+              FractionBox["2", 
+               RowBox[{"1", "+", 
+                RowBox[{"\[ImaginaryI]", "  ", "x"}]}]], "-", "1"}], ")"}], 
+            "n"]}], ")"}]}], ",", 
+        RowBox[{"{", 
+         RowBox[{"x", ",", "0", ",", "maxm"}], "}"}]}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Print", "[", "SSS", "]"}], ";", "\[IndentingNewLine]", 
+     StyleBox[
+      RowBox[{"(*", " ", 
+       RowBox[{"Coefficients", " ", "of", " ", "the", " ", "mapping"}], " ", 
+       "*)"}],
+      FontColor->RGBColor[0, 0, 1]], "\[IndentingNewLine]", 
+     RowBox[{"SSSTF", "=", 
+      RowBox[{"Table", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"m", ",", " ", 
+          RowBox[{"Abs", "[", 
+           RowBox[{"SeriesCoefficient", "[", 
+            RowBox[{"SSS", ",", "m"}], "]"}], "]"}]}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"m", ",", "2", ",", "maxm", ",", "2"}], "}"}]}], "]"}]}], 
+     ";", "\[IndentingNewLine]", 
+     RowBox[{"SSSTP", "=", 
+      RowBox[{"Table", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"m", ",", " ", 
+          RowBox[{"Log", "[", 
+           RowBox[{"Abs", "[", 
+            RowBox[{"SeriesCoefficient", "[", 
+             RowBox[{"SSS", ",", "m"}], "]"}], "]"}], "]"}]}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"m", ",", "2", ",", "maxm", ",", "2"}], "}"}]}], "]"}]}], 
+     ";", "\[IndentingNewLine]", 
+     StyleBox[
+      RowBox[{"(*", " ", 
+       RowBox[{
+       "Fitting", " ", "the", " ", "coefficients", " ", "with", " ", 
+        "polynomials"}], " ", "*)"}],
+      FontColor->RGBColor[0, 0, 1]], "\[IndentingNewLine]", 
+     RowBox[{"Clear", "[", 
+      RowBox[{"x", ",", "k"}], "]"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"vls", "=", 
+      RowBox[{"Table", "[", 
+       RowBox[{
+        SuperscriptBox["x", "k"], ",", 
+        RowBox[{"{", 
+         RowBox[{"k", ",", "0", ",", 
+          RowBox[{"n", "-", "1"}]}], "}"}]}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"FFPS", "=", 
+      RowBox[{"Fit", "[", 
+       RowBox[{"SSSTF", ",", "vls", ",", "x"}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Print", "[", 
+      RowBox[{"\"\<n = \>\"", ",", "n", ",", "\"\< => \>\"", ",", 
+       RowBox[{"Factor", "[", "FFPS", "]"}]}], "]"}], ";", 
+     "\[IndentingNewLine]", 
+     StyleBox[
+      RowBox[{"(*", " ", 
+       RowBox[{"Some", " ", "plots"}], " ", "*)"}],
+      FontColor->RGBColor[0, 0, 1]], "\[IndentingNewLine]", 
+     RowBox[{"Gr", "=", 
+      RowBox[{"ListPlot", "[", 
+       RowBox[{"SSSTP", ",", 
+        RowBox[{"PlotRange", "\[Rule]", "All"}], ",", 
+        RowBox[{"PlotJoined", "\[Rule]", "False"}], ",", 
+        RowBox[{"PlotStyle", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"Hue", "[", 
+            FractionBox[
+             RowBox[{"n", "-", "1"}], 
+             RowBox[{"maxn", "-", "1"}]], "]"}], ",", 
+           RowBox[{"PointSize", "[", "0.01", "]"}]}], "}"}]}], ",", 
+        RowBox[{"DisplayFunction", "\[Rule]", "Identity"}]}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"AppendTo", "[", 
+      RowBox[{"GrS", ",", "Gr"}], "]"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"Gr", "=", 
+      RowBox[{"Plot", "[", 
+       RowBox[{
+        RowBox[{"Log", "[", "FFPS", "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"x", ",", "2", ",", "maxm"}], "}"}], ",", 
+        RowBox[{"PlotRange", "\[Rule]", "All"}], ",", 
+        RowBox[{"PlotStyle", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{"Hue", "[", 
+           FractionBox[
+            RowBox[{"n", "-", "1"}], 
+            RowBox[{"maxn", "-", "1"}]], "]"}], "}"}]}], ",", 
+        RowBox[{"DisplayFunction", "\[Rule]", "Identity"}]}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"AppendTo", "[", 
+      RowBox[{"GrS", ",", "Gr"}], "]"}], ";"}]}], "\[IndentingNewLine]", 
+   "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Show", "[", 
+   RowBox[{"GrS", ",", 
+    RowBox[{"DisplayFunction", "\[Rule]", "$DisplayFunction"}]}], "]"}], 
+  ";"}]}], "Input"],
+
+Cell[BoxData["Newton"], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"F1", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"1", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2", ",", "8"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "18"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4", ",", "32"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5", ",", "50"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6", ",", "72"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"7", ",", "98"}], "}"}]}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"F2", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"1", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2", ",", "16"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "66"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4", ",", "192"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5", ",", "450"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6", ",", "912"}], "}"}]}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"F3", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"1", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2", ",", "24"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "146"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4", ",", "608"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5", ",", "1970"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6", ",", "5336"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"7", ",", "12642"}], "}"}]}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"FF", "=", 
+  RowBox[{"Fit", "[", 
+   RowBox[{"F2", ",", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "x", ",", 
+      SuperscriptBox["x", "2"], ",", 
+      SuperscriptBox["x", "3"]}], "}"}], ",", "x"}], 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"GrA", "=", 
+   RowBox[{"ListPlot", "[", 
+    RowBox[{"F2", ",", 
+     RowBox[{"PlotStyle", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"RGBColor", "[", 
+         RowBox[{"1", ",", "0", ",", "0"}], "]"}], ",", 
+        RowBox[{"PointSize", "[", "0.02", "]"}]}], "}"}]}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"GrB", "=", 
+   RowBox[{"Plot", "[", 
+    RowBox[{"FF", ",", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", "1", ",", "7"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Show", "[", 
+   RowBox[{"GrA", ",", "GrB"}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"FullSimplify", "[", 
+  RowBox[{"InterpolatingPolynomial", "[", 
+   RowBox[{"F3", ",", "x"}], "]"}], "]"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{"Solve", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"23", "+", 
+     RowBox[{"20", " ", 
+      SuperscriptBox["x", "2"]}], "+", 
+     RowBox[{"2", " ", 
+      SuperscriptBox["x", "4"]}]}], "\[Equal]", "0"}], ",", "x"}], 
+  "]"}]], "Input"]
+},
+WindowSize->{1272, 698},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+DockedCells->FEPrivate`FrontEndResource[
+ "FEExpressions", "CompatibilityToolbar"],
+FrontEndVersion->"8.0 for Microsoft Windows (64-bit) (February 23, 2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[557, 20, 5170, 139, 520, "Input"],
+Cell[5730, 161, 32, 0, 31, "Input"],
+Cell[5765, 163, 2634, 87, 175, "Input"],
+Cell[8402, 252, 260, 9, 33, "Input"]
+}
+]
+*)
+
+(* End of internal cache information *)
+

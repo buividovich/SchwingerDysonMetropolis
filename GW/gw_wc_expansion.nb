@@ -1,0 +1,171 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.1'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[      4604,        123]*)
+(*NotebookOutlinePosition[      5248,        145]*)
+(*  CellTagsIndexPosition[      5204,        141]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+    \(FullSimplify[\ 
+      Abs[2\/\(1 - \[ImaginaryI]\ x\) - 1], {x \[Element] Reals}]\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(-\[ImaginaryI]\) + x\)\/\(\[ImaginaryI] + x\)\)], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(Expand[
+      Re[\((2\/\(1 - \[ImaginaryI]\ x\) - 1)\)\^k], {x \[Element] 
+          Reals}]\)], "Input"],
+
+Cell[BoxData[
+    \(Re[\((\(-1\) + 2\/\(1 - \[ImaginaryI]\ x\))\)\^k]\)], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(F[x_, 
+          k_] := \(1\/2\) \((\((\(1 + \[ImaginaryI]\ x\)\/\(1 - \[ImaginaryI]\
+\ x\))\)\^k + \((\(1 - \[ImaginaryI]\ x\)\/\(1 + \[ImaginaryI]\ x\))\)\^k)\) \
+- 1;\)\), "\[IndentingNewLine]", 
+    \(\(Cft = {};\)\), "\[IndentingNewLine]", 
+    \(\(For[k = 1, 
+        k \[LessEqual] 10, \(k++\), \[IndentingNewLine]Sk = 
+          Series[F[x, k], {x, 0, 20}]; \[IndentingNewLine]Cf = 
+          Table[SeriesCoefficient[Sk, k], {k, 2, 20, 
+              2}]; \[IndentingNewLine]AppendTo[Cft, 
+          Cf];\[IndentingNewLine]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[Cft]];\)\), "\[IndentingNewLine]", 
+    \(\(Export["\<D:\\Misc\\cft.dat\>", Cft, "\<Table\>"];\)\)}], "Input"],
+
+Cell[BoxData[
+    TagBox[
+      RowBox[{"(", "\[NoBreak]", GridBox[{
+            {\(-2\), "2", \(-2\), "2", \(-2\), "2", \(-2\), "2", \(-2\), 
+              "2"},
+            {\(-8\), "16", \(-24\), "32", \(-40\), "48", \(-56\), 
+              "64", \(-72\), "80"},
+            {\(-18\), "66", \(-146\), "258", \(-402\), "578", \(-786\), 
+              "1026", \(-1298\), "1602"},
+            {\(-32\), "192", \(-608\), "1408", \(-2720\), "4672", \(-7392\), 
+              "11008", \(-15648\), "21440"},
+            {\(-50\), "450", \(-1970\), "5890", \(-14002\), 
+              "28610", \(-52530\), "89090", \(-142130\), "216002"},
+            {\(-72\), "912", \(-5336\), "20256", \(-58728\), 
+              "142000", \(-301560\), "581184", \(-1038984\), "1749456"},
+            {\(-98\), "1666", \(-12642\), "59906", \(-209762\), 
+              "596610", \(-1459810\), "3188738", \(-6376034\), "11879042"},
+            {\(-128\), "2816", \(-27008\), "157184", \(-658048\), 
+              "2187520", \(-6140800\), "15158272", \(-33830016\), 
+              "69629696"},
+            {\(-162\), "4482", \(-53154\), "374274", \(-1854882\), 
+              "7159170", \(-22952610\), "63821826", \(-158611106\), 
+              "360027522"},
+            {\(-200\), "6800", \(-97880\), "822560", \(-4780008\), 
+              "21278640", \(-77548920\), "242080320", \(-668274440\), 
+              "1669752016"}
+            },
+          RowSpacings->1,
+          ColumnSpacings->1,
+          ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
+      Function[ BoxForm`e$, 
+        MatrixForm[ BoxForm`e$]]]], "Print"]
+}, Open  ]]
+},
+FrontEndVersion->"5.1 for Microsoft Windows",
+ScreenRectangle->{{0, 1280}, {0, 725}},
+WindowSize->{1272, 698},
+WindowMargins->{{0, Automatic}, {Automatic, 0}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 114, 2, 43, "Input"],
+Cell[1893, 57, 83, 1, 42, "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[2013, 63, 125, 3, 44, "Input"],
+Cell[2141, 68, 83, 1, 44, "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[2261, 74, 721, 13, 206, "Input"],
+Cell[2985, 89, 1603, 31, 165, "Print"]
+}, Open  ]]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+
