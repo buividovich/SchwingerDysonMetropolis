@@ -107,7 +107,7 @@ int parse_command_line_options(int argc, char **argv)
 
 void init_parameters()
 {
- alpha_wc = lambda/(2.0*lambda + 8.0);
+ alpha_wc = fabs(lambda)/(2.0*fabs(lambda) + 8.0);
  if(param_auto_tuning)
  {
   if(mode==0)
@@ -158,12 +158,12 @@ void printhelp()
 
 double ptot_sc(double c)
 {
- return 2.0/sqrt(lambda*c) + 1.0/(lambda*c) + c/lambda;
+ return 2.0/sqrt(fabs(lambda)*c) + 1.0/(fabs(lambda)*c) + c/fabs(lambda);
 }
 
 double dptot_sc(double c)
 {
- return -1.0/sqrt(lambda*c*c*c) - 1.0/(lambda*c*c) + 1.0/lambda;
+ return -1.0/sqrt(fabs(lambda)*c*c*c) - 1.0/(fabs(lambda)*c*c) + 1.0/fabs(lambda);
 }
 
 int tune_parameters_sc()
@@ -194,8 +194,8 @@ int tune_parameters_sc()
   };
  };
  cc = 0.5*(c1 + c2);
- NN = 1.0/sqrt(lambda*cc);
- double ptot_check = 1.0/(lambda*NN*cc) + NN + 1.0/(lambda*cc) + cc/lambda;
+ NN = 1.0/sqrt(fabs(lambda)*cc);
+ double ptot_check = 1.0/(fabs(lambda)*NN*cc) + NN + 1.0/(fabs(lambda)*cc) + cc/fabs(lambda);
  logs_Write(1, " => cc = %2.4lf, NN = %2.4lf, ptot = %2.4lf\n", cc, NN, ptot_check);
  return 0;
 }

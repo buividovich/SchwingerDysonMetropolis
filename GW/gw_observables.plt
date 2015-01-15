@@ -34,4 +34,4 @@ set key left top
 set xlabel "{/Symbol l}"
 set ylabel "<(G_+ - G_-)/(G_+ + G_-)>"
 plot\
-'obs_mode0_nmc5000000.dat'  using ($1):($4) title 'G_1'  with lines ls 1
+'obs_mode0_nmc5000000.dat'  using ($1):($4) title 'G_1'  with points ls 2

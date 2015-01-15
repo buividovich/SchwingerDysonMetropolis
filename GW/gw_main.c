@@ -10,6 +10,8 @@
 int main(int argc, char *argv[])
 {
  int imc;
+ ansi_colors = 1;
+ print_errors_to_stdout = 0;
  logs_noise_level = 1;
  
  parse_command_line_options(argc, argv);

@@ -12,12 +12,12 @@ $mode  = 0;
 
 if($mode==0)
 {
- $lambda_min = 4.0;
- $lambda_max = 10.0;
- $dlambda    = 0.5;
+ $lambda_min = -10.0;
+ $lambda_max = -4.0;
+ $dlambda    = 0.2;
 };
 
-if($mode==0)
+if($mode==1)
 {
  $lambda_min = 0.2;
 };

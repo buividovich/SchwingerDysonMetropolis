@@ -6,7 +6,7 @@ static inline double A_create_sc()
 {
  if(stop[ns]<=ns)
  {
-  return 1.0/(lambda*NN*cc);
+  return 1.0/(fabs(lambda)*NN*cc);
  }
  else
  {
@@ -17,13 +17,13 @@ static inline double A_create_sc()
 
 static inline double A_increase_n_sc()
 {
- return 1.0/(lambda*cc);
+ return 1.0/(fabs(lambda)*cc);
 }
 
 static inline double A_decrease_n_sc()
 {
  if(stack[ns][stop[ns]]>1)
-  return cc/lambda;
+  return cc/fabs(lambda);
  return 0.0;
 }
 
@@ -83,16 +83,18 @@ int mc_step_sc()
    if(todo==0) //Push new element into the stack
    {
     stop[ns]++;
-    stack[ns][stop[ns]] = 1;      
+    stack[ns][stop[ns]] = 1; 
+    asign[ns] *= SIGN(lambda);     
    };
    if(todo==1) //Increase n by 1
    {
     stack[ns][stop[ns]] ++;
+    asign[ns] *= SIGN(lambda);
    };
    if(todo==2 && stack[ns][stop[ns]]>1) //Decrease n by 1 and flip sign
    {
     stack[ns][stop[ns]] --;
-    asign[ns] *= -1;
+    asign[ns] *= -1*SIGN(lambda);
    };
    if(todo==3 && stop[ns]>0) //Join the two topmost and flip sign 
    {
