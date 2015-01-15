@@ -17,6 +17,10 @@
 typedef int (*t_action_do)(void** data_out, void* data_in);
 typedef int (*t_action_undo)(void* data_out, void* data_in);
 
+#define  DECLARE_ACTION_AMPLITUDE(_action_name) static inline double action##_action_name##_amplitude(void*  data_in)
+#define         DECLARE_ACTION_DO(_action_name) int                  action##_action_name##_do(       void** data_out, void* data_in)
+#define       DECLARE_ACTION_UNDO(_action_name) int                  action##_action_name##_undo(     void*  data_out, void* data_in)
+
 //Structure which contains all the information about some single action
 typedef struct 
 {

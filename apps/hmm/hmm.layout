@@ -115,6 +115,10 @@ Top=0
 [Editor_12]
 Open=0
 Top=0
+CursorCol=18
+CursorRow=22
+TopLine=1
+LeftChar=1
 [Editor_13]
 Open=0
 Top=0
@@ -142,9 +146,9 @@ Top=0
 [Editor_22]
 Open=0
 Top=0
-CursorCol=31
-CursorRow=20
-TopLine=42
+CursorCol=1
+CursorRow=116
+TopLine=81
 LeftChar=1
 [Editor_23]
 Open=0
