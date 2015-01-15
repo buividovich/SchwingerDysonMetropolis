@@ -1,8 +1,15 @@
 #ifndef _HMM_ACTIONS_H_
 #define _HMM_ACTIONS_H_
 
+#include <sd_metropolis.h>
+#include <lattice_stack.h>
+#include <largeN_QFT_parameters.h>
+
 #include "hmm_parameters.h"
-#include "sd_metropolis.h"
+
+//These two functions set up a configuration space on which the actions will be performed
+void init_hmm_actions();
+void free_hmm_actions();
 
 //Create new factorized-out line
 DECLARE_ACTION_DO(create);

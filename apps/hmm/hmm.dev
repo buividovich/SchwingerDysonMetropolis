@@ -1,7 +1,7 @@
 [Project]
 FileName=hmm.dev
 Name=hmm
-UnitCount=33
+UnitCount=35
 Type=1
 Ver=1
 ObjFiles=
@@ -18,16 +18,16 @@ Icon=
 ExeOutput=
 ObjectOutput=
 OverrideOutput=0
-OverrideOutputName=
+OverrideOutputName=hmm.exe
 HostApplication=
 Folders=clue_include,clue_src,sd_metropolis_include,sd_metropolis_src
 CommandLine=
-UseCustomMakefile=0
-CustomMakefile=
+UseCustomMakefile=1
+CustomMakefile=..\..\Makefile
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=
+CompilerSettings=0000000000000000000000
 
 [Unit1]
 FileName=hmm.c
@@ -376,4 +376,24 @@ OriginalFilename=
 ProductName=
 ProductVersion=
 AutoIncBuildNr=0
+
+[Unit34]
+FileName=..\..\src\largeN_QFT_parameters.c
+CompileCpp=0
+Folder=sd_metropolis_src
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit35]
+FileName=..\..\include\largeN_QFT_parameters.h
+CompileCpp=0
+Folder=sd_metropolis_include
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 

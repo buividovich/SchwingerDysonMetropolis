@@ -21,7 +21,7 @@ typedef int (*t_action_undo)(void* data_out, void* data_in);
 #define         DECLARE_ACTION_DO(_action_name) int                  action##_action_name##_do(       void** data_out, void* data_in)
 #define       DECLARE_ACTION_UNDO(_action_name) int                  action##_action_name##_undo(     void*  data_out, void* data_in)
 
-//Structure which contains all the information about some single action
+//Structure which contains all the information related to some single action
 typedef struct 
 {
  int            action_id;

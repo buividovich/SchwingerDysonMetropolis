@@ -3,12 +3,42 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-
 #include <clue_logs.h>
-#include <square_lattice.h>
+#include <limits.h>
 
-/*! Here we implement the stack of sequences of points on DIM-dimensional lattice
- *  These points might belong either to momentum or to coordinate space - implementation is suitable for both cases
- */
+typedef short    int sint;
+
+//Stack itself
+typedef struct 
+{
+ sint** stack;           //sint[i] contains the pointer to the array of DIM sint's
+ int*   seq_start;       //seq_start[i]  is the first index of i'th sequence in the stack
+ int*   seq_length;      //seq_length[i] is the length of i'th sequence in the stack
+ int    stack_top;       //Number of sequences in the stack
+ int    stack_nel;       //Total number of elements in the stack
+} t_lat_stack;
+
+
+extern int DIM;                     //Our stack will contain sequences of lattice points which are the integer coordinates of a DIM-dimensional lattice
+extern int lat_stack_max_nel;       //Maximal total number of lattice points in all the sequences in the stack
+
+void  print_lattice_stack_parameters();
+void  init_lattice_stack(t_lat_stack* lat_stack);
+void  free_lattice_stack(t_lat_stack* lat_stack);
+
+#define LATTICE_STACK_LONG_OPTIONS                                                  \
+ {                     "DIM",  required_argument,                       NULL, 'Z'}, \
+ {       "lat_stack_max_nel",  required_argument,                       NULL, 'Y'}
+
+#define PARSE_LATTICE_STACK_OPTIONS                                      \
+   case 'Z':                                                             \
+    SAFE_SSCANF_BREAK(optarg, "%i", DIM);                                \
+    ASSERT(DIM<0);                                                       \
+   break;                                                                \
+   case 'Y':                                                             \
+    SAFE_SSCANF_BREAK(optarg, "%i", lat_stack_max_nel);                  \
+   break;                                                                
+
+static const char lattice_stack_short_option_list[] = "Z:Y:";
 
 #endif

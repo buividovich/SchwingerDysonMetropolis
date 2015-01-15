@@ -1,5 +1,20 @@
 #include "hmm_actions.h"
 
+t_lat_stack lat_stack;
+t_lat_stack history_data;
+
+void init_hmm_actions()
+{
+ init_lattice_stack(&lat_stack);
+ init_lattice_stack(&history_data);    
+}
+
+void free_hmm_actions()
+{
+ free_lattice_stack(&lat_stack);
+ free_lattice_stack(&history_data);
+}
+
 //Create new factorized-out line
 DECLARE_ACTION_AMPLITUDE(create)
 {

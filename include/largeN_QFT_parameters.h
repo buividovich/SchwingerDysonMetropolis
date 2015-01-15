@@ -21,8 +21,7 @@ void print_largeN_QFT_parameters();
  {                       "NN",  required_argument,                       NULL, 'C'}, \
  {     "max-correlator-order",  required_argument,                       NULL, 'D'}, \
  {         "observables-file",  required_argument,                       NULL, 'E'}, \
- {        "param-auto-tuning",        no_argument,         &param_auto_tuning,   1}, \
- {                          0,                  0,                       NULL,   0}
+ {        "param-auto-tuning",        no_argument,         &param_auto_tuning,   1}
 
 #define PARSE_LARGEN_QFT_OPTIONS                                         \
    case 'A':                                                             \

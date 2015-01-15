@@ -6,7 +6,7 @@
 #include <sd_metropolis.h>
 
 #include "hmm_parameters.h"
-
+#include "hmm_actions.h"
 
 int main(int argc, char *argv[])
 {
@@ -17,7 +17,10 @@ int main(int argc, char *argv[])
  init_parameters();
  print_parameters();
  
+ init_hmm_actions();
  
-  
+ 
+ free_hmm_actions();
+ 
  return 0;
 }
