@@ -73,8 +73,10 @@ $(1)_dataclean: $(1)_plotclean
 endef
 
 define app_plots_template
-$(1)_dataclean: $(1)_plotclean
-	rm -f -v ./data/$(1)/*
+ $(1)_PLT_FILES = $$(wildcard ./apps/$(1)/*.plt)
+$(1)_plots: 
+	$(foreach plt_file, $$($(1)_PLT_FILES), gnuplot $(plt_file))
+	gnuplot -e "app_name = '$(1)'" ./plots/mc_stat.plt
 endef
 
 APPS          = $(notdir $(shell find ./apps/* -type d))
@@ -82,9 +84,14 @@ APPS          = $(notdir $(shell find ./apps/* -type d))
 $(foreach app, $(APPS), $(eval $(call app_compile_template,$(app))))
 $(foreach app, $(APPS), $(eval $(call app_plotclean_template,$(app))))
 $(foreach app, $(APPS), $(eval $(call app_dataclean_template,$(app))))
+$(foreach app, $(APPS), $(eval $(call app_plots_template,$(app))))
 
 all: $(APPS)
 
 dataclean: $(foreach app, $(APPS), $(app)_dataclean)
 plotclean: $(foreach app, $(APPS), $(app)_plotclean)
+plots:     $(foreach app, $(APPS), $(app)_plots)
+
+
+
 

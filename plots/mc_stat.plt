@@ -30,7 +30,7 @@ set xlabel "{/Symbol l}"
 set ylabel "Mean recursion depth"
 plot \
 for [i=1:NFILES] \
-FILE(i) using ($1):($5) with lines ls 2 
+FILE(i) using ($1):($5) title FILE(i) with lines ls 2 
 
 set out    'G:\\LAT\\sd_metropolis\\plots\\'.app_name.'\\mean_sign.eps'
 set logscale y
@@ -39,4 +39,4 @@ set xlabel "{/Symbol l}"
 set ylabel "Mean sign (over all observables)"
 plot \
 for [i=1:NFILES] \
-FILE(i) using ($1):($9) with lines ls 2 
+FILE(i) using ($1):($9) title FILE(i) with lines ls 2 

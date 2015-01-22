@@ -18,34 +18,13 @@ set style line 15 lt 2 lc rgb '#FF00FF' lw 8 pt 13
 set style line 16 lt 2 lc rgb '#00FFFF' lw 8 pt 15
 set style line 17 lt 2 lc rgb '#888888' lw 8 pt 1
 
-lc = 0.083333
-
-set out    'G:\\LAT\\sd_metropolis\\plots\\hmm\\mean_recursion_depth.eps'
-set logscale y
-set key right top
-set xlabel "1 - |{/Symbol l}|/{/Symbol l}_c"
-set ylabel "Mean recursion depth"
-#set arrow from first 0.0,graph 0.0 to first 0.0, graph 1.0 nohead ls 7
-plot\
-'mc_stat_nmc5000000.dat'  using ((lc-abs($1))/lc):($5) title 'N_{mc} =  5x10^6'  with lines ls 2 
-
-unset logscale y
-set out    'G:\\LAT\\sd_metropolis\\plots\\hmm\\mean_stack_size.eps'
-set key right top
-set xlabel "1 - |{/Symbol l}|/{/Symbol l}_c"
-set ylabel "Mean stack size"
-#set arrow from first 0.0,graph 0.0 to first 0.0, graph 1.0 nohead ls 7
-plot\
-'mc_stat_nmc5000000.dat'  using ((lc-abs($1))/lc):($6) title 'N_{mc} =  5x10^6'  with lines ls 2 
-
 unset logscale y
 set out    'G:\\LAT\\sd_metropolis\\plots\\hmm\\mean_G2_sign.eps'
 set key right top
-set xlabel "1 - |{/Symbol l}|/{/Symbol l}_c"
+set xlabel "{/Symbol l}"
 set ylabel "Mean sign of G2"
-#set arrow from first 0.0,graph 0.0 to first 0.0, graph 1.0 nohead ls 7
 plot\
-'G_nmc5000000.dat'  using ((lc-abs($1))/lc):($4) title 'N_{mc} =  5x10^6'  with lines ls 2 
+'G_nmc5000000.dat'  using ($1):($4) title 'N_{mc} =  5x10^6'  with lines ls 2 
 
 set logscale y
 set out    'G:\\LAT\\sd_metropolis\\plots\\hmm\\observable_comparison.eps'
