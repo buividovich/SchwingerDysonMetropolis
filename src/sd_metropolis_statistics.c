@@ -44,7 +44,7 @@ void gather_mc_stat(int accepted)
  nmc   ++;
 }
 
-void process_mc_stat(FILE* f_table)
+void process_mc_stat(const char* prefix)
 {
  //Summarizing the post-run properties of the MC process
  acceptance_rate      = (double)aac/(double)nmc;
@@ -60,7 +60,11 @@ void process_mc_stat(FILE* f_table)
  logs_WriteParameter(       "Mean config. sign",    "%2.4lf",            mean_sign);
  logs_Write(0, "\n");
  //Saving the statistical characteristics of the MC process
- if(f_table!=NULL)
-  fprintf(f_table, "%2.4E %2.4E %2.4E %2.4E %2.4E %2.4E", acceptance_rate, mean_recursion_depth, mean_nA, err_nA, maxnA, mean_sign);
+ if(mc_stat_file!=NULL)
+ {
+  FILE *f = fopen(mc_stat_file, "a");
+  fprintf(f, "%s %2.4E %2.4E %2.4E %2.4E %2.4E %2.4E\n", prefix, acceptance_rate, mean_recursion_depth, mean_nA, err_nA, maxnA, mean_sign);
+  fclose(f);
+ }; 
 }
 

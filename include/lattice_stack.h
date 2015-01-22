@@ -11,11 +11,11 @@ typedef short    int sint;
 //Stack itself
 typedef struct 
 {
- sint** stack;           //sint[i] contains the pointer to the array of DIM sint's
- int*   seq_start;       //seq_start[i]  is the first index of i'th sequence in the stack
- int*   seq_length;      //seq_length[i] is the length of i'th sequence in the stack
- int    stack_top;       //Number of sequences in the stack
- int    stack_nel;       //Total number of elements in the stack
+ sint** stack;       //sint[i] contains the pointer to the array of DIM sint's
+ int*   start;       //seq_start[i]  is the first index of i'th sequence in the stack
+ int*   len;         //seq_length[i] is the length of i'th sequence in the stack
+ int    top;         //Number of sequences in the stack
+ int    nel;         //Total number of elements in the stack
 } t_lat_stack;
 
 
@@ -25,10 +25,11 @@ extern int lat_stack_max_nel;       //Maximal total number of lattice points in 
 void  print_lattice_stack_parameters();
 void  init_lattice_stack(t_lat_stack* lat_stack);
 void  free_lattice_stack(t_lat_stack* lat_stack);
+int   check_stack_consistency(t_lat_stack* lat_stack, const char* stack_name);
 
 #define LATTICE_STACK_LONG_OPTIONS                                                  \
  {                     "DIM",  required_argument,                       NULL, 'Z'}, \
- {       "lat_stack_max_nel",  required_argument,                       NULL, 'Y'}
+ {       "lat-stack-max-nel",  required_argument,                       NULL, 'Y'}
 
 #define PARSE_LATTICE_STACK_OPTIONS                                      \
    case 'Z':                                                             \

@@ -1,13 +1,13 @@
-#ifndef _HMM_STATISTICS_H_
-#define _HMM_STATISTICS_H_
+#ifndef _STATISTICS_H_
+#define _STATISTICS_H_
 
 #include <linalg.h>
 
 #include <sd_metropolis_parameters.h>
 #include <largeN_QFT_parameters.h>
 
-#include "hmm_parameters.h"
-#include "hmm_actions.h"
+#include "parameters.h"
+#include "actions.h"
 
 
 extern double    astop;

@@ -1,6 +1,6 @@
 reset
 set term postscript color enhanced landscape "Helvetica" 24
-cd 'G:\\LAT\\sd_metropolis\\GW\\data\\'
+cd 'G:\\LAT\\sd_metropolis\\data\\'.app_name.'\\'
 set pointsize 1.5
 set bar 1
 set style line 1  lt 1 lc rgb '#000000' lw 8 pt 5
@@ -18,20 +18,25 @@ set style line 15 lt 2 lc rgb '#FF00FF' lw 8 pt 13
 set style line 16 lt 2 lc rgb '#00FFFF' lw 8 pt 15
 set style line 17 lt 2 lc rgb '#888888' lw 8 pt 1
 
-set out    'G:\\LAT\\sd_metropolis\\GW\\Gn.eps'
-set key left top
-set xlabel "{/Symbol l}"
-set ylabel "{/Symbol l} G_n({/Symbol l})"
-plot\
-'obs_mode0_nmc5000000.dat'  using ($1):($1*$2):($1*$3) title 'G_1, N_{mc}=5x10^6'  with yerrorbars ls 1,\
-'obs_mode0_nmc5000000.dat'  using ($1):($1*$5):($1*$6) title 'G_2, N_{mc}=5x10^6'  with yerrorbars ls 2
+MC_STAT_FILES = system("ls mc_stat_nmc*.dat");
+NFILES        = words(MC_STAT_FILES)
+FILE(i)       = word(MC_STAT_FILES, i);
+LABEL(i)      = substr(FILE(i), 11)
 
-
-set out    'G:\\LAT\\sd_metropolis\\GW\\sign_problem.eps'
-unset logscale y
-unset logscale x
-set key left top
+set out    'G:\\LAT\\sd_metropolis\\plots\\'.app_name.'\\mean_recursion_depth.eps'
+set logscale y
+set key right top
 set xlabel "{/Symbol l}"
-set ylabel "<(G_+ - G_-)/(G_+ + G_-)>"
-plot\
-'obs_mode0_nmc5000000.dat'  using ($1):($4) title 'G_1'  with points ls 2
+set ylabel "Mean recursion depth"
+plot \
+for [i=1:NFILES] \
+FILE(i) using ($1):($5) with lines ls 2 
+
+set out    'G:\\LAT\\sd_metropolis\\plots\\'.app_name.'\\mean_sign.eps'
+set logscale y
+set key right top
+set xlabel "{/Symbol l}"
+set ylabel "Mean sign (over all observables)"
+plot \
+for [i=1:NFILES] \
+FILE(i) using ($1):($9) with lines ls 2 

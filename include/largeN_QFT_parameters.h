@@ -12,6 +12,7 @@ extern int      max_correlator_order;     //Maximal correlator order to trace
 //Output files
 extern char*    observables_file;         //File for the expectation values of the correlators
 extern int      param_auto_tuning;        //Automatic tuning of transition amplitudes so that nAs are minimized
+extern double   param_tuning_accuracy;    //Accuracy of parameter tuning
 
 void print_largeN_QFT_parameters();
 
@@ -20,8 +21,9 @@ void print_largeN_QFT_parameters();
  {                       "cc",  required_argument,                       NULL, 'B'}, \
  {                       "NN",  required_argument,                       NULL, 'C'}, \
  {     "max-correlator-order",  required_argument,                       NULL, 'D'}, \
- {         "observables-file",  required_argument,                       NULL, 'E'}, \
- {        "param-auto-tuning",        no_argument,         &param_auto_tuning,   1}
+ {    "param-tuning-accuracy",  required_argument,                       NULL, 'E'}, \
+ {         "observables-file",  required_argument,                       NULL, 'F'}, \
+ {     "no-param-auto-tuning",        no_argument,         &param_auto_tuning,   0}
 
 #define PARSE_LARGEN_QFT_OPTIONS                                         \
    case 'A':                                                             \
@@ -38,10 +40,14 @@ void print_largeN_QFT_parameters();
     ASSERT(max_correlator_order<0);                                      \
    break;                                                                \
    case 'E':                                                             \
+    SAFE_SSCANF_BREAK(optarg,  "%lf", param_tuning_accuracy);            \
+    ASSERT(param_tuning_accuracy<0.0);                                   \
+   break;                                                                \
+   case 'F':                                                             \
     COPY_FILE_NAME(optarg, observables_file);                            \
    break;
 
-static const char largeN_QFT_short_option_list[] = "A:B:C:D:E:";
+static const char largeN_QFT_short_option_list[] = "A:B:C:D:E:F:";
 
 
 #endif

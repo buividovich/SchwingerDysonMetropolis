@@ -1,4 +1,4 @@
-#include "hmm_parameters.h"
+#include "parameters.h"
 
 static struct option long_options[] =
 {
@@ -8,7 +8,7 @@ static struct option long_options[] =
  {                       0,                  0,                       NULL,   0}
 };
 
-static char hmm_short_option_list[] = "";
+static char my_short_option_list[] = "";
 
 int parse_command_line_options(int argc, char **argv)
 {
@@ -18,10 +18,10 @@ int parse_command_line_options(int argc, char **argv)
  short_option_list_length += strlen(   metropolis_short_option_list);
  short_option_list_length += strlen(   largeN_QFT_short_option_list);
  short_option_list_length += strlen(lattice_stack_short_option_list);
- short_option_list_length += strlen(          hmm_short_option_list);
+ short_option_list_length += strlen(           my_short_option_list);
  char* short_option_list = NULL;
  SAFE_MALLOC(short_option_list, char, short_option_list_length);
- sprintf(short_option_list, "%s",    hmm_short_option_list);
+ sprintf(short_option_list, "%s",     my_short_option_list);
  strcat(short_option_list,    metropolis_short_option_list);
  strcat(short_option_list,    largeN_QFT_short_option_list);
  strcat(short_option_list, lattice_stack_short_option_list);
