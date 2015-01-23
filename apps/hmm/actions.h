@@ -35,6 +35,6 @@ DECLARE_ACTION_DO(        join);
 DECLARE_ACTION_UNDO(      join);
 
 //Action fetcher
-int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int list_length, int step_number);
+int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int list_length);
 
 #endif

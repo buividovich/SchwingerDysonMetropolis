@@ -8,6 +8,7 @@ t_action           state_initializer        =   NULL;
 t_action_fetcher   action_fetcher           =   NULL;
 
 //Variables characterizing the state of the random process which should be visible outside
+int            step_number        = 0;    //Counts the number of calls to metropolis_step() after init_metropolis()
 int            ns                 = 0;    //Counter of the sequence depth  
 double*        nA                 = NULL; //Contains the probability normalization factor on every step
 int*           asign              = NULL; //Reweighting signs of every configuration
@@ -20,9 +21,9 @@ double*        probability_list   = NULL; //LIst of the probabilities of current
 int            action_list_length = 0;
 
 
-int   init_metropolis()
+void   init_metropolis()
 {
- int res = 0;
+ step_number    = 0;
  ns             = 0;
  SAFE_MALLOC(             nA,        double, max_recursion_depth);
  SAFE_MALLOC(          asign,           int, max_recursion_depth);
@@ -40,8 +41,7 @@ int   init_metropolis()
  ASSERT(      state_initializer == NULL);
  ASSERT( action_collection_size <= 0);
  
- asign[ns] = state_initializer(NULL);
- return res;      
+ asign[ns] = state_initializer(NULL);      
 }
 
 void  free_metropolis()
@@ -54,7 +54,7 @@ void  free_metropolis()
  SAFE_FREE(probability_list);
 }
 
-int   metropolis_step(int step_number)
+int   metropolis_step()
 {
  int n_actions, iaction, todo, accepted = 0, res;
  double a, alpha;
@@ -66,7 +66,7 @@ int   metropolis_step(int step_number)
   state_initializer(NULL);                           
  };
  
- n_actions = action_fetcher(&action_list, &amplitude_list, action_list_length, step_number); //Action fetcher should also perform reallocation of the action_list if necessary
+ n_actions = action_fetcher(&action_list, &amplitude_list, action_list_length); //Action fetcher should also perform reallocation of the action_list if necessary
  
  if(n_actions>action_list_length)
  {
@@ -171,6 +171,8 @@ int   metropolis_step(int step_number)
  
  //Updating statistics of the MC process - the mean nA, its dispersion and the mean sign
  gather_mc_stat(accepted);
+ 
+ step_number ++;
  
  return accepted; //Return 1 if some new state is accepted, otherwise 0
 }

@@ -166,7 +166,7 @@ DECLARE_ACTION_UNDO(join)
 }
 
 /************** Action fetcher *****************/
-int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int list_length, int step_number)
+int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int list_length)
 {
  int nact = 0, adata = 0;
  double ampl;
@@ -176,10 +176,10 @@ int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int 
  check_stack_consistency(&X, "X");
  check_stack_consistency(&H, "H");
  
- FETCH_ACTION(         create, 0, (*action_list), (*amplitude_list), list_length, nact, adata, ampl, step_number);
- FETCH_ACTION(    evolve_line, 1, (*action_list), (*amplitude_list), list_length, nact, adata, ampl, step_number);
- FETCH_ACTION(  evolve_vertex, 2, (*action_list), (*amplitude_list), list_length, nact, adata, ampl, step_number);
- FETCH_ACTION(           join, 3, (*action_list), (*amplitude_list), list_length, nact, adata, ampl, step_number);
+ FETCH_ACTION(         create, 0, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
+ FETCH_ACTION(    evolve_line, 1, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
+ FETCH_ACTION(  evolve_vertex, 2, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
+ FETCH_ACTION(           join, 3, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
  
  return nact;
 }
