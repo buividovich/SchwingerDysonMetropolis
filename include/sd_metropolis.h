@@ -14,15 +14,11 @@
 #include "sd_metropolis_parameters.h"
 
 //Possible improvements in the code
-//Important: Fixed arrays for pointers to actions + do not save amplitudes
-//Important: in case of overflow, reset the stack and the history
+//Important: fix gw_wc with new core
 //Important: Function for generating random momenta, struct t_propagator
 //Important: calculation of sigma
 //Important: auto-tuning of actions, more automatic
 //Important: LS, LT, DIM in large-N QFT parameters
-//Important: make dataclean
-//Important: make mcstat_plots - arguments for gnuplot?
-//Important: update git repository
 //Can wait:  Numerical values for characters in getopt
 //Can wait:  Coordinates as integers in stack, not as lists - can give some speedup...
 //Can wait:  Timing? Compare, how much time is taken by stack manipulations? How fast is ranlux?
