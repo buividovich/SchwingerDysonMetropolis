@@ -26,17 +26,17 @@ int main(int argc, char *argv[])
  int imc;
  
  init_actions();
- init_metropolis(&action_create_do);
+ init_metropolis();
  init_observable_stat();
  
  logs_Write(0, "Starting thermalization process for %i MC steps", therm_mc_steps);
  for(imc=0; imc<therm_mc_steps; imc++)
-  metropolis_step(&action_fetcher, &action_create_do, imc);
+  metropolis_step();
  
  logs_Write(0, "Starting production run for %i MC steps", prod_mc_steps);
  for(imc=0; imc<prod_mc_steps; imc++)
  {
-  metropolis_step(&action_fetcher, &action_create_do, imc);
+  metropolis_step();
   if(imc%mc_interval==0)
    gather_observable_stat(); 
  }; 

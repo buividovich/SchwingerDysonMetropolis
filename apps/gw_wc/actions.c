@@ -5,6 +5,19 @@ t_lat_stack H; //This stack will contain the data related to the sequence of act
 
 void init_actions()
 {
+ //Initialize the collection of actions to be used in MC process
+ action_collection_size = 4;
+ SAFE_MALLOC(  action_collection_do, t_action, action_collection_size);
+ SAFE_MALLOC(action_collection_undo, t_action, action_collection_size);
+ 
+ ADD_TO_ACTION_COLLECTION(        create, 0);
+ ADD_TO_ACTION_COLLECTION(   evolve_line, 1);
+ ADD_TO_ACTION_COLLECTION(          join, 2);
+ ADD_TO_ACTION_COLLECTION( evolve_vertex, 3); 
+ 
+ state_initializer       = &action_create_do;
+ action_fetcher          = &my_action_fetcher;
+ 
  init_lattice_stack(&X);
  init_lattice_stack(&H);    
 }
@@ -78,12 +91,16 @@ DECLARE_ACTION_UNDO(evolve_line)
 DECLARE_ACTION_AMPLITUDE(evolve_vertex)
 {
  double amp = 0.0;
- //data_in contains the number of momenta which we need to join - 2, 4, 6, ... in this model
- if(X.len[X.top-1]>(*data_in))  //Now we think that elements in the stack are really like momenta
+ if((*data_in)<0) //Return the maximal possible amplitude of this action
  {
-  amp = 2.0*alpha_wc*pow(alpha_wc*cc, 0.5*(double)(*data_in))*((double)(2*(*data_in) + 4) + lambda)/lambda;
-  amp *= (((*data_in)/2)%2==0? -1.0 : 1.0); //The sign of the amplitude
- }; 
+  amp = 2.0*cc*SQR(alpha_wc)/(lambda*(1.0 - cc*alpha_wc))*(4.0 + lambda + 4.0/(1.0 - cc*alpha_wc));
+ }
+ else
+  if(X.len[X.top-1]>(*data_in))  //Now we think that elements in the stack are really like momenta, data_in contains the number of momenta which we need to join - 2, 4, 6, ... in this model
+  {
+   amp = 2.0*alpha_wc*pow(alpha_wc*cc, 0.5*(double)(*data_in))*((double)(2*(*data_in) + 4) + lambda)/lambda;
+   amp *= (((*data_in)/2)%2==0? -1.0 : 1.0); //The sign of the amplitude
+  }; 
  return amp;
 }
 
@@ -118,7 +135,7 @@ DECLARE_ACTION_UNDO(evolve_vertex)
 //Join two sets of lines
 DECLARE_ACTION_AMPLITUDE(join)
 {
- if(X.top>1) //We can join two sequences if there are more than two elements in the stack
+ if((*data_in)<0 || X.top>1) //We can join two sequences if there are more than two elements in the stack
   return NN/cc;
  return 0.0;
 }
@@ -162,15 +179,24 @@ int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int 
  check_stack_consistency(&X, "X");
  check_stack_consistency(&H, "H");
  
- FETCH_ACTION(               create, 0, ampl, (*alist), alist_length, nact, adata);
- FETCH_ACTION(          evolve_line, 1, ampl, (*alist), alist_length, nact, adata);
- FETCH_ACTION(                 join, 2, ampl, (*alist), alist_length, nact, adata);
+ FETCH_ACTION(           create, 0, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
+ FETCH_ACTION(      evolve_line, 1, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
+ FETCH_ACTION(             join, 2, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
  
  for(iact=0; iact<(X.len[X.top-1]-2)/2; iact++)
  {
   adata = 2*(iact + 1);
-  FETCH_ACTION(        evolve_vertex, 3, ampl, (*alist), alist_length, nact, adata);
+  FETCH_ACTION(   evolve_vertex, 3, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
  };
  
  return nact;
+}
+
+double max_ampl_sum()
+{
+ double ampl_sum = fabs(action_create_amplitude(-1))        + 
+                   fabs(action_evolve_line_amplitude(-1))   +
+                   fabs(action_join_amplitude(-1))          + 
+                   fabs(action_evolve_vertex_amplitude(-1));
+ return ampl_sum;
 }

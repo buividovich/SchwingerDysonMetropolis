@@ -14,10 +14,12 @@
 #include "sd_metropolis_parameters.h"
 
 //Possible improvements in the code
-//Important: fix gw_wc with new core
 //Important: Function for generating random momenta, struct t_propagator
 //Important: calculation of sigma
-//Important: error messages about the overflow of X stack (-3) and H stack (-2)
+//Important: if (*data_in)<0, return the maximal possible amplitude of this action assuming all conditions are met
+//Important: auto-check whether the minimum is indeed found
+//Important: if minimization ever gets too complicated, write automatic minimizer
+//Important: check the code with Dr. Memory
 //Important: auto-tuning of actions, more automatic
 //Important: LS, LT, DIM in large-N QFT parameters
 //Can wait:  Numerical values for characters in getopt

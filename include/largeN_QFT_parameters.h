@@ -16,6 +16,8 @@ extern double   param_tuning_accuracy;    //Accuracy of parameter tuning
 
 void print_largeN_QFT_parameters();
 
+//int check_cc_NN();
+
 #define LARGEN_QFT_LONG_OPTIONS                                                      \
  {                   "lambda",  required_argument,                       NULL, 'A'}, \
  {                       "cc",  required_argument,                       NULL, 'B'}, \
