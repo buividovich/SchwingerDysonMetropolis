@@ -17,6 +17,7 @@
 //Important: fix gw_wc with new core
 //Important: Function for generating random momenta, struct t_propagator
 //Important: calculation of sigma
+//Important: error messages about the overflow of X stack (-3) and H stack (-2)
 //Important: auto-tuning of actions, more automatic
 //Important: LS, LT, DIM in large-N QFT parameters
 //Can wait:  Numerical values for characters in getopt
@@ -37,7 +38,7 @@ typedef struct
  int            action_data_in;     //Parameter which should be passed to the action_do function
 } t_action_data;
 
-#define FETCH_ACTION(_action_name, _action_id, _action_list, _amplitude_list, _list_len, _acounter, _adata, _amp_temp, _step_num)                           \
+#define FETCH_ACTION(_action_name, _action_id, _action_list, _amplitude_list, _list_len, _acounter, _adata, _amp_temp)                           \
 {                                                                                                                                                           \
  (_amp_temp) = action_##_action_name##_amplitude(&(_adata));                                                                                                \
  if(fabs(_amp_temp)>0.0)                                                                                                                                    \
@@ -46,7 +47,7 @@ typedef struct
   {                                                                                                                                                         \
    SAFE_REALLOC(   (_action_list), t_action_data, ((_acounter)+1));                                                                                         \
    SAFE_REALLOC((_amplitude_list),        double, ((_acounter)+1));                                                                                         \
-   logs_Write(0, "Step %08i:", (_step_num));                                                                                                                \
+   logs_Write(0, "Step %08i:", step_number);                                                                                                                \
    logs_Write(0, "\t Action Fetcher:\t Reallocating action_list and amplitude_list to hold %i elements instead of %i", ((_acounter)+1), (_list_len));       \
   };                                                                                                                                                        \
   (_amplitude_list)[(_acounter)]                  = (_amp_temp);                                                                                            \
@@ -63,7 +64,7 @@ typedef struct
 }
 
 //Functional type for a generic function which returns all possible actions and their probabilities
-typedef int (*t_action_fetcher)(t_action_data** action_list, double** amplitude_list, int list_length, int step_number); //Should return the number of possible actions, if there are more actions than the length of the currently allocated action_list, should perform realloc
+typedef int (*t_action_fetcher)(t_action_data** action_list, double** amplitude_list, int list_length); //Should return the number of possible actions, if there are more actions than the length of the currently allocated action_list, should perform realloc
 
 //These pointers to functions should be set in the user code before calling init_metropolis
 extern t_action*          action_collection_do;
@@ -73,13 +74,14 @@ extern t_action           state_initializer;
 extern t_action_fetcher   action_fetcher;
 
 //Variables characterizing the state of the random process which should be visible outside
+extern int            step_number;      //Counts the number of calls to metropolis_step() after init_metropolis()
 extern int            ns;               //Counter of the sequence depth  
 extern double*        nA;               //Contains the probability normalization factor on every step
 extern int*           asign;            //Reweighting signs of every configuration
 extern t_action_data* action_history;   //History of actions, elements up to ns are referenced
 
-int   init_metropolis();
+void  init_metropolis();
 void  free_metropolis();
-int   metropolis_step(int step_number);
+int   metropolis_step();
 
 #endif

@@ -15,7 +15,7 @@ endif
 CLUE_DIR  = ../clue
 
 #Include directories
-INC_DIRS := ./include $(CLUE_DIR)/include $(CLUE_DIR)/complex $(CLUE_DIR)/lapack
+INC_DIRS := ./include $(CLUE_DIR)/include $(CLUE_DIR)/complex $(CLUE_DIR)/complex/my_complex_sys
 
 INCLUDE	 := $(addprefix -I, $(INC_DIRS))
 
@@ -23,10 +23,14 @@ INCLUDE	 := $(addprefix -I, $(INC_DIRS))
 INCLUDE_FILES := $(wildcard $(addsuffix /*.h, $(INC_DIRS)))
 
 #Source directories
-SRC_DIRS = ./src $(CLUE_DIR)/src
+SRC_DIRS = ./src
 
 #List of source files
 SRC_FILES := $(wildcard $(addsuffix /*.c, $(SRC_DIRS)))
+
+#Manually add some files from CLUE
+CLUE_SRC   = clue_logs.c rand_num_generators.c ranlxd.c square_lattice.c
+SRC_FILES += $(addprefix $(CLUE_DIR)/src/, $(CLUE_SRC))
 
 #Object directory
 OBJ_DIR		=	./obj
@@ -35,12 +39,12 @@ OBJ_DIR		=	./obj
 OBJ_FILES := $(patsubst %.c, $(OBJ_DIR)/%.o, $(notdir $(SRC_FILES)))
 
 #List of libraries to be linked with every executable
-LIBS        = -lm -larpack -llapacke -llapack -lblas -lgfortran -lm
+LIBS        = -lm
 
 #Binary directory
 BIN_DIR     =   ./bin
 
-vpath %.c $(SRC_DIRS)
+vpath %.c $(SRC_DIRS) $(CLUE_DIR)/src
 
 clean:
 	rm -f -v $(OBJ_FILES)
@@ -50,7 +54,6 @@ $(OBJ_DIR)/%.o: 	%.c $(INCLUDE_FILES)
 	$(CC) $(CCFLAGS) $(INCLUDE) -c $< -o $@
 
 ifeq ($(OS), Windows_NT)
-LIBFILES = $(CLUE_DIR)/lib/liblapacke.lib $(CLUE_DIR)/lib/liblapack.lib $(CLUE_DIR)/lib/libblas.lib
 EXEEXT   = .exe
 endif
 
@@ -74,7 +77,7 @@ endef
 
 define app_plots_template
  $(1)_PLT_FILES = $$(wildcard ./apps/$(1)/*.plt)
-$(1)_plots: 
+$(1)_plots:
 	$(foreach plt_file, $$($(1)_PLT_FILES), gnuplot $(plt_file))
 	gnuplot -e "app_name = '$(1)'" ./plots/mc_stat.plt
 endef

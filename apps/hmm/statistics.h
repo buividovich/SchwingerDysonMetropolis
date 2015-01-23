@@ -1,8 +1,6 @@
 #ifndef _STATISTICS_H_
 #define _STATISTICS_H_
 
-#include <linalg.h>
-
 #include <sd_metropolis_parameters.h>
 #include <largeN_QFT_parameters.h>
 

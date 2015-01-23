@@ -25,11 +25,12 @@ double G_analytic(double l, int n)
 
 void init_observable_stat()
 {
- int s;
+ int s, i;
  for(s=0; s<2; s++)
  {
   SAFE_MALLOC(G_hist[s], int, max_correlator_order);
-  set_zero_int(G_hist[s], max_correlator_order);
+  for(i=0; i<max_correlator_order; i++)
+   G_hist[s][i] = 0;
  };
 }
 
