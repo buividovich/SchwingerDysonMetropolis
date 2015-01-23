@@ -108,9 +108,9 @@ int   metropolis_step()
    if(action_list[todo].action_id<action_collection_size)
    {
     res = (action_collection_do[action_list[todo].action_id])(&(action_list[todo].action_data_in));
-    if(res==-2)
+    if(res==-2 || res==-3)
     {
-     logs_WriteError("Action %i with action_data_in %i caused overflow, resetting the state of the system...", action_list[todo].action_id, action_list[todo].action_data_in);
+     logs_WriteError("Action %i with action_data_in %i caused %s overflow at mc step %i, resetting the state of the system...", action_list[todo].action_id, action_list[todo].action_data_in, (res==-2? "history" : "state"), step_number);
      ns = 0;
      state_initializer(NULL);
     };
@@ -143,9 +143,9 @@ int   metropolis_step()
     if(action_history[ns].action_id<action_collection_size)
     {
      res = (action_collection_undo[action_history[ns].action_id])(&(action_history[ns].action_data_in));
-     if(res==-2)
+     if(res==-2 || res==-3)
      {
-      logs_WriteError("Undoing action %i with action_data_in %i caused overflow, resetting the state of the system...", action_history[ns].action_id, action_history[ns].action_data_in);
+      logs_WriteError("Undoing action %i with action_data_in %i caused %s overflow at mc step %i, resetting the state of the system...", action_history[ns].action_id, action_history[ns].action_data_in, (res==-2? "history" : "state"), step_number);
       ns = 0;
       state_initializer(NULL);
      };

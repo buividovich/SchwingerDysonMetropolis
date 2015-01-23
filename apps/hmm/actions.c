@@ -40,7 +40,7 @@ DECLARE_ACTION_AMPLITUDE(create)
 
 DECLARE_ACTION_DO(create)
 {
- RETURN_IF_FALSE(X.nel<lat_stack_max_nel-2, -2);
+ RETURN_IF_FALSE(X.nel<lat_stack_max_nel-2, -3);
  if(data_in == NULL)
  {
   X.top = 0; //If called with NULL, should completely reset the state
@@ -75,7 +75,7 @@ DECLARE_ACTION_AMPLITUDE(evolve_line)
 
 DECLARE_ACTION_DO(evolve_line)
 {
- RETURN_IF_FALSE(X.nel<lat_stack_max_nel-2, -2);
+ RETURN_IF_FALSE(X.nel<lat_stack_max_nel-2, -3);
 
  X.len[X.top-1] += 2;
  X.nel          += 2;
@@ -140,7 +140,7 @@ DECLARE_ACTION_AMPLITUDE(join)
 DECLARE_ACTION_DO(join)
 {
  RETURN_IF_FALSE(X.top>1, -1);
- RETURN_IF_FALSE(X.nel<lat_stack_max_nel-2, -2);
+ RETURN_IF_FALSE(X.nel<lat_stack_max_nel-2, -3);
  
  X.len[X.top-2] += (X.len[X.top-1] + 2);
  //... and now we have to remember what was the length of both sequences in order to perform undo

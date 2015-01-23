@@ -23,7 +23,7 @@ DECLARE_ACTION_AMPLITUDE(create)
 
 DECLARE_ACTION_DO(create)
 {
- RETURN_IF_FALSE(X.nel<lat_stack_max_nel-2, -1);
+ RETURN_IF_FALSE(X.nel<lat_stack_max_nel-2, -3);
  if(data_in == NULL)
  {
   X.top = 0;
@@ -56,7 +56,7 @@ DECLARE_ACTION_AMPLITUDE(evolve_line)
 
 DECLARE_ACTION_DO(evolve_line)
 {
- RETURN_IF_FALSE(X.nel<lat_stack_max_nel-2, -1);
+ RETURN_IF_FALSE(X.nel<lat_stack_max_nel-2, -3);
 
  X.len[X.top-1] += 2;
  X.nel          += 2;
@@ -90,7 +90,7 @@ DECLARE_ACTION_AMPLITUDE(evolve_vertex)
 DECLARE_ACTION_DO(evolve_vertex)
 {
  RETURN_IF_FALSE(X.len[X.top-1]>(*data_in), -1);
- RETURN_IF_FALSE(H.nel<lat_stack_max_nel-(*data_in), -1);
+ RETURN_IF_FALSE(H.nel<lat_stack_max_nel-(*data_in), -2);
  //Push the momenta which are being joined into the H(istory)stack
  H.start[ H.top] = (H.top>0? H.start[H.top-1] + H.len[H.top-1] : 0);
  H.len[   H.top] = (*data_in); //We push a pair of momenta on the top of the stack
@@ -126,7 +126,7 @@ DECLARE_ACTION_AMPLITUDE(join)
 DECLARE_ACTION_DO(join)
 {
  RETURN_IF_FALSE(X.top>1, -1);
- RETURN_IF_FALSE(X.nel<lat_stack_max_nel-2, -1);
+ RETURN_IF_FALSE(X.nel<lat_stack_max_nel-2, -3);
  
  X.len[X.top-2] += (X.len[X.top-1] + 2);
  //... and now we have to remember what was the length of both sequences in order to perform undo
