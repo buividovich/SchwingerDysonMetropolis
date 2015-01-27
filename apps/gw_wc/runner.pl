@@ -9,7 +9,7 @@ system("make gw_wc");
 system("cd $BaseDir");
 
 $lambda_min = 0.02;
-$lambda_max = 0.30;
+$lambda_max = 0.26;
 $dlambda    = 0.01;
 
 $nmc  = 5000000;

@@ -19,14 +19,14 @@ void init_actions()
  action_fetcher          = &my_action_fetcher;
  
  //Initialize the lattice stack
- init_lattice_stack(&X);
- init_lattice_stack(&H);    
+ init_lat_stack(&X, DIM, max_stack_nel);
+ init_lat_stack(&H, DIM, max_history_nel);
 }
 
 void free_actions()
 {
- free_lattice_stack(&X);
- free_lattice_stack(&H);
+ free_lat_stack(&X);
+ free_lat_stack(&H);
  
  SAFE_FREE(action_collection_do);
  SAFE_FREE(action_collection_undo);
@@ -40,7 +40,7 @@ DECLARE_ACTION_AMPLITUDE(create)
 
 DECLARE_ACTION_DO(create)
 {
- RETURN_IF_FALSE(X.nel<lat_stack_max_nel-2, -3);
+ RETURN_IF_FALSE(X.nel<X.max_nel-2, -3);
  if(data_in == NULL)
  {
   X.top = 0; //If called with NULL, should completely reset the state
@@ -75,7 +75,7 @@ DECLARE_ACTION_AMPLITUDE(evolve_line)
 
 DECLARE_ACTION_DO(evolve_line)
 {
- RETURN_IF_FALSE(X.nel<lat_stack_max_nel-2, -3);
+ RETURN_IF_FALSE(X.nel<X.max_nel-2, -3);
 
  X.len[X.top-1] += 2;
  X.nel          += 2;
@@ -96,7 +96,7 @@ DECLARE_ACTION_UNDO(evolve_line)
 /*************************** Create new vertex ****************************/
 DECLARE_ACTION_AMPLITUDE(evolve_vertex)
 {
- if(X.len[X.top-1]>=3)  //Now we think that elements in the stack are really like momenta
+ if(data_in==NULL || (*data_in)<0 || X.len[X.top-1]>=3)  //Now we think that elements in the stack are really like momenta
   return lambda*cc;
  return 0.0;
 }
@@ -104,7 +104,7 @@ DECLARE_ACTION_AMPLITUDE(evolve_vertex)
 DECLARE_ACTION_DO(evolve_vertex)
 {
  RETURN_IF_FALSE(X.len[X.top-1]>=3, -1);
- RETURN_IF_FALSE(H.nel<lat_stack_max_nel-2, -2);
+ RETURN_IF_FALSE(H.nel<H.max_nel-2, -2);
  //Push the momenta which are being joined into the H(istory)stack
  H.start[ H.top] = (H.top>0? H.start[H.top-1] + H.len[H.top-1] : 0);
  H.len[   H.top] = 2; //We push a pair of momenta on the top of the stack
@@ -132,7 +132,7 @@ DECLARE_ACTION_UNDO(evolve_vertex)
 //Join two sets of lines
 DECLARE_ACTION_AMPLITUDE(join)
 {
- if(X.top>1) //We can join two sequences if there are more than two elements in the stack
+ if(data_in==NULL || (*data_in)<0 || X.top>1) //We can join two sequences if there are more than two elements in the stack
   return NN/SQR(cc);
  return 0.0;
 }
@@ -140,7 +140,7 @@ DECLARE_ACTION_AMPLITUDE(join)
 DECLARE_ACTION_DO(join)
 {
  RETURN_IF_FALSE(X.top>1, -1);
- RETURN_IF_FALSE(X.nel<lat_stack_max_nel-2, -3);
+ RETURN_IF_FALSE(X.nel<X.max_nel-2, -3);
  
  X.len[X.top-2] += (X.len[X.top-1] + 2);
  //... and now we have to remember what was the length of both sequences in order to perform undo

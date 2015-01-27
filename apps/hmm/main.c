@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
  }; 
  
  char prefix[500];
- sprintf(prefix, "%2.4E %2.4E %2.4E", lambda, cc, NN);
+ largeN_QFT_prefix(prefix);
  process_mc_stat(prefix);
  process_observable_stat();
  

@@ -18,14 +18,14 @@ void init_actions()
  state_initializer       = &action_create_do;
  action_fetcher          = &my_action_fetcher;
  
- init_lattice_stack(&X);
- init_lattice_stack(&H);    
+ init_lat_stack(&X, DIM, max_stack_nel);
+ init_lat_stack(&H, DIM, max_history_nel);    
 }
 
 void free_actions()
 {
- free_lattice_stack(&X);
- free_lattice_stack(&H);
+ free_lat_stack(&X);
+ free_lat_stack(&H);
 }
 
 /************* Create new factorized-out line ****************/
@@ -36,7 +36,7 @@ DECLARE_ACTION_AMPLITUDE(create)
 
 DECLARE_ACTION_DO(create)
 {
- RETURN_IF_FALSE(X.nel<lat_stack_max_nel-2, -3);
+ RETURN_IF_FALSE(X.nel<X.max_nel-2, -3);
  if(data_in == NULL)
  {
   X.top = 0;
@@ -69,7 +69,7 @@ DECLARE_ACTION_AMPLITUDE(evolve_line)
 
 DECLARE_ACTION_DO(evolve_line)
 {
- RETURN_IF_FALSE(X.nel<lat_stack_max_nel-2, -3);
+ RETURN_IF_FALSE(X.nel<X.max_nel-2, -3);
 
  X.len[X.top-1] += 2;
  X.nel          += 2;
@@ -91,7 +91,7 @@ DECLARE_ACTION_UNDO(evolve_line)
 DECLARE_ACTION_AMPLITUDE(evolve_vertex)
 {
  double amp = 0.0;
- if((*data_in)<0) //Return the maximal possible amplitude of this action
+ if(data_in==NULL || (*data_in)<0) //Return the maximal possible amplitude of this action
  {
   amp = 2.0*cc*SQR(alpha_wc)/(lambda*(1.0 - cc*alpha_wc))*(4.0 + lambda + 4.0/(1.0 - cc*alpha_wc));
  }
@@ -107,7 +107,7 @@ DECLARE_ACTION_AMPLITUDE(evolve_vertex)
 DECLARE_ACTION_DO(evolve_vertex)
 {
  RETURN_IF_FALSE(X.len[X.top-1]>(*data_in), -1);
- RETURN_IF_FALSE(H.nel<lat_stack_max_nel-(*data_in), -2);
+ RETURN_IF_FALSE(H.nel<H.max_nel-(*data_in), -2);
  //Push the momenta which are being joined into the H(istory)stack
  H.start[ H.top] = (H.top>0? H.start[H.top-1] + H.len[H.top-1] : 0);
  H.len[   H.top] = (*data_in); //We push a pair of momenta on the top of the stack
@@ -135,7 +135,7 @@ DECLARE_ACTION_UNDO(evolve_vertex)
 //Join two sets of lines
 DECLARE_ACTION_AMPLITUDE(join)
 {
- if((*data_in)<0 || X.top>1) //We can join two sequences if there are more than two elements in the stack
+ if(data_in==NULL || (*data_in)<0 || X.top>1) //We can join two sequences if there are more than two elements in the stack
   return NN/cc;
  return 0.0;
 }
@@ -143,7 +143,7 @@ DECLARE_ACTION_AMPLITUDE(join)
 DECLARE_ACTION_DO(join)
 {
  RETURN_IF_FALSE(X.top>1, -1);
- RETURN_IF_FALSE(X.nel<lat_stack_max_nel-2, -3);
+ RETURN_IF_FALSE(X.nel<X.max_nel-2, -3);
  
  X.len[X.top-2] += (X.len[X.top-1] + 2);
  //... and now we have to remember what was the length of both sequences in order to perform undo
@@ -194,9 +194,10 @@ int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int 
 
 double max_ampl_sum()
 {
- double ampl_sum = fabs(action_create_amplitude(-1))        + 
-                   fabs(action_evolve_line_amplitude(-1))   +
-                   fabs(action_join_amplitude(-1))          + 
-                   fabs(action_evolve_vertex_amplitude(-1));
+ int adata = -1;
+ double ampl_sum = fabs(action_create_amplitude(&adata))        + 
+                   fabs(action_evolve_line_amplitude(&adata))   +
+                   fabs(action_join_amplitude(&adata))          + 
+                   fabs(action_evolve_vertex_amplitude(&adata));
  return ampl_sum;
 }

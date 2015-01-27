@@ -2,12 +2,12 @@
 # MinGW+MSYS are assumed for Windows
 
 CC		    :=	gcc
-CCFLAGS		:=	-D NATIVE_COMPLEX
+CCFLAGS		:=	-D NATIVE_COMPLEX -std=gnu99 -Wall -pedantic -fmax-errors=2
 
 ifeq ($(DEBUG), 1)
- CCFLAGS	+=	-std=gnu99 -O0 -g3 -Wall -pedantic -Wno-unknown-pragmas
+ CCFLAGS	+=	 -O0 -g3  -Wno-unknown-pragmas
 else
- CCFLAGS	+=	-std=gnu99 -O3 -Wall -pedantic -Wno-unknown-pragmas
+ CCFLAGS	+=	-O3  -Wno-unknown-pragmas
 endif
 
 ############## COMMON DEFINITIONS FOR ALL APPLICATIONS ##############################
