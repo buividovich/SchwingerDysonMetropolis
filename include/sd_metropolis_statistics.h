@@ -24,7 +24,7 @@ extern double err_nA;
 extern double mean_sign;
 
 void init_metropolis_statistics();
-void gather_mc_stat(int accepted);
+void gather_mc_stat();
 void process_mc_stat(const char* prefix);
 
 #endif

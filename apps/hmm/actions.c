@@ -40,7 +40,7 @@ DECLARE_ACTION_AMPLITUDE(create)
 
 DECLARE_ACTION_DO(create)
 {
- RETURN_IF_FALSE(X.nel<X.max_nel-2, -3);
+ RETURN_IF_FALSE(X.nel<X.max_nel-2, ERR_STACK_OVERFLOW);
  if(data_in == NULL)
  {
   X.top = 0; //If called with NULL, should completely reset the state
@@ -54,17 +54,17 @@ DECLARE_ACTION_DO(create)
  X.top ++;
  X.nel += 2;
  
- return 1; 
+ return ACTION_SUCCESS; 
 }
 
 DECLARE_ACTION_UNDO(create)
 {
- RETURN_IF_FALSE(X.top>0, -1);
+ RETURN_IF_FALSE(X.top>0, ERR_WRONG_STATE);
  
  X.top --;
  X.nel -= 2;
  
- return 1;
+ return ACTION_SUCCESS;
 }
 
 /************************ Create new factorized-in line *****************/
@@ -75,22 +75,22 @@ DECLARE_ACTION_AMPLITUDE(evolve_line)
 
 DECLARE_ACTION_DO(evolve_line)
 {
- RETURN_IF_FALSE(X.nel<X.max_nel-2, -3);
+ RETURN_IF_FALSE(X.nel<X.max_nel-2, ERR_STACK_OVERFLOW);
 
  X.len[X.top-1] += 2;
  X.nel          += 2;
  
- return 1; 
+ return ACTION_SUCCESS;
 }
 
 DECLARE_ACTION_UNDO(evolve_line)
 {
- RETURN_IF_FALSE(X.len[X.top-1]>2, -1);
+ RETURN_IF_FALSE(X.len[X.top-1]>2, ERR_WRONG_STATE);
 
  X.len[X.top-1] -= 2;
  X.nel          -= 2;
  
- return 1;
+ return ACTION_SUCCESS;
 }
 
 /*************************** Create new vertex ****************************/
@@ -103,8 +103,8 @@ DECLARE_ACTION_AMPLITUDE(evolve_vertex)
 
 DECLARE_ACTION_DO(evolve_vertex)
 {
- RETURN_IF_FALSE(X.len[X.top-1]>=3, -1);
- RETURN_IF_FALSE(H.nel<H.max_nel-2, -2);
+ RETURN_IF_FALSE(X.len[X.top-1]>=3, ERR_WRONG_STATE);
+ RETURN_IF_FALSE(H.nel<H.max_nel-2, ERR_HISTORY_OVERFLOW);
  //Push the momenta which are being joined into the H(istory)stack
  H.start[ H.top] = (H.top>0? H.start[H.top-1] + H.len[H.top-1] : 0);
  H.len[   H.top] = 2; //We push a pair of momenta on the top of the stack
@@ -113,20 +113,22 @@ DECLARE_ACTION_DO(evolve_vertex)
  //Now modify the stack
  X.len[X.top-1] -= 2;
  X.nel          -= 2;
- return 0;
+ 
+ return ACTION_SUCCESS;
 }
 
 DECLARE_ACTION_UNDO(evolve_vertex)
 {
- RETURN_IF_FALSE(H.top>0, -1);
- RETURN_IF_FALSE(H.len[H.top-1]>=2, -1);
+ RETURN_IF_FALSE(H.top>0, ERR_WRONG_STATE);
+ RETURN_IF_FALSE(H.len[H.top-1]>=2, ERR_WRONG_STATE);
  //Pop the momenta incoming to the vertex from the H(istory)stack
  H.top --;
  H.nel -= 2;
  //And add them back to the topmost sequence in the stack
  X.len[X.top-1] += 2;
  X.nel          += 2;
- return 0;
+ 
+ return ACTION_SUCCESS;
 }
 
 //Join two sets of lines
@@ -139,8 +141,8 @@ DECLARE_ACTION_AMPLITUDE(join)
 
 DECLARE_ACTION_DO(join)
 {
- RETURN_IF_FALSE(X.top>1, -1);
- RETURN_IF_FALSE(X.nel<X.max_nel-2, -3);
+ RETURN_IF_FALSE(X.top>1, ERR_WRONG_STATE);
+ RETURN_IF_FALSE(X.nel<X.max_nel-2, ERR_STACK_OVERFLOW);
  
  X.len[X.top-2] += (X.len[X.top-1] + 2);
  //... and now we have to remember what was the length of both sequences in order to perform undo
@@ -150,19 +152,20 @@ DECLARE_ACTION_DO(join)
  X.top --;
  X.nel += 2;
  
- return 0;
+ return ACTION_SUCCESS;
 }
 
 DECLARE_ACTION_UNDO(join)
 {
- RETURN_IF_FALSE(X.len[X.top-1] > ((*data_in) + 2), -1);
+ RETURN_IF_FALSE(X.len[X.top-1] > ((*data_in) + 2), ERR_WRONG_STATE);
  
  X.len[X.top-1] -= ((*data_in) + 2);
  X.len[X.top]    = (*data_in);
  X.start[X.top]  = X.start[X.top-1] + X.len[X.top-1];
  X.top ++;
  X.nel -= 2;
- return 0;
+ 
+ return ACTION_SUCCESS;
 }
 
 /************** Action fetcher *****************/
@@ -182,4 +185,16 @@ int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int 
  FETCH_ACTION(           join, 3, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
  
  return nact;
+}
+
+//Max. sum of all amplitudes - for the tuning of cc and NN
+double max_ampl_sum()
+{
+ int adata = -1;
+ double ampl_sum = fabs(action_create_amplitude(&adata))        + 
+                   fabs(action_evolve_line_amplitude(&adata))   +
+                   fabs(action_evolve_vertex_amplitude(&adata)) +
+                   fabs(action_join_amplitude(&adata)); 
+                   
+ return ampl_sum;
 }

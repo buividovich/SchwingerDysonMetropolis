@@ -45,6 +45,8 @@ int parse_command_line_options(int argc, char **argv)
    break;
   }; 
  }; 
+ 
+ SAFE_FREE(short_option_list);
  return 0;
 }
 
@@ -52,11 +54,13 @@ void init_parameters()
 {
  alpha_wc = fabs(lambda)/(2.0*fabs(lambda) + 8.0);
  if(param_auto_tuning)
-  tune_parameters();   
+  tune_parameters();
+ check_cc_NN_minimum(&max_ampl_sum);    
 }
 
 void print_parameters()
 {
+ logs_Write(0, "\n");
  print_metropolis_parameters();
  print_largeN_QFT_parameters();
 }

@@ -41,7 +41,9 @@ int parse_command_line_options(int argc, char **argv)
     printhelp();       
    break;
   }; 
- }; 
+ };
+ 
+ SAFE_FREE(short_option_list);  
  return 0;
 }
 
@@ -51,11 +53,13 @@ void init_parameters()
  {
   cc = 2.0/sqrt(fabs(lambda));
   NN = cc;
- };    
+ };
+ check_cc_NN_minimum(&max_ampl_sum);    
 }
 
 void print_parameters()
 {
+ logs_Write(0, "\n");
  print_metropolis_parameters();
  print_largeN_QFT_parameters();
 }

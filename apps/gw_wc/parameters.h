@@ -11,6 +11,7 @@
 #include "sd_metropolis_parameters.h"
 #include "largeN_QFT_parameters.h"
 #include "lattice_stack.h"
+#include "actions.h"
 
 extern double   alpha_wc; //Parameter alpha of the weak-coupling expansion
 

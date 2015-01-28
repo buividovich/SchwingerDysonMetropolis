@@ -59,7 +59,7 @@ int   metropolis_step()
  int n_actions, iaction, todo, accepted = 0, res;
  double a, alpha;
  
- if(ns>max_recursion_depth-1)
+ if(ns>=max_recursion_depth-1)
  {
   logs_WriteError("Overflow detected - size of action_history is larger than the allocated memory!!! Resetting the state of the system!!!");
   ns = 0;
@@ -85,6 +85,8 @@ int   metropolis_step()
  nA[ns] = 0.0;
  for(iaction=0; iaction<n_actions; iaction++)
   nA[ns] += fabs(amplitude_list[iaction]);
+  
+ gather_mc_stat(); 
  
  //Decide whether we move forward or backward in the order of expansion
  a = rand_double(0.0, 1.0);
@@ -96,18 +98,26 @@ int   metropolis_step()
   if(a<alpha)
   {//Accept and perform the forward step
    accepted = 1;
-   asign[ns+1] = asign[ns];
    //Now calculate the normalized probabilities of different steps
    for(iaction=0; iaction<n_actions; iaction++)
     probability_list[iaction] = fabs(amplitude_list[iaction])/nA[ns];
-   //And increase the order counter 
-   ns++; 
    //Choose at random which action to perform
    todo = rand_choice(probability_list, n_actions);
    //Perform the selected action
    if(action_list[todo].action_id<action_collection_size)
    {
     res = (action_collection_do[action_list[todo].action_id])(&(action_list[todo].action_data_in));
+    if(abs(res)==ACTION_SUCCESS)
+    {
+     //Write to the log
+     logs_Write((step_number%mc_reporting_interval==0? 1 : 2), "Step %08i:\t Performed action %i, action_data_in = %i, ns = %i, nA[ns] = %2.4lf", step_number, action_list[todo].action_id, action_list[todo].action_data_in, ns, nA[ns]);
+     //Increase the order counter 
+     ns++;
+     //And save it to the history
+     action_history[ns] = action_list[todo];
+     //Modify the reweighting sign/phase
+     asign[ns] = asign[ns-1]*SIGN(amplitude_list[todo]);         
+    };
     if(res==ERR_HISTORY_OVERFLOW || res==ERR_STACK_OVERFLOW)
     {
      logs_WriteError("Action %i with action_data_in %i caused %s overflow at mc step %i, resetting the state of the system...", action_list[todo].action_id, action_list[todo].action_data_in, (res==ERR_HISTORY_OVERFLOW? "history" : "state"), step_number);
@@ -115,18 +125,12 @@ int   metropolis_step()
      state_initializer(NULL);
     };
     if(res==ERR_WRONG_STATE)
-     logs_WriteError("Attempted to apply action %i with action_data_in %i to the improper system state, nothing was really done...", action_list[todo].action_id, action_list[todo].action_data_in);
+     logs_WriteError("Attempted to apply action %i with action_data_in %i to the improper system state, nothing was really done...", action_list[todo].action_id, action_list[todo].action_data_in); 
    } 
    else
    {
     logs_WriteError("action_list[%i].action_id = %i is larger than the total number %i of actions in the collection", todo, action_list[todo].action_id, action_collection_size); 
-   }; 
-   //Write to the log
-   logs_Write((step_number%mc_reporting_interval==0? 1 : 2), "Step %08i:\t Performed action %i, action_data_in = %i, ns = %i, nA[ns] = %2.4lf", step_number, action_list[todo].action_id, action_list[todo].action_data_in, ns, nA[ns]);
-   //And save it to the history
-   action_history[ns] = action_list[todo];
-   //Modify the reweighting sign/phase
-   asign[ns] *= SIGN(amplitude_list[todo]);
+   };
   };
  }
  else
@@ -149,7 +153,7 @@ int   metropolis_step()
       ns = 0;
       state_initializer(NULL);
      };
-     if(res==-1)
+     if(res==ERR_WRONG_STATE)
       logs_WriteError("Attempted to undo action %i with action_data_in %i from the improper system state, nothing was really done...", action_history[ns].action_id, action_history[ns].action_data_in);
     } 
     else
@@ -170,8 +174,8 @@ int   metropolis_step()
  };
  
  //Updating statistics of the MC process - the mean nA, its dispersion and the mean sign
- gather_mc_stat(accepted);
- 
+
+ aac   += accepted;
  step_number ++;
  
  return accepted; //Return 1 if some new state is accepted, otherwise 0

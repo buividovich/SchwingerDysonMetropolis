@@ -33,14 +33,13 @@ void init_metropolis_statistics()
  mean_sign            = 0.0;
 }
 
-void gather_mc_stat(int accepted)
+void gather_mc_stat()
 {
  ans   += (double)(ns+1);
  anA   += nA[ns];
  dnA   += SQR(nA[ns]);
  maxnA  = MAX(nA[ns], maxnA);
  msign += asign[ns]; 
- aac   += accepted;
  nmc   ++;
 }
 

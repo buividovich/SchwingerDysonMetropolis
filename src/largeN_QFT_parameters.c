@@ -2,6 +2,7 @@
 
 //Parameters of a generic SD equations for practically any large-N QFT
 double   lambda                   = 0.05;    //tHooft coupling constant
+double   meff_sq                  = 0.0;     //Square of the effective mass
 double   cc                       = 1.0;     //Rescaling of observables according to the number of fields in the correlator
 double   NN                       = 1.0;     //Overall rescaling of observables
 int      DIM                      = 1;       //Space-time dimensionality
@@ -23,6 +24,8 @@ void print_largeN_QFT_parameters()
  logs_WriteParameter(                                    "LT",       "%i",      LT);
  logs_WriteParameter(                                    "LS",       "%i",      LS);
  logs_WriteParameter(                                "lambda",    "%2.4E",      lambda);
+ if(fabs(meff_sq)>0.0)
+ logs_WriteParameter(          "Square of the effective mass",    "%2.4E",      meff_sq);
  logs_WriteParameter(                                    "cc", "%2.4E %s",      cc, (param_auto_tuning? "(Automatically tuned)" : ""));
  logs_WriteParameter(                                    "NN", "%2.4E %s",      NN, (param_auto_tuning? "(Automatically tuned)" : ""));
  if(param_auto_tuning)
@@ -36,5 +39,41 @@ void print_largeN_QFT_parameters()
 
 void largeN_QFT_prefix(char* prefix) //Prints lambda, cc, NN, LT, LS to prefix
 {
- sprintf(prefix, "%2.4E %2.4E %2.4E %i %i ", lambda, cc, NN, LT, LS);    
+ sprintf(prefix, "%2.4E %2.4E %2.4E %2.4E %i %i ", lambda, meff_sq, cc, NN, LT, LS);    
 }
+
+//The functions below implement auto-check of the minimization 
+
+void cc_NN_vicinity(t_amplitude_sum S, double epsilon, double* data)
+{
+ double cc0 = cc;
+ double NN0 = NN;
+ 
+ cc = cc0*(1.0 - epsilon);
+ data[0] = S();
+ cc = cc0*(1.0 + epsilon);
+ data[1] = S();
+ cc = cc0;
+ 
+ NN = NN0*(1.0 - epsilon);
+ data[2] = S();
+ NN = NN0*(1.0 + epsilon);
+ data[3] = S();
+ NN = NN0; 
+}
+
+int  check_cc_NN_minimum(t_amplitude_sum S)
+{
+ double vdata[4], S0;
+ int res = 1, i;
+ S0 = S();
+ cc_NN_vicinity(S, 0.05, vdata);
+ for(i=0; i<4; i++)
+  res = res && (S0<vdata[i]); 
+ if(res) 
+  logs_Write(0, "Max. amplitude sum has minimal value %2.4E at cc = %2.4E, NN = %2.4E", S0, cc, NN);
+ else
+  logs_WriteWarning("Max. amplitude sum value %2.4E at cc = %2.4E, NN = %2.4E seems not to be the minimum...", S0, cc, NN); 
+ return res; 
+}
+

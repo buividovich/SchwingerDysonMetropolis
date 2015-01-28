@@ -5,11 +5,11 @@ void init_lat_stack(t_lat_stack* lat_stack, int dim, int max_nel)
  int i;
  lat_stack->dim     = dim;
  lat_stack->max_nel = max_nel;
- SAFE_MALLOC( lat_stack->stack,    sint*, max_nel);
+ SAFE_MALLOC( lat_stack->stack,     int*, max_nel);
  SAFE_MALLOC( lat_stack->start,      int, max_nel);
  SAFE_MALLOC( lat_stack->len,        int, max_nel);
  for(i=0; i<max_nel; i++)
-  SAFE_MALLOC(lat_stack->stack[i], sint, dim);
+  SAFE_MALLOC(lat_stack->stack[i],   int, dim);
  lat_stack->top = 0;
  lat_stack->nel = 0;
 }

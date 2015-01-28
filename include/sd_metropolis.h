@@ -14,28 +14,26 @@
 #include "sd_metropolis_parameters.h"
 
 //Possible improvements in the code
-//Important: Function for generating random momenta, struct t_propagator
-//Important: calculation of sigma
-//Important: if (*data_in)<0, return the maximal possible amplitude of this action assuming all conditions are met
-//Important: auto-check whether the minimum is indeed found
 //Important: if minimization ever gets too complicated, write automatic minimizer
-//Important: check the code with Dr. Memory
-//Important: auto-tuning of actions, more automatic
+//Can wait:  some optimization of rand_momentum
 //Can wait:  Numerical values for characters in getopt
 //Can wait:  Coordinates as integers in stack, not as lists - can give some speedup...
 //Can wait:  Timing? Compare, how much time is taken by stack manipulations? How fast is ranlux?
 
 //Functional type for an elementary action on the configuration space
 typedef int (*t_action)(  int* data_in); //In future, probably more data will be necessary to characterize the actions. For the time being, however, single integer seems enough
+//On success, t_action should return 0 
 
 #define  DECLARE_ACTION_AMPLITUDE(_action_name) double  action_##_action_name##_amplitude(int* data_in)
 #define         DECLARE_ACTION_DO(_action_name) int     action_##_action_name##_do(       int* data_in)
 #define       DECLARE_ACTION_UNDO(_action_name) int     action_##_action_name##_undo(     int* data_in)
 
 //Error codes returned by action_do and action_undo
-#define  ERR_WRONG_STATE            (-1)
-#define  ERR_HISTORY_OVERFLOW       (-2)
-#define  ERR_STACK_OVERFLOW         (-3)
+#define  ACTION_SUCCESS             (1)
+#define  ERR_WRONG_STATE            (-2)
+#define  ERR_HISTORY_OVERFLOW       (-3)
+#define  ERR_STACK_OVERFLOW         (-4)
+#define  ERR_WRONG_DATA             (-5) 
 
 //Structure which contains all the information related to some single action
 typedef struct 
