@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 {
  ansi_colors = 1;
  print_errors_to_stderr = 0;
- logs_Write(0, "\n\nDIAGRAMMATIC MONTE-CARLO FOR HERMITIAN PHI4 MATRIX MODEL IN THE PLANAR LIMIT");
+ logs_Write(0, "\n\nDIAGRAMMATIC MONTE-CARLO FOR HERMITIAN PHI4 MATRIX MODEL IN THE PLANAR LIMIT\n\n");
  
  init_rand(time(NULL));
  

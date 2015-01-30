@@ -54,8 +54,11 @@ void init_parameters()
 {
  alpha_wc = fabs(lambda)/(2.0*fabs(lambda) + 8.0);
  if(param_auto_tuning)
-  tune_parameters();
- check_cc_NN_minimum(&max_ampl_sum);    
+ {
+  cc = 1.0; NN = 1.0;
+  find_cc_NN_minimum(&max_ampl_sum, param_tuning_accuracy);
+ }; 
+ check_cc_NN_minimum(&max_ampl_sum, 0.05);    
 }
 
 void print_parameters()

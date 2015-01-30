@@ -51,10 +51,11 @@ void init_parameters()
 {
  if(param_auto_tuning)
  {
-  cc = 2.0/sqrt(fabs(lambda));
-  NN = cc;
+  cc = 1.0; NN = 1.0;
+  find_cc_NN_minimum(&max_ampl_sum, param_tuning_accuracy);
+  logs_Write(0, "Exact results are cc = %2.4E, NN = %2.4E\n", 2.0/sqrt(fabs(lambda)), 2.0/sqrt(fabs(lambda)));
  };
- check_cc_NN_minimum(&max_ampl_sum);    
+ check_cc_NN_minimum(&max_ampl_sum, 0.05);    
 }
 
 void print_parameters()

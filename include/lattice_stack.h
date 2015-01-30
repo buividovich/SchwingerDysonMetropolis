@@ -19,6 +19,11 @@ typedef struct
  
 } t_lat_stack;
 
+//Some useful macro for addressing stack elements
+//_S is the stack, _t is the depth from the top (0 is the topmost element, 1 is the element before etc)
+//_i is the number of element in the sequence, 0 is the topmost element (first element in the sequence), 1 is the next element etc.
+#define STACK_EL(_S, _i) (_S).stack[(_S).start[(_S).top - 1] + (_S).len[(_S).top - 1] - (_i) - 1]
+
 void init_lat_stack(t_lat_stack* lat_stack, int dim, int max_nel);
 void free_lat_stack(t_lat_stack* lat_stack);
 
