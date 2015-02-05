@@ -15,6 +15,15 @@ extern double                   msign; //Expectation value of the sign - also ne
 extern int                        aac;
 extern double                     ans;
 extern int                        nmc; //Counter of calls to gather_mc_stat()
+extern int*            action_counter;
+
+//If control_max_ampl_sum=1 and max_ampl_sum is set to some nonzero value, 
+//an error message is generated everytime nA exceeds max_ampl_sum, 
+//this is useful for debugging
+extern int       control_max_ampl_sum; 
+extern double            max_ampl_sum;
+extern double        max_ampl_sum_tol;
+
 
 //These are the variables which are only set by process_mc_stat
 extern double acceptance_rate;
@@ -26,5 +35,7 @@ extern double mean_sign;
 void init_metropolis_statistics();
 void gather_mc_stat();
 void process_mc_stat(const char* prefix);
+
+void print_max_amplitudes();
 
 #endif

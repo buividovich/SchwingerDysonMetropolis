@@ -22,6 +22,7 @@ extern int      max_correlator_order;     //Maximal correlator order to trace
 extern char*    observables_file;         //File for the expectation values of the correlators
 extern int      param_auto_tuning;        //Automatic tuning of transition amplitudes so that nAs are minimized
 extern double   param_tuning_accuracy;    //Accuracy of parameter tuning
+extern int      param_tuning_max_iter;    //Max. allowed number of iterations in param auto-tuning
 
 typedef double (*t_amplitude_sum)();
 
@@ -29,7 +30,7 @@ void print_largeN_QFT_parameters();
 void largeN_QFT_prefix(char* prefix); //Prints lambda, meff_sq, cc, NN, LT, LS to prefix
 
 int  check_cc_NN_minimum(t_amplitude_sum S, double tol);
-int   find_cc_NN_minimum(t_amplitude_sum S, double tol);
+int   find_cc_NN_minimum(t_amplitude_sum S, double tol, double* min_val);
 
 void init_lat_size_array();
 //int check_cc_NN();
@@ -46,7 +47,8 @@ void init_lat_size_array();
  {          "max-history-nel",  required_argument,                       NULL, 'I'}, \
  {     "max-correlator-order",  required_argument,                       NULL, 'J'}, \
  {    "param-tuning-accuracy",  required_argument,                       NULL, 'K'}, \
- {         "observables-file",  required_argument,                       NULL, 'L'}, \
+ {    "param-tuning-max-iter",  required_argument,                       NULL, 'L'}, \
+ {         "observables-file",  required_argument,                       NULL, 'M'}, \
  {     "no-param-auto-tuning",        no_argument,         &param_auto_tuning,   0}
 
 #define PARSE_LARGEN_QFT_OPTIONS                                         \
@@ -91,9 +93,13 @@ void init_lat_size_array();
     ASSERT(param_tuning_accuracy<0.0);                                   \
    break;                                                                \
    case 'L':                                                             \
+    SAFE_SSCANF_BREAK(optarg,   "%i", param_tuning_max_iter);            \
+    ASSERT(param_tuning_max_iter<1);                                     \
+   break;                                                                \
+   case 'M':                                                             \
     COPY_FILE_NAME(optarg, observables_file);                            \
    break;
 
-static const char largeN_QFT_short_option_list[] = "A:B:C:D:E:F:G:H:I:J:K:L:";
+static const char largeN_QFT_short_option_list[] = "A:B:C:D:E:F:G:H:I:J:K:L:M:";
 
 #endif

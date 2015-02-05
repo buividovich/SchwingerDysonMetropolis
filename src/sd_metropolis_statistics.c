@@ -7,6 +7,14 @@ double                   msign    = 0.0; //Expectation value of the sign - also 
 int                        aac    = 0;
 double                     ans    = 0.0;
 int                        nmc    = 0;
+int*            action_counter    = NULL;
+
+//If control_max_ampl_sum=1 and max_ampl_sum is set to some nonzero value, 
+//an error message is generated everytime nA exceeds max_ampl_sum, 
+//this is useful for debugging
+int       control_max_ampl_sum     = 0; 
+double            max_ampl_sum     = 0.0;
+double        max_ampl_sum_tol     = 0.0;
 
 //These are the variables which are only set by process_mc_stat
 double acceptance_rate      = 0.0;
@@ -25,6 +33,9 @@ void init_metropolis_statistics()
  msign = 0.0;
  ans   = 0.0;
  nmc   = 0;
+ SAFE_MALLOC(action_counter, int, action_collection_size);
+ for(int i=0; i<action_collection_size; i++)
+  action_counter[i] = 0;
  //These are the variables which are only set by process_mc_stat
  acceptance_rate      = 0.0;
  mean_recursion_depth = 0.0;
@@ -35,6 +46,8 @@ void init_metropolis_statistics()
 
 void gather_mc_stat()
 {
+ if(control_max_ampl_sum && (nA[ns] > (max_ampl_sum + max_ampl_sum_tol)))
+  logs_WriteError("nA[%i] = %2.4E > max_ampl_sum = %2.4E", ns, nA[ns], max_ampl_sum);
  ans   += (double)(ns+1);
  anA   += nA[ns];
  dnA   += SQR(nA[ns]);
@@ -51,12 +64,26 @@ void process_mc_stat(const char* prefix)
  mean_nA              =         anA/(double)nmc;
  err_nA               = sqrt((dnA/(double)nmc - SQR(mean_nA))/(double)(nmc-1));
  mean_sign            =       msign/(double)nmc;
+ 
  logs_Write(0, "\nSTATISTICS ON THE MC PROCESS (over %i steps): ",       nmc);
  logs_WriteParameter(         "Acceptance rate",    "%2.4lf",            acceptance_rate);
  logs_WriteParameter(    "Mean recursion depth",    "%2.4lf",            mean_recursion_depth);
  logs_WriteParameter( "Mean A rescaling factor",    "%2.4lf +/- %2.4lf", mean_nA, err_nA);
  logs_WriteParameter(  "Max A rescaling factor",    "%2.4lf",            maxnA);
  logs_WriteParameter(       "Mean config. sign",    "%2.4lf",            mean_sign);
+ logs_Write(0, "\n");
+ 
+ int action_counter_total = 0;
+ for(int i=0; i<action_collection_size; i++)
+  action_counter_total += action_counter[i];
+ 
+ logs_Write(0, "\tFACTUAL PROBABILITIES OF ACTIONS (over %i calls in %i mc steps): ",  action_counter_total, nmc);
+ for(int i=0; i<action_collection_size; i++)
+ {
+  double act_prob = (double)(action_counter[i])/(double)action_counter_total;
+  logs_Write(0, "   %30s [id = %i]: \t %2.4E \t (%02i%% of all actions, %i calls)", action_collection_name[i], i, act_prob, (int)(round(100.0*act_prob)), action_counter[i]);
+ }; 
+   
  logs_Write(0, "\n");
  //Saving the statistical characteristics of the MC process
  if(mc_stat_file!=NULL)
@@ -65,5 +92,14 @@ void process_mc_stat(const char* prefix)
   fprintf(f, "%s %2.4E %2.4E %2.4E %2.4E %2.4E %2.4E\n", prefix, acceptance_rate, mean_recursion_depth, mean_nA, err_nA, maxnA, mean_sign);
   fclose(f);
  }; 
+}
+
+void print_max_amplitudes()
+{
+ int i, adata = -1;
+ logs_Write(0, "\t MAXIMAL AMPLITUDES OF ELEMENTARY ACTIONS");
+ for(i=0; i<action_collection_size; i++)
+  logs_Write(0, "   %20s [action_id = %i]:\t %+2.4E", action_collection_name[i], i, (action_collection_amplitude[i])(&adata));
+ logs_Write(0, ""); 
 }
 

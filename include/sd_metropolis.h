@@ -14,7 +14,9 @@
 #include "sd_metropolis_parameters.h"
 
 //Possible improvements in the code
-//Important: if minimization ever gets too complicated, write automatic minimizer
+//Important: add momentum conservation test for the X stack
+//Can wait:  inline functions for momenta manipulations
+//Can wait:  add amplitudes to action_collection + max_ampl_sum based on action_collection
 //Can wait:  some optimization of rand_momentum
 //Can wait:  Numerical values for characters in getopt
 //Can wait:  Coordinates as integers in stack, not as lists - can give some speedup...
@@ -23,6 +25,7 @@
 //Functional type for an elementary action on the configuration space
 typedef int (*t_action)(  int* data_in); //In future, probably more data will be necessary to characterize the actions. For the time being, however, single integer seems enough
 //On success, t_action should return 0 
+typedef double (*t_action_amplitude)(int* data_in); //Generic functional type for action amplitudes
 
 #define  DECLARE_ACTION_AMPLITUDE(_action_name) double  action_##_action_name##_amplitude(int* data_in)
 #define         DECLARE_ACTION_DO(_action_name) int     action_##_action_name##_do(       int* data_in)
@@ -61,21 +64,26 @@ typedef struct
  }                                                                                                                                                          \
 } 
 
-#define ADD_TO_ACTION_COLLECTION(_action_name, _action_id)                     \
-{                                                                              \
- action_collection_do[(_action_id)]   = &(action_##_action_name##_do);         \
- action_collection_undo[(_action_id)] = &(action_##_action_name##_undo);       \
+#define ADD_TO_ACTION_COLLECTION(_action_name, _action_id)                               \
+{                                                                                        \
+ action_collection_do[(_action_id)]        = &(action_##_action_name##_do);              \
+ action_collection_undo[(_action_id)]      = &(action_##_action_name##_undo);            \
+ action_collection_amplitude[(_action_id)] = &(action_##_action_name##_amplitude);       \
+ SAFE_MALLOC(action_collection_name[(_action_id)], char, strlen(#_action_name)+2);       \
+ sprintf(action_collection_name[(_action_id)], "%s", #_action_name);                     \
 }
 
 //Functional type for a generic function which returns all possible actions and their probabilities
 typedef int (*t_action_fetcher)(t_action_data** action_list, double** amplitude_list, int list_length); //Should return the number of possible actions, if there are more actions than the length of the currently allocated action_list, should perform realloc
 
 //These pointers to functions should be set in the user code before calling init_metropolis
-extern t_action*          action_collection_do;
-extern t_action*          action_collection_undo;
-extern int                action_collection_size;
-extern t_action           state_initializer;
-extern t_action_fetcher   action_fetcher;
+extern t_action*            action_collection_do;
+extern t_action*            action_collection_undo;
+extern t_action_amplitude*  action_collection_amplitude;
+extern char**               action_collection_name;
+extern int                  action_collection_size;
+extern t_action             state_initializer;
+extern t_action_fetcher     action_fetcher;
 
 //Variables characterizing the state of the random process which should be visible outside
 extern int            step_number;      //Counts the number of calls to metropolis_step() after init_metropolis()

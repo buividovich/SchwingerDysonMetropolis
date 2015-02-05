@@ -1,11 +1,13 @@
 #include "sd_metropolis.h"
 
 //These pointers to functions should be set in the user code before calling init_metropolis
-t_action*          action_collection_do     =   NULL;
-t_action*          action_collection_undo   =   NULL;
-int                action_collection_size   =   NULL;
-t_action           state_initializer        =   NULL;
-t_action_fetcher   action_fetcher           =   NULL;
+t_action*            action_collection_do        =   NULL;
+t_action*            action_collection_undo      =   NULL;
+t_action_amplitude*  action_collection_amplitude =   NULL;
+char**               action_collection_name      =   NULL;
+int                  action_collection_size      =   NULL;
+t_action             state_initializer           =   NULL;
+t_action_fetcher     action_fetcher              =   NULL;
 
 //Variables characterizing the state of the random process which should be visible outside
 int            step_number        = 0;    //Counts the number of calls to metropolis_step() after init_metropolis()
@@ -36,10 +38,12 @@ void   init_metropolis()
  
  init_metropolis_statistics();
  
- ASSERT(   action_collection_do == NULL);
- ASSERT( action_collection_undo == NULL);
- ASSERT(      state_initializer == NULL);
- ASSERT( action_collection_size <= 0);
+ ASSERT( action_collection_do        == NULL);
+ ASSERT( action_collection_undo      == NULL);
+ ASSERT( action_collection_amplitude == NULL);
+ ASSERT( action_collection_name      == NULL);
+ ASSERT(      state_initializer      == NULL);
+ ASSERT( action_collection_size      <= 0);
  
  asign[ns] = state_initializer(NULL);      
 }
@@ -104,6 +108,7 @@ int   metropolis_step()
    //Choose at random which action to perform
    todo = rand_choice(probability_list, n_actions);
    //Perform the selected action
+   logs_Write(2, "Action %i selected by rand_choice...", todo);
    if(action_list[todo].action_id<action_collection_size)
    {
     res = (action_collection_do[action_list[todo].action_id])(&(action_list[todo].action_data_in));
@@ -113,8 +118,10 @@ int   metropolis_step()
      logs_Write((step_number%mc_reporting_interval==0? 1 : 2), "Step %08i:\t Performed action %i, action_data_in = %i, ns = %i, nA[ns] = %2.4lf", step_number, action_list[todo].action_id, action_list[todo].action_data_in, ns, nA[ns]);
      //Increase the order counter 
      ns++;
-     //And save it to the history
+     //...save it to the history
      action_history[ns] = action_list[todo];
+     //...add this choice to the statistics
+     action_counter[todo]++;
      //Modify the reweighting sign/phase
      asign[ns] = asign[ns-1]*SIGN(amplitude_list[todo]);         
     };

@@ -37,6 +37,6 @@ DECLARE_ACTION_UNDO(      join);
 //Action fetcher
 int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int list_length);
 
-double max_ampl_sum(); //Max. sum of all amplitudes - for the tuning of cc and NN
+double f_max_ampl_sum(); //Max. sum of all amplitudes - for the tuning of cc and NN
 
 #endif

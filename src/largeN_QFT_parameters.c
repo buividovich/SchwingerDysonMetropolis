@@ -16,6 +16,7 @@ int      max_correlator_order     = 5;        //Maximal correlator order to trac
 char*    observables_file         = NULL;     //File for the expectation values of the correlators
 int      param_auto_tuning        = 1;        //Automatic tuning of transition amplitudes so that nAs are minimized
 double   param_tuning_accuracy    = 0.000001; //Accuracy of parameter auto-tuning
+int      param_tuning_max_iter    = 1000;     //Max. allowed number of iterations in param auto-tuning
 
 void print_largeN_QFT_parameters()
 {
@@ -29,12 +30,15 @@ void print_largeN_QFT_parameters()
  logs_WriteParameter(                                    "cc", "%2.4E %s",      cc, (param_auto_tuning? "(Automatically tuned)" : ""));
  logs_WriteParameter(                                    "NN", "%2.4E %s",      NN, (param_auto_tuning? "(Automatically tuned)" : ""));
  if(param_auto_tuning)
-  logs_WriteParameter(    "Accuracy of parameter auto-tuning",    "%2.4E",      param_tuning_accuracy);
+ {
+ logs_WriteParameter(     "Accuracy of parameter auto-tuning",    "%2.4E",      param_tuning_accuracy);
+ logs_WriteParameter(        "Max. iterations of auto-tuning",       "%i",      param_tuning_max_iter);
+ };
  logs_WriteParameter(               "Max.correlator to trace",       "%i",      max_correlator_order);
  logs_WriteParameter(                         "max_stack_nel",       "%i",      max_stack_nel);
  logs_WriteParameter(                       "max_history_nel",       "%i",      max_history_nel);
  if(observables_file!=NULL)
-  logs_WriteParameter(                     "Observables file",       "%s",      observables_file);
+ logs_WriteParameter(                      "Observables file",       "%s",      observables_file);
 }
 
 void largeN_QFT_prefix(char* prefix) //Prints lambda, cc, NN, LT, LS to prefix
@@ -77,30 +81,32 @@ int  check_cc_NN_minimum(t_amplitude_sum S, double tol)
  return res; 
 }
 
-int  find_cc_NN_minimum(t_amplitude_sum S, double tol)
+int  find_cc_NN_minimum(t_amplitude_sum S, double tol, double* min_val)
 {
  double vdata[4], S0;
  int res = 0, i, min_i, step_count;
- double epsilon = 0.1, min_val;
+ double epsilon = 0.1;
+ 
+ (*min_val) = 0.0;
  
  while(epsilon>MIN(tol,0.01))
  {
   logs_Write(1, "Searching for the minimal values of cc and NN with tolerance %2.4E, starting with cc = %2.4E, NN = %2.4E", epsilon, cc, NN);
   res = 0;
   step_count = 0;
-  while(!res)
+  while(!res && step_count<param_tuning_max_iter)
   {
    S0 = S();
    cc_NN_vicinity(S, epsilon, vdata);
-   min_val = vdata[0];
-   min_i   = 0;
+   (*min_val) = vdata[0];
+   min_i      = 0;
    for(i=1; i<4; i++)
-    if(vdata[i]<min_val)
+    if(vdata[i]<(*min_val))
     {
-     min_i   = i;
-     min_val = vdata[i];
+     min_i      = i;
+     (*min_val) = vdata[i];
     };
-   res = (min_val>S0);
+   res = ((*min_val)>S0);
    if(!res && min_i==0)
     cc *= (1.0 - epsilon);
    if(!res && min_i==1)
@@ -110,14 +116,14 @@ int  find_cc_NN_minimum(t_amplitude_sum S, double tol)
    if(!res && min_i==3)
     NN *= (1.0 + epsilon);
    step_count ++;
-   logs_Write(2, "Auto-minimizer step %i: cc = %2.4E, NN = %2.4E", step_count, cc, NN);
+   logs_Write(2, "Auto-minimizer step %03i: cc = %2.4E, NN = %2.4E, S = %2.4E", step_count, cc, NN, (*min_val));
   };
   logs_Write(1, "Optimal values with precision %2.4E: cc = %2.4E, NN = %2.4E", epsilon, cc, NN);
   epsilon *= 0.1;
  };
  
- logs_Write(0, "Minimal values of cc and NN (with precision %2.4E): \t cc = %2.4E, NN = %2.4E", MIN(tol, 0.01), cc, NN);
-  
+ logs_Write(0, "Minimal values of cc and NN (with precision %2.4E): \t cc = %2.4E, NN = %2.4E, max. amplitude sum = %2.4E", MIN(tol, 0.01), cc, NN, (*min_val));
+
  return res;
 }
 

@@ -183,8 +183,9 @@ int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int 
  
  logs_Write((step_number%mc_reporting_interval==0? 1 : 2), "Step %08i:\t X.top = %i, X.nel = %i, H.top = %i, H.nel = %i", step_number, X.top, X.nel, H.top, H.nel);
  
- check_stack_consistency(&X, "X");
- check_stack_consistency(&H, "H");
+     check_stack_consistency(&X, "X");
+     check_stack_consistency(&H, "H");
+ check_momentum_conservation(&X, "X");
  
  FETCH_ACTION(           create, 0, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
  FETCH_ACTION(      evolve_line, 1, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
@@ -199,7 +200,7 @@ int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int 
  return nact;
 }
 
-double max_ampl_sum()
+double f_max_ampl_sum()
 {
  int adata = -1;
  double ampl_sum = fabs(action_create_amplitude(&adata))        + 

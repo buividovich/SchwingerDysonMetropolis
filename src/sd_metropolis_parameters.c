@@ -6,7 +6,7 @@ double   p_plus                   = 0.5;     //Probability of the "Forward" move
 int      prod_mc_steps            = 10;      //Number of MC steps for production runs
 int      therm_mc_steps           = 0;       //Number of MC steps for thermalization
 int      mc_interval              = 1;       //Interval between the successive presumably uncorrelated measurements
-int      mc_reporting_interval    = 1;       //The interval at which the current state of the MC process is reported
+int      mc_reporting_interval    = 1000;    //The interval at which the current state of the MC process is reported
 char*    mc_stat_file             = NULL;    //File for the quantities characterizing the MC process itself
 char*    ns_history_file          = NULL;    //File for saving the MC history of ns
 

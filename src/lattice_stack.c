@@ -53,7 +53,6 @@ int   check_stack_consistency(t_lat_stack* lat_stack, const char* stack_name)
  if(my_nel != lat_stack->nel)
  {
   logs_WriteError("my_nel = %i, %s->nel = %i", my_nel, stack_name, lat_stack->nel);
-  system("PAUSE");
   res = -3;
  }; 
    

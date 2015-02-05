@@ -52,10 +52,15 @@ void init_parameters()
  if(param_auto_tuning)
  {
   cc = 1.0; NN = 1.0;
-  find_cc_NN_minimum(&max_ampl_sum, param_tuning_accuracy);
+  find_cc_NN_minimum(&f_max_ampl_sum, param_tuning_accuracy, &max_ampl_sum);
+  if(max_ampl_sum>0.0)
+  {
+   control_max_ampl_sum = 1;
+   max_ampl_sum_tol     = 0.001*max_ampl_sum;                   
+  };
   logs_Write(0, "Exact results are cc = %2.4E, NN = %2.4E\n", 2.0/sqrt(fabs(lambda)), 2.0/sqrt(fabs(lambda)));
  };
- check_cc_NN_minimum(&max_ampl_sum, 0.05);    
+ check_cc_NN_minimum(&f_max_ampl_sum, 0.05);    
 }
 
 void print_parameters()

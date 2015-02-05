@@ -9,6 +9,7 @@
 #include <clue_logs.h>
 
 #include "sd_metropolis_parameters.h"
+#include "sd_metropolis_statistics.h"
 #include "largeN_QFT_parameters.h"
 #include "lattice_stack.h"
 #include "actions.h"

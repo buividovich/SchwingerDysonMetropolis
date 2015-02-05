@@ -229,38 +229,8 @@ we can rewrite the above equations as
 \end{eqnarray}
 \end{widetext}
 
-Seemingly no way to perform stochastics at small $\lambda$ - $\kappa$ becomes too close to the critical value...
 
-\section*{Unitarity via scalar Lagrange multipliers}
-
-We consider the Gross-Witten unitary matrix model, defined by the partition function and the observables
-\begin{eqnarray}
-\label{GW_partition}
- \mathcal{Z} = \int\limits_{U\lr{N}} dg \expa{\frac{N}{\lambda}\tr\lr{g + g^{\dag}} } \\
-\label{GW_observables}
- G_n = \vev{\frac{1}{N} \tr{g^n}}
-\end{eqnarray}
-Schwinger-Dyson equations for the GW model have the following form:
-\begin{eqnarray}
-\label{GW_SD}
- G_1 = \frac{1}{\lambda} - \frac{1}{\lambda} G_2
- \nonumber \\
- G_2 = - G_1 G_1 + \frac{1}{\lambda} G_1 - \frac{1}{\lambda} G_3
- \nonumber \\
- G_n = - \sum\limits_{k=1}^{n-1} G_k G_{n-k} + \frac{1}{\lambda} G_{n-1} - \frac{1}{\lambda} G_{n+1}
-\end{eqnarray}
-
- We would like to reproduce these single-trace observables in a non-unitary matrix model, for which the unitarity conditions are implemented using the Lagrange multipliers $\xi_k$, $k = 1, 2, \ldots$:
-\begin{eqnarray}
-\label{GL_partition}
- \mathcal{Z} = \int\limits_{GL\lr{N}} dg \expa{\frac{N}{\lambda}\tr\lr{g + g^{\dag}} }
- \times \nonumber \\ \times
- \expa{ \sum\limits_k N \xi_k \lr{ \tr\lr{g g^{\dag}}^k - N}
- } .
-\end{eqnarray}
-For finite $N$, one should integrate all the $\xi_k$ over the imaginary axis. For infinite $N$, however, it often happens that $\xi_k$ have saddle points on the real axis, and therefore one should simply tune $\xi_k$ to these saddle points in order to get the correct result. Let us write SD equations for the above matrix model.
-
-\section*{$SU\lr{N}$ sigma-model: introduction}
+\section*{$SU\lr{N}$ sigma-model: strong-coupling expansion in momentum space}
 \label{sec:introduction}
 
  We study the theory defined by the integral over elements $g\lr{x}$ of $SU\lr{N}$, where $x$ labels different lattice sites. The partition function is:
@@ -301,481 +271,107 @@ From this equation we obtain the following set of Schwinger-Dyson equations:
 \label{SDs}
 \mathcal{G}\lr{x_1, y_1, \ldots, x_n, y_n}
 = %\nonumber\\ =
-\sum\limits_{A=2}^{n-1} \delta_{x_1, y_A} \, 
-\mathcal{G}\lr{x_A, y_1, \ldots, x_{A-1}, y_{A-1}}\, 
+\sum\limits_{A=2}^{n-1} \delta_{x_1, y_A} \,
+\mathcal{G}\lr{x_A, y_1, \ldots, x_{A-1}, y_{A-1}}\,
 \mathcal{G}\lr{x_{A+1}, y_{A+1}, \ldots, x_n, y_n}\,
 + \nonumber \\ +
 \delta_{x_1, y_1} \, \mathcal{G}\lr{x_2, y_2, \ldots, x_n, y_n}\,
 +
 \delta_{x_1, y_n} \, \mathcal{G}\lr{x_n, y_1, \ldots, x_{n-1}, y_{n-1}}\,
 - \nonumber \\ -
-\sum\limits_{A=2}^{n} \delta_{x_1, x_A} \, 
- \mathcal{G}\lr{x_1, y_1, \ldots, x_{A-1}, y_{A-1}}\, 
+\sum\limits_{A=2}^{n} \delta_{x_1, x_A} \,
+ \mathcal{G}\lr{x_1, y_1, \ldots, x_{A-1}, y_{A-1}}\,
  \mathcal{G}\lr{x_A, y_A, \ldots, x_n, y_n}\,
 - \nonumber \\ -
 \frac{1}{\lambda} D_{x_1 x} \mathcal{G}\lr{x, y_1, \ldots, x_n, y_n}
-+ 
++
 \frac{1}{\lambda} D_{x_1 x} \, \mathcal{G}\lr{x_1, x, x_1, y_1, \ldots, x_n, y_n}
 \end{eqnarray}
 
 Let us now define the correlators in the momentum space:
 \begin{eqnarray}
 \label{momentum_space_def}
-G\lr{p_1, q_1, \ldots, p_n, q_n} = \frac{1}{V^{2 n}} \,
+\mathcal{G}\lr{p_1, q_1, \ldots, p_n, q_n} = \frac{1}{V^{2 n}} \,
 \sum\limits_{x_1, y_1} \ldots \sum\limits_{x_n, y_n} \,
 \nonumber \\
 \expa{i \sum\limits_A p_A x_A + i \sum\limits_A q_A y_A} \,
-G\lr{x_1, y_1, \ldots, x_n, y_n}  ,
+\mathcal{G}\lr{x_1, y_1, \ldots, x_n, y_n}  ,
 \end{eqnarray}
-where $V$ is the total volume of space. In the momentum space the equations (\ref{SDs_n2_pcm_coord}), (\ref{SDs_pcm_coord}) read:
+where $V$ is the total volume of space. In the momentum space the equations (\ref{SDs_n2}), (\ref{SDs}) read:
 \begin{eqnarray}
-\label{SDs_n2_pcm_momentum}
-G\lr{p_1, q_1} = G_0\lr{p_1} \, V^{-1}\delta\lr{p_1 + q_1}
-+
-\frac{G_0\lr{p_1}}{\lambda} \,
-\sum\limits_{\tilde{p}, \tilde{q}, \tilde{p}_1}
-\delta\lr{p_1 - \tilde{p} - \tilde{q} - \tilde{p}_1} \,
-\lr{||\tilde{q}||^2 + \xi} G\lr{\tilde{p}, \tilde{q}, \tilde{p}_1, q_1}
+\label{SDs_n2_momentum}
+ \mathcal{G}\lr{p_1, q_1} = \lambda \, \frac{\mathcal{G}_0\lr{p_1} \delta\lr{p_1 + q_1}}{V}
+ +
+ \mathcal{G}_0\lr{p_1} \,
+\sum\limits_{\tilde{p}_1, \tilde{q}_1, \tilde{p}_2}
+\delta\lr{p_1, \tilde{p}_1 + \tilde{q}_1 + \tilde{p}_2} \,
+D\lr{\tilde{q}_1} \mathcal{G}\lr{\tilde{p}_1, \tilde{q}_1, \tilde{p}_2, q_1}
 \end{eqnarray}
 
 \begin{eqnarray}
 \label{SDs_pcm_momentum}
-G\lr{p_1, q_1, \ldots, p_n, q_n}
-= \nonumber \\ =
-G_0\lr{p_1} \, V^{-1}\delta\lr{p_1 + q_1} \, G\lr{p_2, q_2, \ldots, p_n, q_n}
-+
-G_0\lr{p_1} \, V^{-1}\delta\lr{p_1 + q_n} \, G\lr{p_n, q_1, p_2, q_2, \ldots, p_{n-1}, q_{n-1}}
-+ \nonumber \\ +
-\sum\limits_{A=2}^{n-1}
-G_0\lr{p_1} \, V^{-1}\delta\lr{p_1 + q_A} \,
-G\lr{p_A, q_1, p_2, q_2, \ldots, p_{A-1}, q_{A-1}} \,
-G\lr{p_{A+1}, q_{A+1}, \ldots, p_n, q_n}
-- \nonumber \\ -
-\sum\limits_{A=1}^{n} \sum\limits_{\tilde{p}_1, \tilde{p}_A}
-G_0\lr{p_1} \, V^{-1}\delta\lr{p_1 + p_A - \tilde{p}_1 - \tilde{p}_A} \,
-G\lr{\tilde{p}_1, q_1, p_2, q_2, \ldots, p_{A-1}, q_{A-1}} \,
-G\lr{\tilde{p}_A, q_A, \ldots, p_n, q_n}
-+ \nonumber \\ +
-\frac{G_0\lr{p_1}}{\lambda} \,
-\sum\limits_{\tilde{p}, \tilde{q}, \tilde{p}_1}
-\delta\lr{p_1 - \tilde{p} - \tilde{q} - \tilde{p}_1} \,
-\lr{||\tilde{q}||^2 + \xi} G\lr{\tilde{p}, \tilde{q}, \tilde{p}_1, q_1, p_2, q_2, \ldots, p_n, q_n}  ,
+ \mathcal{G}\lr{p_1, q_1, \ldots, p_n, q_n}
+ = \nonumber \\ =
+ \sum\limits_{A=2}^{n-1}
+ \lambda \, \frac{\mathcal{G}_0\lr{p_1} \, \delta\lr{p_1 + q_A}}{V} \,
+ \mathcal{G}\lr{    p_A,     q_1, \ldots, p_{A-1}, q_{A-1}}
+ \mathcal{G}\lr{p_{A+1}, q_{A+1}, \ldots,     p_n,    q_n }
+ + \nonumber \\ +
+ \lambda \, \frac{\mathcal{G}_0\lr{p_1} \, \delta\lr{p_1 + q_1}}{V} \,
+ \mathcal{G}\lr{p_2, q_2, \ldots, p_n, q_n}
+ + \nonumber \\ +
+ \lambda \, \frac{\mathcal{G}_0\lr{p_1} \, \delta\lr{p_1 + q_n}}{V} \,
+ \mathcal{G}\lr{p_n, q_1, p_2, q_2, \ldots, p_{n-1}, q_{n-1}}
+ - \nonumber \\ -
+ \lambda \, \frac{\mathcal{G}_0\lr{p_1}}{V} \,
+ \sum\limits_{A=2}^{n}
+ \sum\limits_{\tilde{p}_1 \tilde{p}_A} \delta\lr{p_1 + p_A, \tilde{p}_1 + \tilde{p}_A}
+ \mathcal{G}\lr{\tilde{p}_1, q_1, p_2, q_2, \ldots, p_{A-1}, q_{A-1}}
+ \mathcal{G}\lr{\tilde{p}_A, q_A,           \ldots, p_n, q_n}
+ + \nonumber \\ +
+ \mathcal{G}_0\lr{p_1}
+ \sum\limits_{\tilde{p}_1, \tilde{q}_1, \tilde{p_2}}
+ \delta\lr{p_1, \tilde{p}_1 + \tilde{q}_1 + \tilde{p}_2} D\lr{\tilde{q}_1}
+ \mathcal{G}\lr{\tilde{p}_1, \tilde{q}_1, \tilde{p}_2, q_1, p_2, q_2, \ldots, p_n, q_n}
 \end{eqnarray}
-where we have defined $||p||^2 = \sum\limits_{\mu} 4 \sin^2\lr{p_{\mu}/2}$ and
+where we have defined the effective propagator
 \begin{eqnarray}
 \label{free_prop_def}
-G_0\lr{p} = \lr{1 + \frac{\xi}{\lambda} + \frac{||p||^2}{\lambda}}^{-1} .
+\mathcal{G}_0\lr{p} = \lr{\lambda + D\lr{p}}^{-1} .
 \end{eqnarray}
 \end{widetext}
 For further convenience let us also define
 \begin{eqnarray}
 \label{prop_norm_def}
-\Sigma\lr{\lambda, \xi} = V^{-1} \sum\limits_{p} G_0\lr{p}
+\Sigma = V^{-1} \sum\limits_{p} \mathcal{G}_0\lr{p}
 \end{eqnarray}
 
 Let us now, as usual, try to solve this equation by stochastic methods. We assume that $G\lr{p_1, q_1, \ldots, p_n, q_n} = \mathcal{N} c^{n} \, w\lr{p_1, q_1, \ldots, p_n, q_n}$, where $w\lr{p_1, q_1, \ldots, p_n, q_n}$ is the probability to encounter the sequence of momenta $\lrc{p_1, q_1, \ldots, p_n, q_n}$ in a certain random process, for which the equations (\ref{SDs_n2_pcm_momentum}) and (\ref{SDs_pcm_momentum}) are the steady-state equations. This random process is then given by the following set of random steps (actions):
 
 \begin{description}
- \item[Create]: With probability $\frac{\Sigma\lr{\lambda, \xi}}{\mathcal{N} c}$ create a new pair of momenta $\lrc{p, -p}$, where $p$ is distributed with probability distribution which is proportional to $G_0\lr{p}$.
- \item[Add momenta]: With probability $\frac{2 \Sigma\lr{\lambda, \xi}}{c}$ add to the topmost sequence a pair of momenta $\lrc{p, -p}$ (distributed as for the previous action) either at the beginning of the sequence, or at the beginning and in the end: $\lrc{p_1, q_1, \ldots, p_n, q_n} \rightarrow \lrc{p, -p, p_1, q_1, \ldots, p_n, q_n}$ or $\lrc{p_1, q_1, \ldots, p_n, q_n} \rightarrow \lrc{p, q_1, \ldots, p_n, q_n, p_1, -p}$ (both choices are realized with equal probability).
+ \item[Create]: With probability $\frac{\Sigma}{\mathcal{N} c}$ create a new pair of momenta $\lrc{p, -p}$, where $p$ is distributed with probability distribution which is proportional to $G_0\lr{p}$.
+ \item[Add momenta]: With probability $\frac{2 \Sigma}{c}$ add to the topmost sequence a pair of momenta $\lrc{p, -p}$ (distributed as for the previous action) either at the beginning of the sequence, or at the beginning and in the end: $\lrc{p_1, q_1, \ldots, p_n, q_n} \rightarrow \lrc{p, -p, p_1, q_1, \ldots, p_n, q_n}$ or $\lrc{p_1, q_1, \ldots, p_n, q_n} \rightarrow \lrc{p, q_1, \ldots, p_n, q_n, p_1, -p}$ (both choices are realized with equal probability).
  \item[Join sequences with random momenta]: With probability $\frac{\mathcal{N} \Sigma\lr{\lambda, \xi}}{c}$ take two sequences $\lrc{p_1, q_1, \ldots, p_m, q_m}$ and $\lrc{\tilde{p}_1, \tilde{q}_1, \ldots, \tilde{p}_m, \tilde{q}_m}$ from the stack and join them with a pair of random momenta $\lrc{p, -p}$ (also distributed as in the previous actions) as $\lrc{p, q_1, \ldots, p_m, q_m, p_1, -p, \tilde{p}_1, \tilde{q}_1, \ldots, \tilde{p}_m, \tilde{q}_m}$.
  \item[Flip momenta]: With probability $\mathcal{N} \Sigma\lr{\lambda, \xi}$ take two sequences $\lrc{p_1, q_1, \ldots, p_m, q_m}$ and $\lrc{\tilde{p}_1, \tilde{q}_1, \ldots, \tilde{p}_m, \tilde{q}_m}$ and combine them into the new sequence $\lrc{p_1', q_1, \ldots, p_m, q_m, \lr{p_1 + \tilde{p}_1 - p_1'}, \tilde{p}_1, \tilde{q}_1, \ldots, \tilde{p}_m, \tilde{q}_m}$, where $p_1'$ again has the probability distribution which is proportional to $G\lr{p_1'}$.
  \item[Create vertex]: With probability $G_0\lr{Q} \lr{||q_1||^2 + \xi}/\lambda$ take the sequence $\lrc{p_1, q_1, p_2, q_2, \ldots, p_n, q_n}$ and replace it with the sequence $\lrc{Q, q_2, p_3, q_3, \ldots, p_n, q_n}$, where $Q = p_1 + q_1 + p_2$.
 \end{description}
 
- Taking now the supremum of the probability of the ``Create vertex'' action over all possible momenta, we can calculate the supremum of the total probability of all actions:
+\section{Some reference results for the Gross-Witten model}
+
+ If the operator $D_{x y}$ in (\ref{pf_def}) is defined as $D_{x y} = 2 D \delta_{x,y} - \sum\limits_{\mu=1}^{D} \lr{\delta_{x+\hat{\mu},y} + \delta_{x-\hat{\mu},y}}$, then for the lattice of two sites the nontrivial terms in the action are $2/\lambda \tr\lr{g^{\dag}_0 g_1} + c.c.$, therefore $\lambda_{GW}^{-1} = 2/\lambda$ and $\lambda_{GW} = \lambda/2$. The strong-coupling correlator is
 \begin{eqnarray}
-\label{probs_supremum1}
-P_{tot}
- =
-\Sigma\lr{\lambda} \, \lr{\frac{1}{\mathcal{N} c} + \frac{\mathcal{N}}{c} + \frac{2}{c} + \mathcal{N}}
-+
-\frac{4 D c}{\lambda + \Lambda_{IR}^2}  ,
+\label{gw_sc_correlator}
+ \mathcal{G}_{xy} = 
+ \begin{cases}
+                  1, & x = y \\
+  \lambda_{GW}^{-1}, & x \neq y \\
+ \end{cases}
 \end{eqnarray}
-where we assume that the momenta $p$ are such that the norm $||p||^2$ cannot take the values smaller than $\Lambda_{IR}^2$. The simplest way to achieve such constraint is to consider the principal chiral model with twisted boundary conditions for all dimensions. In this case, $\Lambda_{IR} \sim 1/L$, where $L$ is the lattice size. Minimizing trivially w.r.t. $\mathcal{N}$, we find that the allowed values of $\lambda$ are determined by the following inequality:
-\begin{eqnarray}
-\label{probs_supremum1}
-P_{tot}
- =
-\frac{2 \, \Sigma\lr{\lambda}}{c} \, \lr{\sqrt{1 + c} + 1}
-+
-\frac{4 D c}{\lambda + \Lambda_{IR}^2} < 1
-\end{eqnarray}
+The Fourier transform yields then $\mathcal{G}_{00} = \frac{1}{2} + \frac{1}{\lambda}$, $\mathcal{G}_{11} = \frac{1}{2} - \frac{1}{\lambda}$.
 
-\begin{eqnarray}
-\label{SDs_n2_pcm_momentum_temp}
-G\lr{p, q} = \red{\frac{\lambda}{\lambda + ||p||^2}} \, \delta\lr{p + q}
-+
-\nonumber \\
-+
-\red{\frac{1}{\lambda + ||p||^2}} \,
-\sum\limits_{\tilde{p}, \tilde{q}, \tilde{k}}
-\delta\lr{p - \tilde{p} - \tilde{q} - \tilde{k}} \,
-||\tilde{q}||^2 \, G\lr{\tilde{p}, \tilde{q}, \tilde{k}, q}
-\end{eqnarray}
-
-\begin{eqnarray}
-\label{SUN_pcm_pf}
-\mathcal{Z} = \int\limits_{SU\lr{N}} \mathcal{D}g\lr{x}
-\expa{\frac{N}{\lambda} \, \tr\lr{ \partial_{\mu} g^{\dag}\lr{x} \partial_{\mu} g\lr{x} }}
-\end{eqnarray}
-
-\section*{Lattice consisting of two points: Gross-Witten matrix model}
-\label{sec:Gross_Witten}
-
-Now the momentum $p$ has only one component, which takes the values $p = 0, 1$. The corresponding ``plane wave'' is just $\expa{i \pi p x}$, where $x = 0, 1$.
-Then $||0||^2 = 0$, $||1||^2 = 2$, and $\Sigma\lr{\lambda} = \frac{2 + 2 \lambda}{2 + \lambda}$.
-
-The basic steps of the algorithm are the following. First, we create a pair of momenta $\lrc{0, 0}$ with probability $\frac{2 + \lambda}{2 + 2 \lambda}$ or $\lrc{1, 1}$ with probability $\frac{\lambda}{2 + 2 \lambda}$. Then we perform the following steps:
-\begin{description}
- \item[Create]: With probability $\frac{\Sigma\lr{\lambda}}{\mathcal{N} c}$ push this new sequence to the stack.
- \item[Add momenta]: With probability $\frac{2 \Sigma\lr{\lambda}}{c}$ .
- \item[Join sequences with random momenta]: With probability $\frac{\mathcal{N} \Sigma\lr{\lambda}}{c}$ use this new sequence to join two existing sequences, as discussed above.
- \item[Flip momenta]: With probability $\mathcal{N} \Sigma\lr{\lambda}$ use this new sequence to flip momenta.
-\end{description}
-
-Finally, we can create the vertex by joining the momenta:
-\begin{description}
- \item[Create vertex]: If the sequence has the form $\lrc{p_1, 1, p_2, q_2, \ldots, p_n, q_n}$ then: if $p_1 + p_2 = 0$, with probability $\frac{2}{\lambda + 2}$ replace the sequence by $\lrc{1, q_2, \ldots, p_n, q_n}$. If $p_1 + p_2 = 1$, with probability $\frac{2}{\lambda}$ replace the sequence with $\lrc{0, q_2, \ldots, p_n, q_n}$.
-\end{description}
-
-
-
-
-\section*{Deprecated results}
-\label{sec:deprecated}
-
-Now let us set $A = A_1$, which leads to a more conventional form of Schwinger-Dyson equations. For the reasons which will become clear later, let us also add the term $\frac{\zeta_0}{\lambda} G\lr{A_1, B_1, \ldots, A_n, B_n}$ to the left-hand side of (\ref{SDs_pre_n2}), (\ref{SDs_pre}), and the term $\frac{\zeta_0}{\lambda} G\lr{A_1, A_1, A_1, B_1, \ldots, A_n, B_n}$ - to the right-hand side of (\ref{SDs_pre_n2}), (\ref{SDs_pre}). By definition (\ref{gf_def}), these terms are identically equal, and we do not change the equations (\ref{SDs_pre}) and (\ref{SDs_pre_n2}). As a result we get the following equations:
-Let us now rearrange all the factors and represent the equations (\ref{SDs_n2}), (\ref{SDs}) in the ``stochastic'' form:
-\begin{widetext}
-\begin{eqnarray}
-\label{SDs_n2_1}
-G\lr{A_1, B_1}
-=
-\frac{\lambda}{\lambda + \zeta_0} \, \delta\lr{A_1, B_1}
- + \nonumber \\ +
-\frac{1}{\lambda + \zeta_0} \sum\limits_C D_{A_1 C} \, G\lr{C, B_1}
- -
-\frac{1}{\lambda + \zeta_0} \sum\limits_C D_{A_1 C} \, G\lr{A_1, C, A_1, B_1}
- +
-\frac{\zeta_0}{\lambda + \zeta_0} G\lr{A_1, A_1, A_1, B_1}
-\end{eqnarray}
-
-\begin{eqnarray}
-\label{SDs_1}
-G\lr{A_1, B_1, \ldots, A_n, B_n}
-= \nonumber\\ =
-- \frac{\lambda}{\lambda + \zeta_0} \, \sum\limits_{k=2}^{n} G\lr{A_1, B_1, \ldots, A_{k-1}, B_{k-1}}\, G\lr{A_k, B_k, \ldots, A_n, B_n}\,
-\delta\lr{A_1, A_k}
-+ \nonumber \\ +
-\frac{\lambda}{\lambda + \zeta_0} \, \sum\limits_{k=1}^{n-1} G\lr{A_1, B_1, \ldots, A_k, B_k}\, G\lr{A_{k+1}, B_{k+1}, \ldots, A_n, B_n}\,
-\delta\lr{A_1, B_k}
-+ \nonumber \\ +
-\frac{\lambda}{\lambda + \zeta_0} \, G\lr{A_1, B_1, \ldots, A_n, B_n}\, \delta\lr{A_1, B_n}
-+
-\frac{1}{\lambda + \zeta_0}\, \sum \limits_C D_{A_1 C} \, G\lr{C, B_1, \ldots, A_n, B_n}
-+ \nonumber \\ +
-\frac{\zeta_0}{\lambda + \zeta_0}\, G\lr{A_1, A_1, A_1, B_1, \ldots, A_n, B_n}
--
-\frac{1}{\lambda + \zeta_0}\, \sum \limits_C D_{A_1 C} \, G\lr{A_1, C, A_1, B_1, \ldots, A_n, B_n}
-\end{eqnarray}
-Finally, we introduce the ``renormalized'' observables as $G\lr{A_1, B_1, \ldots, A_n, B_n} = \mathcal{N} c^{n} w\lr{A_1, B_1, \ldots, A_n, B_n}$, and write the equations (\ref{SDs_n2_1}), (\ref{SDs_1}) as:
-\begin{eqnarray}
-\label{SDs_n2_stoch}
-w\lr{A_1, B_1}
-=
-\frac{1}{\mathcal{N} c} \, \frac{\lambda}{\lambda + \zeta_0} \, \delta\lr{A_1, B_1}
- + \nonumber \\ +
-\frac{1}{\lambda + \zeta_0} \, \sum\limits_C D_{A_1 C} \, w\lr{C, B_1}
- -
-\frac{c}{\lambda + \zeta_0} \, \sum\limits_C D_{A_1 C} \, w\lr{A_1, C, A_1, B_1}
- +
-\frac{c \, \zeta_0}{\lambda + \zeta_0} \, w\lr{A_1, A_1, A_1, B_1}
-\end{eqnarray}
-
-\begin{eqnarray}
-\label{SDs_stoch}
-w\lr{A_1, B_1, \ldots, A_n, B_n}
-= \nonumber\\ =
-- \frac{\lambda \mathcal{N}}{\lambda + \zeta_0} \, \sum\limits_{k=2}^{n} w\lr{A_1, B_1, \ldots, A_{k-1}, B_{k-1}}\, w\lr{A_k, B_k, \ldots, A_n, B_n}\,
-\delta\lr{A_1, A_k}
-+ \nonumber \\ +
-\frac{\lambda \mathcal{N}}{\lambda + \zeta_0} \, \sum\limits_{k=1}^{n-1} w\lr{A_1, B_1, \ldots, A_k, B_k}\, w\lr{A_{k+1}, B_{k+1}, \ldots, A_n, B_n}\,
-\delta\lr{A_1, B_k}
-+ \nonumber \\ +
-\frac{\lambda}{\lambda + \zeta_0} \, w\lr{A_1, B_1, \ldots, A_n, B_n}\, \delta\lr{A_1, B_n}
-+
-\frac{1}{\lambda + \zeta_0}\, \sum \limits_C D_{A_1 C} \, w\lr{C, B_1, \ldots, A_n, B_n}
-+ \nonumber \\ +
-\frac{c \, \zeta_0}{\lambda + \zeta_0}\, w\lr{A_1, A_1, A_1, B_1, \ldots, A_n, B_n}
--
-\frac{c}{\lambda + \zeta_0}\, \sum \limits_C D_{A_1 C} \, w\lr{A_1, C, A_1, B_1, \ldots, A_n, B_n}
-\end{eqnarray}
-Following \cite{Buividovich:10:2}, we arrive at the following probabilistic algorithm. The configuration space is a space of sequences of indices $A, B$, equipped with an additional sign variable $s$: $\lrc{A_1, B_1, \ldots, A_n, B_n}$. At each discrete time step do one of the following:
-\begin{description}
-  \item[Create:] With probability $\frac{1}{\mathcal{N} c} \, \frac{\lambda \, M}{\lambda + \zeta_0}$ create a new sequence $\lrc{A, A, +}$, where $A$ is selected at random from $M$ possible values of the indices.
-  \item[Join:]
-  \begin{itemize}
-    \item If on the top of the stack there are two sequences $\lrc{A_1, B_1, \ldots, A_n, B_n, s_1}$ and $\lrc{C_1, D_1, \ldots, C_m, D_m, s_2}$ with $A_1 = B_n$ - pop these sequences from the stack, join them into a single sequence $\lrc{A_1, B_1, \ldots, A_n, B_n, C_1, D_1, \ldots, C_m, D_m, s_1 s_2}$ and push the result into the stack. The probability of this step is $\frac{\lambda \mathcal{N}}{\lambda + \zeta_0}$.
-    \item If on the top of the stack there are two sequences $\lrc{A_1, B_1, \ldots, A_n, B_n, s_1}$ and $\lrc{C_1, D_1, \ldots, C_m, D_m, s_2}$ with $A_1 = C_1$ - pop these sequences from the stack, join them into a single sequence $\lrc{A_1, B_1, \ldots, A_n, B_n, C_1, D_1, \ldots, C_m, D_m, - s_1 s_2}$ and push the result into the stack. The probability of this step is $\frac{\lambda \mathcal{N}}{\lambda + \zeta_0}$.
-  \end{itemize}
-  \item[Idle step:] If on the top of the stack there is a sequence $\lrc{A_1, B_1, \ldots, A_n, B_n}$ with $\lrc{A_1 = B_n}$ - with probability $\frac{\lambda}{\lambda + \zeta_0}$ do nothing.
-  \item[Evolve:] With probability $\frac{D_{A_1' A_1}}{\lambda + \zeta_0}$ change the first element $A_1$ of the topmost sequence $\lrc{A_1, B_1, \ldots, A_n, B_n, s}$ to $A_1'$.
-  \item[Chop off:]
-  \begin{itemize}
-    \item If in the topmost sequence $\lrc{A_1, B_1, \ldots, A_n, B_n, s}$ $A_1 = B_1 = A_2$ - change this sequence to $\lrc{A_2, B_2, \ldots, A_n, B_n, s}$ with probability $\frac{c \, \zeta_0}{\lambda + \zeta_0}$.
-    \item If in the topmost sequence $\lrc{A_1, B_1, \ldots, A_n, B_n, s}$ $A_1 = A_2$ - change this sequence to $\lrc{A_2, B_2, \ldots, A_n, B_n, -s}$ with probability $\frac{c \, D_{A_1 B_1}}{\lambda + \zeta_0}$.
-  \end{itemize}
-\end{description}
-
- The maximal total sum of the probabilities of all possible actions is:
-\begin{eqnarray}
-\label{P_tot_max}
-P_{tot} \le
-\frac{1}{\mathcal{N} c} \, \frac{\lambda \, M}{\lambda + \zeta_0}
-+
-\frac{2 \lambda \mathcal{N}}{\lambda + \zeta_0}
-+
-\frac{\lambda}{\lambda + \zeta_0}
-+
-\frac{\sup\lr{D_{A_1' A_1}}}{\lambda + \zeta_0}
-+
-\frac{c \sup\lr{D_{A_1' A_1}}}{\lambda + \zeta_0}
-+
-\frac{c \zeta_0}{\lambda + \zeta_0}
-\end{eqnarray}
-
-
-Let us now diagonalize the matrix $D_{AB}$, which we assume real, symmetric and invertible:
-\begin{eqnarray}
-\label{D_matrix_diag}
- \sum\limits_{B} D_{AB} \phi\lr{B ; \alpha} = \zeta_{\alpha}\, \phi\lr{A; \alpha}
-\nonumber \\
- \sum \limits_{A} \bar{\phi}\lr{A; \alpha} \, \phi\lr{A; \beta} = \delta\lr{\alpha, \beta}
-\nonumber \\
- \sum \limits_{\alpha} \bar{\phi}\lr{A; \alpha} \, \phi\lr{B; \alpha} = \delta\lr{A, B}
-\end{eqnarray}
-Let us now introduce an alternative set of single-trace observables by expanding the original observables in terms of the eigenfunctions of $D_{AB}$:
-\begin{eqnarray}
-\label{gf_redef1}
-G\lr{\alpha_1, \beta_1, \ldots, \alpha_n, \beta_n}
- =
-\sum \limits_{A_1, \ldots, A_n} \phi\lr{A_1, \alpha_1} \ldots \phi\lr{A_n, \alpha_n}
-\sum \limits_{B_1, \ldots, B_n} \bar{\phi}\lr{B_1, \beta_1} \ldots \bar{\phi}\lr{B_n, \beta_n}
-G\lr{A_1, B_1, \ldots, A_n, B_n}
-\nonumber \\
-\label{gf_redef2}
-G\lr{A_1, B_1, \ldots, A_n, B_n}
- =
-\sum \limits_{\alpha_1, \ldots, \alpha_n} \bar{\phi}\lr{A_1, \alpha_1} \ldots \bar{\phi}\lr{A_n, \alpha_n}
-\sum \limits_{\beta_1,  \ldots, \beta_n} \phi\lr{B_1, \beta_1} \ldots \phi\lr{B_n, \beta_n}
-G\lr{\alpha_1, \beta_1, \ldots, \alpha_n, \beta_n}
-\end{eqnarray}
-
-Let us now rewrite the equations (\ref{SDs_n2}), (\ref{SDs}) in terms of the functions (\ref{gf_redef1}):
-\begin{eqnarray}
-\label{SDs_n2_redef}
-G\lr{\alpha_1, \beta_1}
-=
-\frac{\lambda}{\lambda + \zeta_0 - \zeta_{\alpha_1}} \, \delta\lr{\alpha_1, \beta_1}
-+
-\sum \limits_{\alpha_0 \beta_0 \alpha_1'} \frac{\zeta_0 - \zeta_{\beta_0}}{\lambda + \zeta_0 - \zeta_{\alpha_1}}\,
-V\lr{\alpha_1, \alpha_0, \beta_0, \alpha_1'}
-G\lr{\alpha_0, \beta_0, \alpha_1', \beta_1}
-\end{eqnarray}
-
-\begin{eqnarray}
-\label{SDs_redef}
-G\lr{\alpha_1, \beta_1, \ldots, \alpha_n, \beta_n}
-= \nonumber \\
-- \frac{\lambda}{\lambda + \zeta_0 - \zeta_{\alpha_1}} \,
-\sum\limits_{k=2}^{n} \sum\limits_{\alpha_1' \alpha_k'}
-G\lr{\alpha_1', \beta_1, \ldots, \alpha_{k-1}, \beta_{k-1}}
-G\lr{\alpha_k', \beta_k, \ldots, \alpha_n, \beta_n}
-V\lr{\alpha_1, \alpha_1', \alpha_k, \alpha_k'}
-+ \nonumber \\ +
-\frac{\lambda}{\lambda + \zeta_0 - \zeta_{\alpha_1}} \,
-\sum\limits_{k=1}^{n-1} \sum\limits_{\alpha_1' \beta_k'}
-G\lr{\alpha_1', \beta_1, \ldots, \alpha_k, \beta_k'}
-G\lr{\alpha_{k+1}, \beta_{k+1}, \ldots, \alpha_n, \beta_n}
-V\lr{\alpha_1, \alpha_1', \beta_k', \beta_k}
-+ \nonumber \\ +
-\frac{\lambda}{\lambda + \zeta_0 - \zeta_{\alpha_1}} \,
-\sum\limits_{\alpha_1' \beta_n'}
-G\lr{\alpha_1', \beta_1, \ldots, \alpha_n, \beta_n'}
-V\lr{\alpha_1, \alpha_1', \beta_n', \beta_n}
-+ \nonumber \\ +
-\sum\limits_{\alpha_0 \beta_0 \alpha_1'} \frac{\zeta_0 - \zeta_{\beta_0}}{\lambda + \zeta_0 - \zeta_{\alpha_1}}\,
-V\lr{\alpha_1, \alpha_0, \beta_0, \alpha_1'}
-G\lr{\alpha_0, \beta_0, \alpha_1', \beta_1, \ldots, \alpha_n, \beta_n}
-\end{eqnarray}
-where we have defined the following ``vertex function'':
-\begin{eqnarray}
-\label{vertex_def}
-V\lr{\alpha, \beta, \gamma, \delta} =
-\sum\limits_{A}
-\phi\lr{A, \alpha} \bar{\phi}\lr{A, \beta}
-\phi\lr{A, \gamma} \bar{\phi}\lr{A, \delta}
-\end{eqnarray}
-Obviously, one has $V\lr{\alpha, \beta, \gamma, \delta} < 1$ for any $\alpha, \beta, \gamma, \delta$.
-Let us now introduce the ``renormalized'' observables, which will be estimated stochastically:
-\begin{eqnarray}
-\label{gf_renorm}
-G\lr{\alpha_1, \beta_1, \ldots, \alpha_n, \beta_n}
-=
-\mathcal{N} \, c^n \, w\lr{\alpha_1, \beta_1, \ldots, \alpha_n, \beta_n}
-\end{eqnarray}
-
-\begin{eqnarray}
-\label{SDs_n2_redef_renorm}
-w\lr{\alpha_1, \beta_1}
-=
-\frac{1}{\mathcal{N} c} \, \frac{\lambda}{\lambda + \zeta_0 - \zeta_{\alpha_1}} \, \delta\lr{\alpha_1, \beta_1}
-+
-\sum \limits_{\alpha_0 \beta_0 \alpha_1'} \frac{c\lr{\zeta_0 - \zeta_{\beta_0}}}{\lambda + \zeta_0 - \zeta_{\alpha_1}}\,
-V\lr{\alpha_1, \alpha_0, \beta_0, \alpha_1'}
-w\lr{\alpha_0, \beta_0, \alpha_1', \beta_1}
-\end{eqnarray}
-
-\begin{eqnarray}
-\label{SDs_redef_renorm}
-w\lr{\alpha_1, \beta_1, \ldots, \alpha_n, \beta_n}
-= \nonumber \\
-- \frac{\lambda \, \mathcal{N}}{\lambda + \zeta_0 - \zeta_{\alpha_1}} \,
-\sum\limits_{k=2}^{n} \sum\limits_{\alpha_1' \alpha_k'}
-V\lr{\alpha_1, \alpha_1', \alpha_k, \alpha_k'}
-w\lr{\alpha_1', \beta_1, \ldots, \alpha_{k-1}, \beta_{k-1}}
-w\lr{\alpha_k', \beta_k, \ldots, \alpha_n, \beta_n}
-+ \nonumber \\ +
-\frac{\lambda \, \mathcal{N}}{\lambda + \zeta_0 - \zeta_{\alpha_1}} \,
-\sum\limits_{k=1}^{n-1} \sum\limits_{\alpha_1' \beta_k'}
-V\lr{\alpha_1, \alpha_1', \beta_k', \beta_k}
-w\lr{\alpha_1', \beta_1, \ldots, \alpha_k, \beta_k'}
-w\lr{\alpha_{k+1}, \beta_{k+1}, \ldots, \alpha_n, \beta_n}
-+ \nonumber \\ +
-\frac{\lambda}{\lambda + \zeta_0 - \zeta_{\alpha_1}} \sum\limits_{\alpha_1' \beta_n'}
-V\lr{\alpha_1, \alpha_1', \beta_n', \beta_n}
-w\lr{\alpha_1', \beta_1, \ldots, \alpha_n, \beta_n'}
-+ \nonumber \\ +
-\sum\limits_{\alpha_0 \beta_0 \alpha_1'} \frac{c \, \lr{\zeta_0 - \zeta_{\beta_0}}}{\lambda + \zeta_0 - \zeta_{\alpha_1}}\,
-V\lr{\alpha_1, \alpha_0, \beta_0, \alpha_1'}
-w\lr{\alpha_0, \beta_0, \alpha_1', \beta_1, \ldots, \alpha_n, \beta_n}
-\end{eqnarray}
-Following the paper \cite{Buividovich:10:2}, we construct a stochastic algorithm for solving these equations. The configuration space of the random process is the stack of the sequences of indices $\lrc{\alpha_1, \beta_1, \ldots, \alpha_n, \beta_n, \pm}$ for $n \ge 1$ with an additional sign variable. The random process is specified by the following choice of probabilistic actions at each time step:
-\begin{description}
-  \item[Create:] With probability $\frac{1}{\mathcal{N} c} \frac{\lambda}{\lambda + \zeta_0 - \zeta_{\alpha}}$ push a new sequence $\lrc{\alpha, \alpha, +}$ to the stack.
-  \item[Join:]
-   \begin{itemize}
-     \item With probability $\frac{\lambda \mathcal{N}}{\lambda + \zeta_0 - \zeta_{\alpha_1'}} \, V\lr{\alpha_1', \alpha_1, \gamma_1', \gamma_1}$ pop the two sequences $\lrc{\alpha_1, \beta_1, \ldots, \alpha_n, \beta_n, \, s_1}$ and $\lrc{\gamma_1, \delta_1, \ldots, \gamma_m, \delta_m, \, s_2}$ and push a new sequence $\lrc{\alpha_1', \beta_1, \ldots, \alpha_n, \beta_n, \gamma_1', \delta_1, \ldots, \gamma_m, \delta_m, \, -s_1 s_2}$ to the stack.
-     \item With probability $\frac{\lambda \mathcal{N}}{\lambda + \zeta_0 - \zeta_{\alpha_1'}} \, V\lr{\alpha_1', \alpha_1, \beta_n, \beta_n'}$ pop the two sequences $\lrc{\alpha_1, \beta_1, \ldots, \alpha_n, \beta_n, \, s_1}$ and $\lrc{\gamma_1, \delta_1, \ldots, \gamma_m, \delta_m, \, s_2}$ and push a new sequence $\lrc{\alpha_1', \beta_1, \ldots, \alpha_n, \beta_n', \gamma_1, \delta_1, \ldots, \gamma_m, \delta_m, \, s_1 s_2}$ to the stack.
-   \end{itemize}
-  \item[Add:] With probability $\frac{\lambda \mathcal{N}}{\lambda + \zeta_0 - \zeta_{\alpha_1'}} \, V\lr{\alpha_1', \alpha_1, \beta_n, \beta_n'}$ replace the topmost sequence $\lrc{\alpha_1, \beta_1, \ldots, \alpha_n, \beta_n, \, s}$ with $\lrc{\alpha_1', \beta_1, \ldots, \alpha_n, \beta_n', \, s}$
-  \item[Create vertex:] With probability $\frac{c \lr{\zeta_0 - \zeta_{\beta_1}}}{\lambda + \zeta_0 - \zeta_{\alpha_2'}} \, V\lr{\alpha_2', \alpha_1, \beta_1, \alpha_2}$ pop a sequence $\lrc{\alpha_1, \beta_1, \ldots, \alpha_n, \beta_n}$ and push a sequence $\lrc{\alpha_2', \beta_2, \ldots, \alpha_n, \beta_n}$
-  \item[Restart:] Otherwise restart
-\end{description}
-
-Let us first consider the case where $D_{AC}$ is the lattice Laplacian on a $D$-dimensional torus of volume $V$:
-\begin{eqnarray}
-\label{latt_lapl_def}
-\Delta \phi\lr{x} = \sum \limits_{\mu = 1}^{D} \phi\lr{x \pm e_\mu} - 2 D \, \phi\lr{x}
-\end{eqnarray}
- The labels $A_1, B_1, \ldots$ now become the lattice coordinates $x_1, y_1, \ldots$, and the labels $\alpha_1, \beta_1, \ldots$ - the lattice momenta $p_1, q_1$, with $p_{\mu} \sim 2 \pi n/L_{\mu}$, with $n = 0, \ldots, L_{\mu}-1$. The normalized functions $\phi\lr{A, \alpha}$ and the vertex operators are now:
-\begin{eqnarray}
-\label{momenta_eigenfuncs}
-\phi\lr{k, x} = \frac{1}{\sqrt{V}}\, \expa{i k \cdot x}
-\\
-\label{momenta_vertex}
-V\lr{k_1, k_2, k_3, k_4} = V^{-1} \delta\lr{k_1 - k_2 + k_3 - k_4}
-\end{eqnarray}
-The eigenvalues of the lattice laplacian are $-4 \sum\limits_{\mu=1}^{D} \sin^2\lr{k_\mu/2}$.
-We are thus led to the following algorithm:
-\begin{description}
-  \item[Create:] With probability $\frac{1}{\mathcal{N} c} \frac{\lambda}{\lambda + \zeta_0 + 4 \sum \limits_{\mu} \sin^2\lr{k_{\mu}/2}}$ push a new sequence $\lrc{k, k, +}$ to the stack.
-  \item[Join:]
-   \begin{itemize}
-     \item With probability $\frac{\lambda \mathcal{N}}{\lambda + \zeta_0 + 4 \sum \limits_{\mu} \sin^2\lr{p_{1 \mu}'/2}} \, V^{-1}\, \delta\lr{p_1' - p_1 + k_1' - k_1}$ pop the two sequences $\lrc{p_1, q_1, \ldots, p_n, q_n, \, s_1}$ and $\lrc{k_1, l_1, \ldots, k_m, l_m, \, s_2}$ and push a new sequence $\lrc{p_1', q_1, \ldots, p_n, q_n, k_1', l_1, \ldots, k_m, l_m, \, -s_1 s_2}$ to the stack.
-     \item With probability $\frac{\lambda \mathcal{N}}{\lambda + \zeta_0 + 4 \sum \limits_{\mu} \sin^2\lr{p_{1 \mu}'/2}} \, V^{-1} \, \delta\lr{p_1' - p_1 + q_n - q_n'}$ pop the two sequences $\lrc{p_1, q_1, \ldots, p_n, q_n, \, s_1}$ and $\lrc{k_1, l_1, \ldots, k_m, l_m, \, s_2}$ and push a new sequence $\lrc{p_1', q_1, \ldots, p_n, q_n', k_1, l_1, \ldots, \gamma_m, \delta_m, \, s_1 s_2}$ to the stack.
-   \end{itemize}
-  \item[Add:] With probability $\frac{\lambda \mathcal{N}}{\lambda + \zeta_0 - \zeta_{\alpha_1'}} \, V^{-1} \, \delta\lr{p_1' - p_1 + q_n - q_n'}$ replace the topmost sequence $\lrc{p_1, p_1, \ldots, p_n, q_n, \, s}$ with $\lrc{p_1', q_1, \ldots, p_n, q_n', \, s}$
-  \item[Create vertex:] With probability $\frac{c \lr{\zeta_0 + 4 \sum\limits_{\mu} \sin^2\lr{q_{1 \mu}/2}}}{\lambda + \zeta_0 + 4 \sum \limits_{\mu} \sin^2\lr{p_{2 \mu}'/2} } \, V^{-1} \, \lr{p_2', p_1, q_1, p_2}$ pop a sequence $\lrc{p_1, q_1, \ldots, p_n, q_n}$ and push a sequence $\lrc{p_2', q_2, \ldots, p_n, q_n}$
-  \item[Restart:] Otherwise restart
-\end{description}
-Let us estimate the total sum of all the probabilities:
-\begin{itemize}
-    \item For all ``Create'' events: $\frac{1}{\mathcal{N}c} \frac{\lambda V}{\lambda + \zeta_0}$.
-    \item For all ``Join/change'' events: $\frac{3 \lambda \mathcal{N}}{\lambda + \zeta_0}$.
-    \item For the ``Create vertex'' event: $\frac{c \lr{\zeta_0 + 4 D}}{\lambda + \zeta_0}$.
-\end{itemize}
-Defining $c = \bar{c} V$, we obtain an estimate:
-\begin{eqnarray}
-\label{ptot}
-P_{tot} \le
-\end{eqnarray}
-
-\end{widetext}
-
-\section{Schwinger-Dyson equations for the $SU\lr{N}$ $\sigma$-model at finite $N$}
-\label{sec:finite_N}
-
-
-
-\section{Schwinger-Dyson equations for the Gross-Witten model and the uniqueness of their solutions}
-\label{sec:Gross_Witten}
-
-Partition function:
-\begin{eqnarray}
-\label{gw_pf}
-\mathcal{Z}\lr{\lambda} = \int \limits_{U\lr{N}} dg \, \expa{\frac{N}{\lambda}\, \tr\lr{g + g^{-1}} }
-\end{eqnarray}
-The observables of interest are:
-\begin{eqnarray}
-\label{gw_gf_def}
- G_n = \vev{\frac{1}{N}\, \tr g^n}
-\end{eqnarray}
-
-The Schwinger-Dyson equations read:
-\begin{widetext}
-\begin{eqnarray}
-\label{gw_sds_n1}
- G_1 + \frac{1}{\lambda}\, G_{2} - \frac{1}{\lambda} = 0
- \\
-\label{gw_sds}
- G_n + \sum \limits_{k=1}^{n-1} G_k \, G_{n-k} + \frac{1}{\lambda}\, G_{n+1} - \frac{1}{\lambda}\, G_{n-1} = 0, \quad n \ge 2
-\end{eqnarray}
-\end{widetext}
-
-\begin{widetext}
-Consider now the action which depends on $D$ $U\lr{N}$ variables $g_{\mu}$, $\mu = 1, \ldots, D$:
-\begin{eqnarray}
-\label{EKaction}
-S = \sum\limits_{\mu=1}^{D} \sum\limits_{\nu=1,\, \nu \neq \mu}^{D} \,
-\lr{
-\tr\lr{g_{\mu} g_{\nu} g_{\mu}^{\dag} g_{\nu}^{\dag} }
-+
-\tr\lr{g_{\nu} g_{\mu} g_{\nu}^{\dag} g_{\mu}^{\dag} }
-}
-\end{eqnarray}
-The Lie derivative of the action is:
-\begin{eqnarray}
-\label{EKaction_var}
-\nabla_{a}^{\nu} \, S =
-\frac{2 \, N}{\lambda} \sum \limits_{\mu \neq \nu}
-\lr{
-  \tr\lr{i T_a \, g_{\nu}         g_{\mu}        g_{\nu}^{\dag}  g_{\mu}^{\dag}}
-+ \tr\lr{i T_a \, g_{\nu}         g_{\mu}^{\dag} g_{\nu}^{\dag}  g_{\mu}}
-- \tr\lr{i T_a \, g_{\mu}^{\dag}  g_{\nu}        g_{\mu}         g_{\nu}^{\dag} }
-- \tr\lr{i T_a \, g_{\mu}         g_{\nu}        g_{\mu}^{\dag}  g_{\nu}^{\dag}  }
-}
-\end{eqnarray}
-\end{widetext}
-
-\begin{eqnarray}
-\label{partitions}
-\sum \limits_{k_1, \ldots, k_m = 0}^{+\infty} \, \delta\lr{s - \sum\limits_{A=1}^{m} k_A} = \frac{\lr{s+m-1}!}{s! \, \lr{m-1}!}
-\end{eqnarray}
 
 \begin{acknowledgments}
- I am grateful to Drs. M. I. Polikarpov, Yu. M. Makeenko, A. S. Gorsky, E. T. Akhmedov and N. V. Prokof'ev for interesting and stimulating discussions. I'd like also to thank Drs. F. Bruckmann and A. Schaefer for their kind hospitality at the University of Regensburg, where a part of this work was written. This work was partly supported by Grants RFBR Nos. 06-02-04010-NNIO-a, 08-02-00661-a, 06-02-17012, 09-02-00338-à and DFG-RFBR 436 RUS, a grant for scientific schools No. NSh-679.2008.2, by the Russian Federal Agency for Nuclear Power, and by personal grants from the ``Dynasty'' foundation and from the FAIR-Russia Research Center (FRRC).
+ This work was supported by the S.~Kowalevskaja award from the Alexander von Humboldt foundation.
 \end{acknowledgments}
 
 \bibliography{MyBibliography}

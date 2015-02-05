@@ -188,7 +188,7 @@ int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int 
 }
 
 //Max. sum of all amplitudes - for the tuning of cc and NN
-double max_ampl_sum()
+double f_max_ampl_sum()
 {
  int adata = -1;
  double ampl_sum = fabs(action_create_amplitude(&adata))        + 
