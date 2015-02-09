@@ -361,7 +361,7 @@ Let us now, as usual, try to solve this equation by stochastic methods. We assum
  If the operator $D_{x y}$ in (\ref{pf_def}) is defined as $D_{x y} = 2 D \delta_{x,y} - \sum\limits_{\mu=1}^{D} \lr{\delta_{x+\hat{\mu},y} + \delta_{x-\hat{\mu},y}}$, then for the lattice of two sites the nontrivial terms in the action are $2/\lambda \tr\lr{g^{\dag}_0 g_1} + c.c.$, therefore $\lambda_{GW}^{-1} = 2/\lambda$ and $\lambda_{GW} = \lambda/2$. The strong-coupling correlator is
 \begin{eqnarray}
 \label{gw_sc_correlator}
- \mathcal{G}_{xy} = 
+ \mathcal{G}_{xy} =
  \begin{cases}
                   1, & x = y \\
   \lambda_{GW}^{-1}, & x \neq y \\
@@ -369,6 +369,29 @@ Let us now, as usual, try to solve this equation by stochastic methods. We assum
 \end{eqnarray}
 The Fourier transform yields then $\mathcal{G}_{00} = \frac{1}{2} + \frac{1}{\lambda}$, $\mathcal{G}_{11} = \frac{1}{2} - \frac{1}{\lambda}$.
 
+$SU\lr{N=\infty}$ free algebra:
+\begin{eqnarray}
+\label{sun_free_algebra}
+ \mathcal{G}^{0}_{x_1 y_1} = \int\mathcal{D}g \frac{1}{N} \tr\lr{g_{x_1} g^{\dag}_{y_1}}
+ = \delta_{x_1 y_1}
+\nonumber \\
+ \mathcal{G}^{0}_{x_1 y_1 x_2 y_2} = \int\mathcal{D}g \frac{1}{N} \tr\lr{g_{x_1} g^{\dag}_{y_1} g_{x_2} g^{\dag}_{y_2}}
+ = \nonumber \\ =
+ \delta_{x_1 y_1} \delta_{x_2 y_2} + \delta_{x_1 y_2} \delta_{y_1 x_2} - \delta_{x_1 x_2} \delta_{x_1 y_1} \delta_{x_2 y_2}
+\end{eqnarray}
+
+In momentum space these free correlators read
+\begin{eqnarray}
+\label{sun_free_algebra_mspace}
+ \mathcal{G}^{0}_{p_1 q_1} = \frac{1}{V} \delta\lr{p_1 + q_1}
+\nonumber \\
+ \mathcal{G}^{0}_{p_1 q_1 p_2 q_2} =
+ \frac{1}{V^2} \delta\lr{p_1 + q_1} \delta\lr{p_2 + q_2}
+ + \nonumber \\ +
+ \frac{1}{V^2} \delta\lr{p_1 + q_2} \delta\lr{p_2 + q_1}
+ - \nonumber \\ -
+ \frac{1}{V^3} \delta\lr{p_1 + q_1 + p_2 + q_2}
+\end{eqnarray}
 
 \begin{acknowledgments}
  This work was supported by the S.~Kowalevskaja award from the Alexander von Humboldt foundation.
