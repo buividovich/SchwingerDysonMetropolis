@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <clue_utils.h>
 #include <clue_logs.h>
+#include <clue_io.h>
 
 #include "sd_metropolis.h"
 

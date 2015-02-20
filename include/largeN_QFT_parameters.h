@@ -2,6 +2,7 @@
 #define _LARGEN_QFT_PARAMETERS_H_
 
 #include <math.h>
+#include <limits.h>
 #include <clue_logs.h>
 #include <clue_utils.h>
 
@@ -18,11 +19,15 @@ extern int      max_stack_nel;            //Maximal number of elements in the st
 extern int      max_history_nel;          //Maximal number of elements in the stack containing the history of momenta contractions
 //Parameters of the statistical analysis of the MC data
 extern int      max_correlator_order;     //Maximal correlator order to trace
+extern int      min_observables_order;    //Minimal order of observables which are included into statistics in some formal expansion (e.g. SC/WC expansion)
+extern int      max_observables_order;    //Correspondingly, maximal order
 //Output files
 extern char*    observables_file;         //File for the expectation values of the correlators
 extern int      param_auto_tuning;        //Automatic tuning of transition amplitudes so that nAs are minimized
 extern double   param_tuning_accuracy;    //Accuracy of parameter tuning
 extern int      param_tuning_max_iter;    //Max. allowed number of iterations in param auto-tuning
+//In debug mode, we can also check the stack consistency at every step
+extern int      check_stack; 
 
 typedef double (*t_amplitude_sum)();
 
@@ -36,20 +41,23 @@ void init_lat_size_array();
 //int check_cc_NN();
 
 #define LARGEN_QFT_LONG_OPTIONS                                                      \
- {                   "lambda",  required_argument,                       NULL, 'A'}, \
- {                  "meff-sq",  required_argument,                       NULL, 'B'}, \
- {                       "cc",  required_argument,                       NULL, 'C'}, \
- {                       "NN",  required_argument,                       NULL, 'D'}, \
- {                      "DIM",  required_argument,                       NULL, 'E'}, \
- {                       "LT",  required_argument,                       NULL, 'F'}, \
- {                       "LS",  required_argument,                       NULL, 'G'}, \
- {            "max-stack-nel",  required_argument,                       NULL, 'H'}, \
- {          "max-history-nel",  required_argument,                       NULL, 'I'}, \
- {     "max-correlator-order",  required_argument,                       NULL, 'J'}, \
- {    "param-tuning-accuracy",  required_argument,                       NULL, 'K'}, \
- {    "param-tuning-max-iter",  required_argument,                       NULL, 'L'}, \
- {         "observables-file",  required_argument,                       NULL, 'M'}, \
- {     "no-param-auto-tuning",        no_argument,         &param_auto_tuning,   0}
+ {                     "lambda",  required_argument,                       NULL, 'A'}, \
+ {                    "meff-sq",  required_argument,                       NULL, 'B'}, \
+ {                         "cc",  required_argument,                       NULL, 'C'}, \
+ {                         "NN",  required_argument,                       NULL, 'D'}, \
+ {                        "DIM",  required_argument,                       NULL, 'E'}, \
+ {                         "LT",  required_argument,                       NULL, 'F'}, \
+ {                         "LS",  required_argument,                       NULL, 'G'}, \
+ {              "max-stack-nel",  required_argument,                       NULL, 'H'}, \
+ {            "max-history-nel",  required_argument,                       NULL, 'I'}, \
+ {       "max-correlator-order",  required_argument,                       NULL, 'J'}, \
+ {      "min-observables-order",  required_argument,                       NULL, 'K'}, \
+ {      "max-observables-order",  required_argument,                       NULL, 'L'}, \
+ {      "param-tuning-accuracy",  required_argument,                       NULL, 'M'}, \
+ {      "param-tuning-max-iter",  required_argument,                       NULL, 'N'}, \
+ {           "observables-file",  required_argument,                       NULL, 'O'}, \
+ {       "no-param-auto-tuning",        no_argument,         &param_auto_tuning,   0}, \
+ {             "no-stack-check",        no_argument,               &check_stack,   0}
 
 #define PARSE_LARGEN_QFT_OPTIONS                                         \
    case 'A':                                                             \
@@ -89,17 +97,23 @@ void init_lat_size_array();
     ASSERT(max_correlator_order<0);                                      \
    break;                                                                \
    case 'K':                                                             \
+    SAFE_SSCANF_BREAK(optarg,  "%i", min_observables_order);             \
+   break;                                                                \
+   case 'L':                                                             \
+    SAFE_SSCANF_BREAK(optarg,  "%i", max_observables_order);             \
+   break;                                                                \
+   case 'M':                                                             \
     SAFE_SSCANF_BREAK(optarg,  "%lf", param_tuning_accuracy);            \
     ASSERT(param_tuning_accuracy<0.0);                                   \
    break;                                                                \
-   case 'L':                                                             \
+   case 'N':                                                             \
     SAFE_SSCANF_BREAK(optarg,   "%i", param_tuning_max_iter);            \
     ASSERT(param_tuning_max_iter<1);                                     \
    break;                                                                \
-   case 'M':                                                             \
+   case 'O':                                                             \
     COPY_FILE_NAME(optarg, observables_file);                            \
    break;
 
-static const char largeN_QFT_short_option_list[] = "A:B:C:D:E:F:G:H:I:J:K:L:M:";
+static const char largeN_QFT_short_option_list[] = "A:B:C:D:E:F:G:H:I:J:K:L:M:N:O:";
 
 #endif

@@ -3,6 +3,11 @@
 t_lat_stack      X; //This stack is the current state of the system
 t_lat_stack      H; //This stack will contain the data related to the sequence of actions
 
+//Data for the formal counting of diagram orders
+int*             O      =        NULL; //Contains the orders of the diagrams in the stack
+int*            OH      =        NULL; //Stack-like structure to keep the history of diagram orders
+int             OH_top  =        0;    //Topmost element of the OH stack
+
 t_lat_propagator P;
 
 void init_actions()
@@ -26,17 +31,23 @@ void init_actions()
  //Initialize the lattice stack
  init_lat_stack(&X, DIM, max_stack_nel);
  init_lat_stack(&H, DIM, max_history_nel);
+ 
+ //Initializing the order counting
+ SAFE_MALLOC( O, int, max_stack_nel);
+ SAFE_MALLOC(OH, int, max_history_nel);
+ OH_top = 0;
 }
 
 void free_actions()
 {
- int i;
+ SAFE_FREE(O);
+ SAFE_FREE(OH);
  free_lat_stack(&X);
  free_lat_stack(&H);
  
  SAFE_FREE(action_collection_do);
  SAFE_FREE(action_collection_undo);
- for(i=0; i<action_collection_size; i++)
+ for(int i=0; i<action_collection_size; i++)
   SAFE_FREE(action_collection_name[i]);
  SAFE_FREE(action_collection_name); 
 }
@@ -51,10 +62,11 @@ DECLARE_ACTION_DO(create)
 {
  if(data_in == NULL)
  {
-  X.top = 0; //If called with NULL, should completely reset the state
-  X.nel = 0;
-  H.top = 0;
-  H.nel = 0;
+  X.top  = 0; //If called with NULL, should completely reset the state
+  X.nel  = 0;
+  H.top  = 0;
+  H.nel  = 0;
+  OH_top = 0;
  };
  
  RETURN_IF_FALSE(X.nel<X.max_nel-2, ERR_STACK_OVERFLOW);  
@@ -63,6 +75,8 @@ DECLARE_ACTION_DO(create)
  X.len[   X.top] = 2; //We push a pair of momenta on the top of the stack
  X.top ++;
  X.nel += 2;
+ 
+ O[X.top-1] = 0;
  
  rand_momentum(&P, STACK_EL(X, 0) );
  invert_momentum(  STACK_EL(X, 1), STACK_EL(X, 0));
@@ -139,13 +153,17 @@ DECLARE_ACTION_AMPLITUDE(evolve_vertex)
  int    Q[4];
  if(data_in==NULL || (*data_in)<0)
  {
-  return cc/(meff_sq + lambda)*(4.0*DIM + meff_sq);                 
+  double res = cc/(meff_sq + lambda);
+  if(fabs(4.0*DIM + meff_sq) >= fabs(meff_sq))
+   return res*(4.0*DIM + meff_sq);
+  else
+   return res*meff_sq;
  }
  else
   if(X.len[X.top-1]>=3)
   {
    add3momenta(Q, STACK_EL(X, 0), STACK_EL(X, 1), STACK_EL(X, 2));
-   return cc*lat_propagator(Q, meff_sq + lambda)*(lat_momentum_sq(Q) + meff_sq);
+   return cc*lat_propagator(Q, meff_sq + lambda)*(lat_momentum_sq(STACK_EL(X, 1)) + meff_sq);
   };
  return 0.0;
 }
@@ -170,6 +188,8 @@ DECLARE_ACTION_DO(evolve_vertex)
  X.len[X.top-1] -= 2;
  X.nel          -= 2;
  
+ O[X.top-1] ++;
+ 
  return ACTION_SUCCESS;
 }
 
@@ -177,6 +197,9 @@ DECLARE_ACTION_UNDO(evolve_vertex)
 {
  RETURN_IF_FALSE(           H.top>0, ERR_WRONG_STATE);
  RETURN_IF_FALSE( H.len[H.top-1]==2, ERR_WRONG_STATE);
+ RETURN_IF_FALSE(      O[X.top-1]>0, ERR_WRONG_STATE);
+ 
+ O[X.top-1] --;
  
  //Increase again the size of the topmost sequence
  X.len[X.top-1] += 2;
@@ -203,8 +226,13 @@ DECLARE_ACTION_AMPLITUDE(join)
 
 DECLARE_ACTION_DO(join)
 {
- RETURN_IF_FALSE(           X.top>1, ERR_WRONG_STATE);
- RETURN_IF_FALSE( X.nel<X.max_nel-2, ERR_STACK_OVERFLOW);
+ RETURN_IF_FALSE(                 X.top>1, ERR_WRONG_STATE);
+ RETURN_IF_FALSE(       X.nel<X.max_nel-2, ERR_STACK_OVERFLOW);
+ RETURN_IF_FALSE(  OH_top<max_history_nel, ERR_OTHER);
+ RETURN_IF_FALSE(               OH_top>=0, ERR_OTHER);
+ 
+ O[X.top-2] += O[X.top-1];
+ OH_PUSH(O[X.top-1]);
  
  X.len[X.top-2] += (X.len[X.top-1] + 2);
  //... and now we have to remember what was the length of both sequences in order to perform undo
@@ -227,7 +255,8 @@ DECLARE_ACTION_UNDO(join)
 {
  RETURN_IF_FALSE(                        (*data_in) >= 2, ERR_WRONG_DATA);
  RETURN_IF_FALSE(X.len[X.top-1] >= ((*data_in) + 2) +  2, ERR_WRONG_STATE);
- 
+ RETURN_IF_FALSE(                               OH_top>0, ERR_OTHER);
+  
  //First bringing the topmost sequence into the form which is easy to split = {_, _, p1, q1, ..., p_m, q_m, pt_1, qt_1, ..., pt_n, qt_n}
  assign_momentum(STACK_EL(X, 0), STACK_EL(X, (*data_in))); //now we have {p1, q1, ..., p_m, q_m, _, _, ...}
  
@@ -238,6 +267,10 @@ DECLARE_ACTION_UNDO(join)
  X.len[X.top-1] -= ((*data_in) + 2);
  X.len[X.top]    = (*data_in);
  X.start[X.top]  = X.start[X.top-1] + X.len[X.top-1];
+ 
+ OH_POP(O[X.top]);
+ O[X.top-1] -= O[X.top];
+ 
  X.top ++;
  X.nel -= 2;
  
@@ -255,14 +288,21 @@ DECLARE_ACTION_AMPLITUDE(flip_momenta)
 DECLARE_ACTION_DO(flip_momenta)
 {
  RETURN_IF_FALSE(X.top>1, ERR_WRONG_STATE);
+ RETURN_IF_FALSE( OH_top<max_history_nel, ERR_OTHER);
+ RETURN_IF_FALSE(              OH_top>=0, ERR_OTHER);
  
  //Combine the topmost sequences in the stack
  X.len[X.top-2] += X.len[X.top-1];
  //... and now we have to remember what was the length of both sequences in order to perform undo
  //... to this end we store X.seq_length[X.stack_top-1] in action_data_in
+ //... Diagram orders are also stored
  (*data_in) = X.len[X.top-1];
- X.top --;
  
+ O[X.top-2] += O[X.top-1];
+ OH_PUSH(O[X.top-1]);
+ 
+ X.top --;
+  
  //Save p_1 to the history stack
  H.start[ H.top] = (H.top>0? H.start[H.top-1] + H.len[H.top-1] : 0);
  H.len[   H.top] = 1; //We push just one momentum on the top of the stack
@@ -284,6 +324,7 @@ DECLARE_ACTION_UNDO(flip_momenta)
  RETURN_IF_FALSE(         H.len[H.top-1]==1, ERR_WRONG_STATE);
  RETURN_IF_FALSE(             *(data_in)>=2, ERR_WRONG_DATA);
  RETURN_IF_FALSE( X.len[X.top-1]>(*data_in), ERR_WRONG_STATE);
+ RETURN_IF_FALSE(                  OH_top>0, ERR_OTHER);
  
  //First bringing the sequences back to the form p1, q1, ..., p_m, q_m, pt_1, pt_2, ..., qt_1, qt_2
  addto_momentum(STACK_EL(X, (*data_in)), +1, STACK_EL(X, 0));
@@ -298,6 +339,10 @@ DECLARE_ACTION_UNDO(flip_momenta)
  X.len[X.top-1] -= (*data_in);
  X.start[X.top] = X.start[X.top-1] + X.len[X.top-1];
  X.len[X.top]   = (*data_in);
+ 
+ OH_POP(O[X.top]);
+ O[X.top-1] -= O[X.top];
+ 
  X.top ++;
  
  return ACTION_SUCCESS;
@@ -311,8 +356,12 @@ int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int 
  
  logs_Write((step_number%mc_reporting_interval==0? 1 : 2), "Step %08i:\t X.top = %i, X.nel = %i, H.top = %i, H.nel = %i", step_number, X.top, X.nel, H.top, H.nel);
  
- check_stack_consistency(&X, "X");
- check_stack_consistency(&H, "H");
+ if(check_stack)
+ {
+  check_stack_consistency(    &X, "X");
+  check_stack_consistency(    &H, "H");
+  check_momentum_conservation(&X, "X");
+ }; 
  
  FETCH_ACTION(         create, 0, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
  FETCH_ACTION(    evolve_line, 1, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);

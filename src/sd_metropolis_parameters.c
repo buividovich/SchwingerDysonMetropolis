@@ -8,6 +8,7 @@ int      therm_mc_steps           = 0;       //Number of MC steps for thermaliza
 int      mc_interval              = 1;       //Interval between the successive presumably uncorrelated measurements
 int      mc_reporting_interval    = 1000;    //The interval at which the current state of the MC process is reported
 char*    mc_stat_file             = NULL;    //File for the quantities characterizing the MC process itself
+char*    action_stat_file         = NULL;    //Statistics on different actions
 char*    ns_history_file          = NULL;    //File for saving the MC history of ns
 
 void print_metropolis_parameters()
@@ -15,13 +16,15 @@ void print_metropolis_parameters()
  logs_Write(0, "\tPARAMETERS OF THE METROPOLIS ALGORITHM");
  logs_WriteParameter(                  "Max. recursion depth",     "%i",   max_recursion_depth);
  logs_WriteParameter(           "Probability of forward move", "%2.4lf",   p_plus);
- logs_WriteParameter(     "Number of MC steps for production",     "%i",   prod_mc_steps);
- logs_WriteParameter( "Number of MC steps for thermalization",     "%i",   therm_mc_steps);
+ logs_WriteParameter(     "Number of MC steps for production",     "%i (%i%% of INT_MAX)",    prod_mc_steps, (int)(round(100.0*(double)prod_mc_steps/(double)INT_MAX)) );
+ logs_WriteParameter( "Number of MC steps for thermalization",     "%i (%i%% of INT_MAX)",   therm_mc_steps, (int)(round(100.0*(double)therm_mc_steps/(double)INT_MAX)) );
  logs_WriteParameter(         "Interval between measurements",     "%i",   mc_interval);
  logs_WriteParameter(           "MC state reporting interval",     "%i",   mc_reporting_interval);
  logs_WriteParameter(                      "Logs noise level",     "%i",   logs_noise_level);
  if(mc_stat_file!=NULL)
   logs_WriteParameter(                   "MC statistics file",     "%s",   mc_stat_file);
+ if(action_stat_file!=NULL)
+  logs_WriteParameter(               "Action statistics file",     "%s",   action_stat_file); 
  if(ns_history_file!=NULL)
   logs_WriteParameter(         "Recursion depth history file",     "%s",   ns_history_file);
 }

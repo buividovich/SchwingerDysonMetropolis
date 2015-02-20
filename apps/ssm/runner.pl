@@ -1,39 +1,77 @@
-$BaseDir    = "G:\\LAT\\sd_metropolis\\apps\\hmm"; 
-$TmpDir     = "C:\\Temp";
-$DataDir    = "G:\\LAT\\sd_metropolis\\data\\hmm";
+#!/usr/bin/perl
 
-$executable = "G:\\LAT\\sd_metropolis\\bin\\hmm.exe";
+require "../clue/os_profile.pl";
 
-system("cd $BaseDir\\..\\..");
-system("make hmm");
-system("cd $BaseDir");
+system("cd $GlobalCodeDir/sd_metropolis/");
 
-$lambda_min = -0.09;
-$lambda_max =  0.09;
-$dlambda    =  0.002;
+$AppDir     = "$GlobalCodeDir/sd_metropolis/apps/ssm"; 
+$DataDir    = "$GlobalDataDir/sd_metropolis/data/ssm";
+$TmpDir     = "$GlobalCodeDir/sd_metropolis/tmp";
 
-$nmc  = 5000000;
-$maxn = 20000;
+$executable = "$GlobalCodeDir/sd_metropolis/bin/ssm";
 
-$mc_stat_file = "$DataDir\\mc_stat_nmc$nmc.dat";
-system("rm -f -v $mc_stat_file");
+system("make ssm");
+system("$OutputCleanupCmd");
 
-$observables_file = sprintf("%s\\G_nmc%i.dat", $DataDir, $nmc);
-system("rm -f -v $observables_file");
+$lambda_min = 57.5;
+$lambda_max = 155.0;
 
-for($lambda=$lambda_min; $lambda<=$lambda_max; $lambda += $dlambda)
+if($myOS eq "Linux")
 {
- $ns_history_file  =  sprintf("%s\\ns_history_l%2.4f_nmc%i.dat", $TmpDir, $lambda, $nmc);
-
- $cmd = $executable;
- $cmd = $cmd." --lambda              $lambda";
- $cmd = $cmd." --prod-mc-steps       $nmc";
- $cmd = $cmd." --max-recursion-depth $maxn";
- $cmd = $cmd." --mc-stat-file        $mc_stat_file";
- $cmd = $cmd." --observables-file    $observables_file";
- $cmd = $cmd." --ns-history-file     $ns_history_file";
- $cmd = $cmd." --logs-noise-level         0";
- $cmd = $cmd." --mc-reporting-interval    50000";
- 
- system("$cmd");
+ $dlambda    = 2.5;
+ $nmc  = 2000000000;
+ $maxn = 20000;
+ @masses = (-2.0); 
+}
+else
+{
+ $dlambda    = 5.0;
+ $nmc  = 20000000;
+ $maxn = 20000;
+ @masses = (-2.1, -2.0, -1.9);
 };
+
+foreach $meff_sq (@masses)
+{
+ $mc_reporting_interval = int($nmc/100);
+
+ $suffix0 = sprintf("m%2.4f_nmc%i", $meff_sq, $nmc);
+
+ $mc_stat_file = "$DataDir/mc_stat_$suffix0.dat";
+ system("rm -f -v $mc_stat_file");
+
+ $action_stat_file = "$DataDir/action_stat_$suffix0.dat";
+ system("rm -f -v $action_stat_file");
+
+ $observables_file = "$DataDir/G_$suffix0.dat";
+ system("rm -f -v $observables_file");
+
+ for($lambda=$lambda_min; $lambda<=$lambda_max; $lambda += $dlambda)
+ {
+  $suffix1 = sprintf("%s_l%2.4f", $suffix0, $lambda);
+  $job_id  = $suffix1;
+ 
+  $cmd = $executable;
+  $cmd = $cmd." --lambda                   $lambda";
+  $cmd = $cmd." --meff-sq                  $meff_sq";
+  $cmd = $cmd." --prod-mc-steps            $nmc";
+  $cmd = $cmd." --max-recursion-depth      $maxn";
+  $cmd = $cmd." --mc-stat-file             $mc_stat_file";
+  $cmd = $cmd." --action-stat-file         $action_stat_file";
+  $cmd = $cmd." --observables-file         $observables_file";
+  $cmd = $cmd." --logs-noise-level         1";
+  $cmd = $cmd." --mc-reporting-interval    $mc_reporting_interval";
+  
+  if($myOS eq "Linux")
+  {
+   $cmd = $cmd." --no-stack-check ";
+   $cmd = $cmd." --no-ansi-colors ";
+   $cmd = $cmd." --print-errors-to-stderr ";
+  };
+ 
+  run_command($job_id, $cmd, "short", "$TmpDir");
+ };
+};
+
+system("$QueueWatchCmd");
+

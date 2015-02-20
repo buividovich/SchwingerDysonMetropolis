@@ -18,10 +18,10 @@ set style line 15 lt 2 lc rgb '#FF00FF' lw 8 pt 13
 set style line 16 lt 2 lc rgb '#00FFFF' lw 8 pt 15
 set style line 17 lt 2 lc rgb '#888888' lw 8 pt 1
 
-MC_STAT_FILES = system("ls mc_stat_nmc*.dat");
+MC_STAT_FILES = system("ls mc_stat*.dat");
 NFILES        = words(MC_STAT_FILES)
 FILE(i)       = word(MC_STAT_FILES, i);
-LABEL(i)      = substr(FILE(i), 11)
+LABEL(i)      = FILE(i)[9:strstrt(FILE(i), ".dat")-1]
 
 set out    'G:\\LAT\\sd_metropolis\\plots\\'.app_name.'\\mean_recursion_depth.eps'
 set logscale y
@@ -30,13 +30,13 @@ set xlabel "{/Symbol l}"
 set ylabel "Mean recursion depth"
 plot \
 for [i=1:NFILES] \
-FILE(i) using ($1):($8) title FILE(i) with lines ls 2 
+FILE(i) using ($1):($8) title LABEL(i) with points ls i 
 
 set out    'G:\\LAT\\sd_metropolis\\plots\\'.app_name.'\\mean_sign.eps'
-set logscale y
-set key right top
+unset logscale y
+set key left top
 set xlabel "{/Symbol l}"
 set ylabel "Mean sign (over all observables)"
 plot \
 for [i=1:NFILES] \
-FILE(i) using ($1):($12) title FILE(i) with lines ls 2 
+FILE(i) using ($1):($12) title LABEL(i) with points ls i 

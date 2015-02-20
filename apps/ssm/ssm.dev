@@ -1,7 +1,7 @@
 [Project]
 FileName=ssm.dev
 Name=ssm
-UnitCount=31
+UnitCount=33
 Type=1
 Ver=1
 ObjFiles=
@@ -110,9 +110,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit32]
-FileName=parameters.c
+FileName=..\..\..\clue\src\clue_io.c
 CompileCpp=0
-Folder=hmm
+Folder=clue_src
 Compile=1
 Link=1
 Priority=1000
@@ -120,9 +120,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit33]
-FileName=parameters.h
+FileName=..\..\..\clue\include\clue_io.h
 CompileCpp=0
-Folder=hmm
+Folder=clue_include
 Compile=1
 Link=1
 Priority=1000

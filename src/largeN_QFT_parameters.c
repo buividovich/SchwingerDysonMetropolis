@@ -12,11 +12,17 @@ int      LS                       = 2;        //Spatial size of the system
 int      max_stack_nel            = 10000;    //Maximal number of elements in the stack characterizing the system state
 int      max_history_nel          = 10000;    //Maximal number of elements in the stack containing the history of momenta contractions
 int      max_correlator_order     = 5;        //Maximal correlator order to trace
+int      min_observables_order    = 0;        //Minimal order of observables which are included into statistics in some formal expansion (e.g. SC/WC expansion)
+int      max_observables_order    = INT_MAX;  //Correspondingly, maximal order
 //Output files
 char*    observables_file         = NULL;     //File for the expectation values of the correlators
+//Parameter tuning parameters
 int      param_auto_tuning        = 1;        //Automatic tuning of transition amplitudes so that nAs are minimized
 double   param_tuning_accuracy    = 0.000001; //Accuracy of parameter auto-tuning
 int      param_tuning_max_iter    = 1000;     //Max. allowed number of iterations in param auto-tuning
+//In debug mode, we can also check the stack consistency at every step
+int      check_stack              = 1;
+
 
 void print_largeN_QFT_parameters()
 {
@@ -25,7 +31,6 @@ void print_largeN_QFT_parameters()
  logs_WriteParameter(                                    "LT",       "%i",      LT);
  logs_WriteParameter(                                    "LS",       "%i",      LS);
  logs_WriteParameter(                                "lambda",    "%2.4E",      lambda);
- if(fabs(meff_sq)>0.0)
  logs_WriteParameter(          "Square of the effective mass",    "%2.4E",      meff_sq);
  logs_WriteParameter(                                    "cc", "%2.4E %s",      cc, (param_auto_tuning? "(Automatically tuned)" : ""));
  logs_WriteParameter(                                    "NN", "%2.4E %s",      NN, (param_auto_tuning? "(Automatically tuned)" : ""));
@@ -35,8 +40,11 @@ void print_largeN_QFT_parameters()
  logs_WriteParameter(        "Max. iterations of auto-tuning",       "%i",      param_tuning_max_iter);
  };
  logs_WriteParameter(               "Max.correlator to trace",       "%i",      max_correlator_order);
+ logs_WriteParameter(                 "Min.observables order",       "%i",      min_observables_order);
+ logs_WriteParameter(                 "Max.observables order",       "%i",      max_observables_order);
  logs_WriteParameter(                         "max_stack_nel",       "%i",      max_stack_nel);
  logs_WriteParameter(                       "max_history_nel",       "%i",      max_history_nel);
+ logs_WriteParameter( "Check stack consistency at every step",       "%s",      (check_stack? "YES" : "NO"));
  if(observables_file!=NULL)
  logs_WriteParameter(                      "Observables file",       "%s",      observables_file);
 }

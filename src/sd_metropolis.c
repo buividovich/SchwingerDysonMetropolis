@@ -5,7 +5,7 @@ t_action*            action_collection_do        =   NULL;
 t_action*            action_collection_undo      =   NULL;
 t_action_amplitude*  action_collection_amplitude =   NULL;
 char**               action_collection_name      =   NULL;
-int                  action_collection_size      =   NULL;
+int                  action_collection_size      =   0;
 t_action             state_initializer           =   NULL;
 t_action_fetcher     action_fetcher              =   NULL;
 
@@ -65,7 +65,7 @@ int   metropolis_step()
  
  if(ns>=max_recursion_depth-1)
  {
-  logs_WriteError("Overflow detected - size of action_history is larger than the allocated memory!!! Resetting the state of the system!!!");
+  logs_WriteError("Step %08i:\tOverflow detected - size of action_history is larger than the allocated memory!!! Resetting the state of the system!!!", step_number);
   ns = 0;
   state_initializer(NULL);                           
  };
@@ -83,7 +83,7 @@ int   metropolis_step()
  {
   logs_Write(3, "Fetched the following action amplitudes at step %i: ", step_number);
   for(iaction=0; iaction<n_actions; iaction++)
-   logs_Write(3, "Action %i: \t ampl = %2.4E, action_data_in = %i", action_list[iaction].action_id, amplitude_list[iaction], action_list[iaction].action_data_in);
+   logs_Write(3, "Action %s [id = %i]: \t ampl = %2.4E, action_data_in = %i", action_collection_name[action_list[iaction].action_id], action_list[iaction].action_id, amplitude_list[iaction], action_list[iaction].action_data_in);
  }; 
  
  nA[ns] = 0.0;
@@ -108,14 +108,14 @@ int   metropolis_step()
    //Choose at random which action to perform
    todo = rand_choice(probability_list, n_actions);
    //Perform the selected action
-   logs_Write(2, "Action %i selected by rand_choice...", todo);
+   logs_Write(2, "Action %i [%s, id = %i] selected by rand_choice...", todo, action_collection_name[action_list[todo].action_id], action_list[todo].action_id);
    if(action_list[todo].action_id<action_collection_size)
    {
     res = (action_collection_do[action_list[todo].action_id])(&(action_list[todo].action_data_in));
     if(abs(res)==ACTION_SUCCESS)
     {
      //Write to the log
-     logs_Write((step_number%mc_reporting_interval==0? 1 : 2), "Step %08i:\t Performed action %i, action_data_in = %i, ns = %i, nA[ns] = %2.4lf", step_number, action_list[todo].action_id, action_list[todo].action_data_in, ns, nA[ns]);
+     logs_Write((step_number%mc_reporting_interval==0? 1 : 2), "Step %08i:\t Performed action %s [id = %i], action_data_in = %i, ns = %i, nA[ns] = %2.4lf", step_number, action_collection_name[action_list[todo].action_id], action_list[todo].action_id, action_list[todo].action_data_in, ns, nA[ns]);
      //Increase the order counter 
      ns++;
      //...save it to the history
@@ -127,12 +127,12 @@ int   metropolis_step()
     };
     if(res==ERR_HISTORY_OVERFLOW || res==ERR_STACK_OVERFLOW)
     {
-     logs_WriteError("Action %i with action_data_in %i caused %s overflow at mc step %i, resetting the state of the system...", action_list[todo].action_id, action_list[todo].action_data_in, (res==ERR_HISTORY_OVERFLOW? "history" : "state"), step_number);
+     logs_WriteError("Action %s [id = %i] with action_data_in %i caused %s overflow at mc step %i, resetting the state of the system...", action_collection_name[action_list[todo].action_id], action_list[todo].action_id, action_list[todo].action_data_in, (res==ERR_HISTORY_OVERFLOW? "history" : "state"), step_number);
      ns = 0;
      state_initializer(NULL);
     };
     if(res==ERR_WRONG_STATE)
-     logs_WriteError("Attempted to apply action %i with action_data_in %i to the improper system state, nothing was really done...", action_list[todo].action_id, action_list[todo].action_data_in); 
+     logs_WriteError("Attempted to apply action %s [id = %i] with action_data_in %i to the improper system state, nothing was really done...", action_collection_name[action_list[todo].action_id], action_list[todo].action_id, action_list[todo].action_data_in); 
    } 
    else
    {
@@ -150,18 +150,18 @@ int   metropolis_step()
    {
     accepted = 1;
     //Undo the last action!!!
-    logs_Write((step_number%mc_reporting_interval==0? 1 : 2), "Step %08i:\t Undoing the action %i, action_data_in = %i, ns = %i, nA[ns-1] = %2.4lf", step_number, action_history[ns].action_id, action_history[ns].action_data_in, ns, nA[ns-1]);
+    logs_Write((step_number%mc_reporting_interval==0? 1 : 2), "Step %08i:\t Undoing the action %s [id = %i], action_data_in = %i, ns = %i, nA[ns-1] = %2.4lf", step_number, action_collection_name[action_history[ns].action_id], action_history[ns].action_id, action_history[ns].action_data_in, ns, nA[ns-1]);
     if(action_history[ns].action_id<action_collection_size)
     {
      res = (action_collection_undo[action_history[ns].action_id])(&(action_history[ns].action_data_in));
      if(res==ERR_HISTORY_OVERFLOW || res==ERR_STACK_OVERFLOW)
      {
-      logs_WriteError("Undoing action %i with action_data_in %i caused %s overflow at mc step %i, resetting the state of the system...", action_history[ns].action_id, action_history[ns].action_data_in, (res==ERR_HISTORY_OVERFLOW? "history" : "state"), step_number);
+      logs_WriteError("Undoing action %s [id = %i] with action_data_in %i caused %s overflow at mc step %i, resetting the state of the system...", action_collection_name[action_history[ns].action_id], action_history[ns].action_id, action_history[ns].action_data_in, (res==ERR_HISTORY_OVERFLOW? "history" : "state"), step_number);
       ns = 0;
       state_initializer(NULL);
      };
      if(res==ERR_WRONG_STATE)
-      logs_WriteError("Attempted to undo action %i with action_data_in %i from the improper system state, nothing was really done...", action_history[ns].action_id, action_history[ns].action_data_in);
+      logs_WriteError("Attempted to undo action %s [id = %i] with action_data_in %i from the improper system state, nothing was really done...", action_collection_name[action_history[ns].action_id], action_history[ns].action_id, action_history[ns].action_data_in);
     } 
     else
     {

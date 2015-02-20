@@ -77,29 +77,41 @@ void process_mc_stat(const char* prefix)
  for(int i=0; i<action_collection_size; i++)
   action_counter_total += action_counter[i];
  
+ char* act_stat_str = NULL;
+ sprintf_append(&act_stat_str, "%s ", prefix);
  logs_Write(0, "\tFACTUAL PROBABILITIES OF ACTIONS (over %i calls in %i mc steps): ",  action_counter_total, nmc);
  for(int i=0; i<action_collection_size; i++)
  {
   double act_prob = (double)(action_counter[i])/(double)action_counter_total;
   logs_Write(0, "   %30s [id = %i]: \t %2.4E \t (%02i%% of all actions, %i calls)", action_collection_name[i], i, act_prob, (int)(round(100.0*act_prob)), action_counter[i]);
- }; 
+  sprintf_append(&act_stat_str, "%16s %2.4E ", action_collection_name[i], act_prob);
+ };
+ sprintf_append(&act_stat_str, "\n");
+ if(action_stat_file!=NULL)
+  safe_append_str_to_file(action_stat_file, act_stat_str);
+ SAFE_FREE(act_stat_str); 
    
  logs_Write(0, "\n");
  //Saving the statistical characteristics of the MC process
  if(mc_stat_file!=NULL)
  {
-  FILE *f = fopen(mc_stat_file, "a");
-  fprintf(f, "%s %2.4E %2.4E %2.4E %2.4E %2.4E %2.4E\n", prefix, acceptance_rate, mean_recursion_depth, mean_nA, err_nA, maxnA, mean_sign);
-  fclose(f);
+  int res = safe_append_to_file(mc_stat_file, "%s %2.4E %2.4E %2.4E %2.4E %2.4E %2.4E\n", prefix, acceptance_rate, mean_recursion_depth, mean_nA, err_nA, maxnA, mean_sign);
+  if(res!=0)
+   logs_WriteError("safe_append_to_file %s failed with code %i", mc_stat_file, res);
  }; 
 }
 
 void print_max_amplitudes()
 {
  int i, adata = -1;
+ double ampl, ampl_sum = 0.0;
  logs_Write(0, "\t MAXIMAL AMPLITUDES OF ELEMENTARY ACTIONS");
  for(i=0; i<action_collection_size; i++)
-  logs_Write(0, "   %20s [action_id = %i]:\t %+2.4E", action_collection_name[i], i, (action_collection_amplitude[i])(&adata));
- logs_Write(0, ""); 
+ {
+  ampl = (action_collection_amplitude[i])(&adata);
+  logs_Write(0, "   %20s [action_id = %i]:\t %+2.4E", action_collection_name[i], i, ampl);
+  ampl_sum += fabs(ampl);
+ };
+ logs_Write(0, " TOTAL: %2.4E\n", ampl_sum);
 }
 

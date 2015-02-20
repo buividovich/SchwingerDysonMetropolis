@@ -11,6 +11,20 @@
 extern t_lat_stack      X; //This stack is the current state of the system
 extern t_lat_stack      H; //This stack will contain the data related to the sequence of actions
 
+//Stack-like structure for automatic counting of diagram orders
+extern int*             O; //Contains the orders of the diagrams in the stack
+extern int*            OH; //Stack-like structure to keep the history of diagram orders
+extern int         OH_top; //Topmost element of the OH stack
+
+#define OH_PUSH(_x)                                  { \
+ OH[OH_top] = (_x);                                    \
+ OH_top ++;                                          }  
+ 
+#define OH_POP(_x)                                   { \
+ OH_top--;                                             \
+ (_x) = OH[OH_top];                                  }  
+ 
+
 extern t_lat_propagator P;
 
 //These two functions set up a configuration space on which the actions will be performed

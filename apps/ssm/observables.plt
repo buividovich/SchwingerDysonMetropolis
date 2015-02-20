@@ -1,6 +1,6 @@
 reset
 set term postscript color enhanced landscape "Helvetica" 24
-cd 'G:\\LAT\\sd_metropolis\\data\\hmm\\'
+cd 'G:\\LAT\\sd_metropolis\\data\\ssm\\'
 set pointsize 1.5
 set bar 1
 set style line 1  lt 1 lc rgb '#000000' lw 8 pt 5
@@ -18,24 +18,36 @@ set style line 15 lt 2 lc rgb '#FF00FF' lw 8 pt 13
 set style line 16 lt 2 lc rgb '#00FFFF' lw 8 pt 15
 set style line 17 lt 2 lc rgb '#888888' lw 8 pt 1
 
-unset logscale y
-set out    'G:\\LAT\\sd_metropolis\\plots\\hmm\\mean_G2_sign.eps'
-set key right top
-set xlabel "{/Symbol l}"
-set ylabel "Mean sign of G2"
-plot\
-'G_nmc5000000.dat'  using ($1):($4) title 'N_{mc} =  5x10^6'  with lines ls 2 
+OBS_FILES = system("ls G*.dat");
+NFILES        = words(OBS_FILES)
+FILE(i)       = word(OBS_FILES, i);
+LABEL(i)      = FILE(i)[3:strstrt(FILE(i), ".dat")-1]
 
-set logscale y
-set out    'G:\\LAT\\sd_metropolis\\plots\\hmm\\observable_comparison.eps'
+unset logscale y
+set out    'G:\\LAT\\sd_metropolis\\plots\\ssm\\mean_G2_sign.eps'
 set key left top
 set xlabel "{/Symbol l}"
-set ylabel "G_n"
-plot\
-'G_nmc5000000.dat' using ($1):($2):($3)   title 'G_2'  with yerrorbars ls 2,\
-'G_nmc5000000.dat' using ($1):($5)        notitle      with lines      ls 3,\
-'G_nmc5000000.dat' using ($1):($6):($7)   title 'G_4'  with yerrorbars ls 4,\
-'G_nmc5000000.dat' using ($1):($9)        notitle      with lines      ls 5,\
-'G_nmc5000000.dat' using ($1):($10):($11) title 'G_6'  with yerrorbars ls 6,\
-'G_nmc5000000.dat' using ($1):($13)       notitle      with lines      ls 7
+set ylabel "Mean sign of G2"
+plot \
+for [i=1:NFILES] \
+FILE(i) using ($1):($5) title LABEL(i) with points ls i 
 
+unset logscale y
+
+set out    'G:\\LAT\\sd_metropolis\\plots\\ssm\\observable_comparison_G20.eps'
+set key right top
+set xlabel "{/Symbol l}"
+set ylabel "G2(0)"
+plot \
+1/x notitle with lines ls 17, \
+for [i=1:NFILES] \
+FILE(i) using ($1):(abs($3-0.5)):($4) title LABEL(i) with yerrorbars ls i 
+
+set out    'G:\\LAT\\sd_metropolis\\plots\\ssm\\observable_comparison_G21.eps'
+set key right top
+set xlabel "{/Symbol l}"
+set ylabel "G2(1)"
+plot \
+1/x notitle with lines ls 17, \
+for [i=1:NFILES] \
+FILE(i) using ($1):(abs($7-0.5)):($8) title LABEL(i) with yerrorbars ls i 

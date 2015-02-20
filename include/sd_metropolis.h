@@ -36,7 +36,8 @@ typedef double (*t_action_amplitude)(int* data_in); //Generic functional type fo
 #define  ERR_WRONG_STATE            (-2)
 #define  ERR_HISTORY_OVERFLOW       (-3)
 #define  ERR_STACK_OVERFLOW         (-4)
-#define  ERR_WRONG_DATA             (-5) 
+#define  ERR_WRONG_DATA             (-5)
+#define  ERR_OTHER                  (-10) 
 
 //Structure which contains all the information related to some single action
 typedef struct 
