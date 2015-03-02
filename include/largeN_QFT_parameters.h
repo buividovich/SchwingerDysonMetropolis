@@ -6,6 +6,10 @@
 #include <clue_logs.h>
 #include <clue_utils.h>
 
+#include <sd_metropolis.h>
+#include <sd_metropolis_parameters.h>
+#include <sd_metropolis_statistics.h>
+
 //Parameters of a generic SD equations for practically any large-N QFT
 extern double   lambda;                   //tHooft coupling constant
 extern double   meff_sq;                  //Square of the effective mass
@@ -29,13 +33,16 @@ extern int      param_tuning_max_iter;    //Max. allowed number of iterations in
 //In debug mode, we can also check the stack consistency at every step
 extern int      check_stack; 
 
-typedef double (*t_amplitude_sum)();
-
 void print_largeN_QFT_parameters();
 void largeN_QFT_prefix(char* prefix); //Prints lambda, meff_sq, cc, NN, LT, LS to prefix
 
-int  check_cc_NN_minimum(t_amplitude_sum S, double tol);
-int   find_cc_NN_minimum(t_amplitude_sum S, double tol, double* min_val);
+void      cc_NN_vicinity(double epsilon, double* data);
+int  check_cc_NN_minimum(double tol);
+int   find_cc_NN_minimum(double tol, double* min_val);
+
+
+//Tunes cc and NN using a real MC process in such a way that <nA> is minimized...
+double   tune_cc_NN_minimum(double tol, int tune_mc_steps); 
 
 void init_lat_size_array();
 //int check_cc_NN();

@@ -27,17 +27,13 @@ void   init_metropolis()
 {
  step_number    = 0;
  ns             = 0;
- SAFE_MALLOC(             nA,        double, max_recursion_depth);
- SAFE_MALLOC(          asign,           int, max_recursion_depth);
- SAFE_MALLOC( action_history, t_action_data, max_recursion_depth);
- 
- action_list        = NULL;
- amplitude_list     = NULL;
- probability_list   = NULL;
- action_list_length = 0;
+ SAFE_MALLOC_IF_NULL(             nA,        double, max_recursion_depth);
+ SAFE_MALLOC_IF_NULL(          asign,           int, max_recursion_depth);
+ SAFE_MALLOC_IF_NULL( action_history, t_action_data, max_recursion_depth);
  
  init_metropolis_statistics();
  
+ //Check that the action collection is properly initialized
  ASSERT( action_collection_do        == NULL);
  ASSERT( action_collection_undo      == NULL);
  ASSERT( action_collection_amplitude == NULL);

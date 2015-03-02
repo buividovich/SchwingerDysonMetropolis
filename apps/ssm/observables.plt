@@ -33,6 +33,7 @@ for [i=1:NFILES] \
 FILE(i) using ($1):($5) title LABEL(i) with points ls i 
 
 unset logscale y
+set yrange [0.0:0.05]
 
 set out    'G:\\LAT\\sd_metropolis\\plots\\ssm\\observable_comparison_G20.eps'
 set key right top
@@ -51,3 +52,6 @@ plot \
 1/x notitle with lines ls 17, \
 for [i=1:NFILES] \
 FILE(i) using ($1):(abs($7-0.5)):($8) title LABEL(i) with yerrorbars ls i 
+
+#1/x notitle with lines ls 17, \
+#1/x notitle with lines ls 17, \

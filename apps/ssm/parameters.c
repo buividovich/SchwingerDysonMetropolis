@@ -1,9 +1,14 @@
 #include "parameters.h"
 
+int save_g4_hist = 0;
+int save_g2_hist = 1;
+
 static struct option long_options[] =
 {
  METROPOLIS_LONG_OPTIONS,
  LARGEN_QFT_LONG_OPTIONS,
+ {          "save-g4-hist",        no_argument,              &save_g4_hist,   1},
+ {     "dont-save-g2-hist",        no_argument,              &save_g2_hist,   0},
  {                       0,                  0,                       NULL,   0}
 };
 
@@ -49,18 +54,14 @@ int parse_command_line_options(int argc, char **argv)
 
 void init_parameters()
 {
+ double ma;
  init_lat_propagator(&P, 1, meff_sq + lambda);
  if(param_auto_tuning)
  {
   cc = 1.0; NN = 1.0;
-  find_cc_NN_minimum(&f_max_ampl_sum, param_tuning_accuracy, &max_ampl_sum);
-  if(max_ampl_sum>0.0)
-  {
-   control_max_ampl_sum = 1.0;
-   max_ampl_sum_tol     = 0.001*max_ampl_sum;                   
-  };
+  find_cc_NN_minimum(param_tuning_accuracy, &ma);
  };
- check_cc_NN_minimum(&f_max_ampl_sum, 0.05);    
+ check_cc_NN_minimum(0.05);    
 }
 
 void print_parameters()
@@ -70,13 +71,10 @@ void print_parameters()
  print_metropolis_parameters();
  print_largeN_QFT_parameters();
  logs_Write(0, "\tPARAMETERS OF LATTICE PROPAGATOR");
- logs_WriteParameter(   "Sigma", "%2.4E", P.sigma);
- logs_WriteParameter( "lat_dim",    "%i", lat_dim);
- logs_WriteParameter( "lat_vol",    "%i", lat_vol);
+ logs_WriteParameter(0,   "Sigma", "%2.4E", P.sigma);
+ logs_WriteParameter(0, "lat_dim",    "%i", lat_dim);
+ logs_WriteParameter(0, "lat_vol",    "%i", lat_vol);
  for(mu=0; mu<lat_dim; mu++)
-  logs_WriteParameter( "lat_size",    "[%i]: %i", mu, lat_size[mu]);
+  logs_WriteParameter(0, "lat_size",    "[%i]: %i", mu, lat_size[mu]);
  print_max_amplitudes(); 
 }
-
-
-

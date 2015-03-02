@@ -13,22 +13,22 @@ $executable = "$GlobalCodeDir/sd_metropolis/bin/ssm";
 system("make ssm");
 system("$OutputCleanupCmd");
 
-$lambda_min = 57.5;
-$lambda_max = 155.0;
+$lambda_min = 0.005;
+$lambda_max = 0.1;
 
 if($myOS eq "Linux")
 {
- $dlambda    = 2.5;
+ $dlambda    = 0.005;
  $nmc  = 2000000000;
  $maxn = 20000;
- @masses = (-2.0); 
+ @masses = (0.5, 1.0, 2.0); 
 }
 else
 {
- $dlambda    = 5.0;
- $nmc  = 20000000;
+ $dlambda    = 0.005;
+ $nmc  = 10000000;
  $maxn = 20000;
- @masses = (-2.1, -2.0, -1.9);
+ @masses = (0.5, 1.0, 2.0);
 };
 
 foreach $meff_sq (@masses)
@@ -61,6 +61,8 @@ foreach $meff_sq (@masses)
   $cmd = $cmd." --observables-file         $observables_file";
   $cmd = $cmd." --logs-noise-level         1";
   $cmd = $cmd." --mc-reporting-interval    $mc_reporting_interval";
+  
+  $cmd = $cmd." --no-stack-check ";
   
   if($myOS eq "Linux")
   {

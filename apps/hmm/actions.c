@@ -7,8 +7,10 @@ void init_actions()
 {
  //Initialize the collection of actions to be used in MC process
  action_collection_size = 4;
- SAFE_MALLOC(  action_collection_do, t_action, action_collection_size);
- SAFE_MALLOC(action_collection_undo, t_action, action_collection_size);
+ SAFE_MALLOC( action_collection_do,        t_action,           action_collection_size);
+ SAFE_MALLOC( action_collection_undo,      t_action,           action_collection_size);
+ SAFE_MALLOC( action_collection_amplitude, t_action_amplitude, action_collection_size);
+ SAFE_MALLOC( action_collection_name,      char*,              action_collection_size);
  
  ADD_TO_ACTION_COLLECTION(        create, 0);
  ADD_TO_ACTION_COLLECTION(   evolve_line, 1);
@@ -176,8 +178,11 @@ int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int 
  
  logs_Write((step_number%mc_reporting_interval==0? 1 : 2), "Step %08i:\t X.top = %i, X.nel = %i, H.top = %i, H.nel = %i", step_number, X.top, X.nel, H.top, H.nel);
  
- check_stack_consistency(&X, "X");
- check_stack_consistency(&H, "H");
+ if(check_stack)
+ {
+  check_stack_consistency(&X, "X");
+  check_stack_consistency(&H, "H");
+ }; 
  
  FETCH_ACTION(         create, 0, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
  FETCH_ACTION(    evolve_line, 1, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
@@ -185,16 +190,4 @@ int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int 
  FETCH_ACTION(           join, 3, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
  
  return nact;
-}
-
-//Max. sum of all amplitudes - for the tuning of cc and NN
-double f_max_ampl_sum()
-{
- int adata = -1;
- double ampl_sum = fabs(action_create_amplitude(&adata))        + 
-                   fabs(action_evolve_line_amplitude(&adata))   +
-                   fabs(action_evolve_vertex_amplitude(&adata)) +
-                   fabs(action_join_amplitude(&adata)); 
-                   
- return ampl_sum;
 }

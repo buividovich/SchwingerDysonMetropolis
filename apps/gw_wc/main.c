@@ -20,12 +20,12 @@ int main(int argc, char *argv[])
  init_rand(time(NULL));
  
  parse_command_line_options(argc, argv);
+ init_actions();
  init_parameters();
  print_parameters();
  
  int imc;
  
- init_actions();
  init_metropolis();
  init_observable_stat();
  
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
  
  char prefix[500];
  largeN_QFT_prefix(prefix);
- process_mc_stat(prefix);
+ process_mc_stat(prefix, 1);
  process_observable_stat();
  
  free_observable_stat();

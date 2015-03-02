@@ -107,18 +107,15 @@ $(1)_plotclean:
 	rm -f -v ./plots/$(1)/*
 endef
 
-ifneq ($(OS),Windows_NT)
- DATADIR    =   /home/clusters/rrcmpi/buividovich/sd_metropolis/
- ifeq ($(wildcard $(DATADIR)/.*),)
-  $(info $(DATADIR) does not exist...)
-  DATADIR = ./
- endif
- DATADIR    =   /temp_local/bup58975/sd_metropolis/
- ifeq ($(wildcard $(DATADIR)/.*),)
-  $(info $(DATADIR) does not exist...)
-  DATADIR = ./
- endif
+DATADIR    =   /home/clusters/rrcmpi/buividovich/sd_metropolis/
+ifeq ($(wildcard $(DATADIR)/.*),)
+ DATADIR = ./
 endif
+DATADIR    =   /temp_local/bup58975/sd_metropolis/
+ifeq ($(wildcard $(DATADIR)/.*),)
+ DATADIR = ./
+endif
+$(info DATADIR = $(DATADIR))
 
 define app_dataclean_template
 $(1)_dataclean: $(1)_plotclean

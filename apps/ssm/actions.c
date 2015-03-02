@@ -47,6 +47,7 @@ void free_actions()
  
  SAFE_FREE(action_collection_do);
  SAFE_FREE(action_collection_undo);
+ SAFE_FREE(action_collection_amplitude);
  for(int i=0; i<action_collection_size; i++)
   SAFE_FREE(action_collection_name[i]);
  SAFE_FREE(action_collection_name); 
@@ -370,17 +371,4 @@ int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int 
  FETCH_ACTION(   flip_momenta, 4, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
  
  return nact;
-}
-
-//Max. sum of all amplitudes - for the tuning of cc and NN
-double f_max_ampl_sum()
-{
- int adata = -1;
- double ampl_sum = fabs(action_create_amplitude(&adata))        + 
-                   fabs(action_evolve_line_amplitude(&adata))   +
-                   fabs(action_evolve_vertex_amplitude(&adata)) +
-                   fabs(action_join_amplitude(&adata))          +
-                   fabs(action_flip_momenta_amplitude(&adata)); 
-                   
- return ampl_sum;
 }

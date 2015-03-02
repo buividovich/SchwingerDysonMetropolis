@@ -33,9 +33,16 @@ void init_metropolis_statistics()
  msign = 0.0;
  ans   = 0.0;
  nmc   = 0;
- SAFE_MALLOC(action_counter, int, action_collection_size);
+ SAFE_MALLOC_IF_NULL(action_counter, int, action_collection_size);
  for(int i=0; i<action_collection_size; i++)
   action_counter[i] = 0;
+  
+ max_ampl_sum = f_max_ampl_sum(); 
+ if(max_ampl_sum>0.0)
+  {
+   control_max_ampl_sum = 1;
+   max_ampl_sum_tol     = 0.001*max_ampl_sum;                   
+  }; 
  //These are the variables which are only set by process_mc_stat
  acceptance_rate      = 0.0;
  mean_recursion_depth = 0.0;
@@ -56,7 +63,7 @@ void gather_mc_stat()
  nmc   ++;
 }
 
-void process_mc_stat(const char* prefix)
+void process_mc_stat(const char* prefix, int save_to_files)
 {
  //Summarizing the post-run properties of the MC process
  acceptance_rate      = (double)aac/(double)nmc;
@@ -66,11 +73,11 @@ void process_mc_stat(const char* prefix)
  mean_sign            =       msign/(double)nmc;
  
  logs_Write(0, "\nSTATISTICS ON THE MC PROCESS (over %i steps): ",       nmc);
- logs_WriteParameter(         "Acceptance rate",    "%2.4lf",            acceptance_rate);
- logs_WriteParameter(    "Mean recursion depth",    "%2.4lf",            mean_recursion_depth);
- logs_WriteParameter( "Mean A rescaling factor",    "%2.4lf +/- %2.4lf", mean_nA, err_nA);
- logs_WriteParameter(  "Max A rescaling factor",    "%2.4lf",            maxnA);
- logs_WriteParameter(       "Mean config. sign",    "%2.4lf",            mean_sign);
+ logs_WriteParameter(0,         "Acceptance rate",    "%2.4lf",            acceptance_rate);
+ logs_WriteParameter(0,    "Mean recursion depth",    "%2.4lf",            mean_recursion_depth);
+ logs_WriteParameter(0, "Mean A rescaling factor",    "%2.4lf +/- %2.4lf", mean_nA, err_nA);
+ logs_WriteParameter(0,  "Max A rescaling factor",    "%2.4lf",            maxnA);
+ logs_WriteParameter(0,       "Mean config. sign",    "%2.4lf",            mean_sign);
  logs_Write(0, "\n");
  
  int action_counter_total = 0;
@@ -87,15 +94,15 @@ void process_mc_stat(const char* prefix)
   sprintf_append(&act_stat_str, "%16s %2.4E ", action_collection_name[i], act_prob);
  };
  sprintf_append(&act_stat_str, "\n");
- if(action_stat_file!=NULL)
-  safe_append_str_to_file(action_stat_file, act_stat_str);
+ if(save_to_files && action_stat_file!=NULL)
+  safe_append_str_to_file(action_stat_file, act_stat_str, io_sleep_time, io_write_attempts);
  SAFE_FREE(act_stat_str); 
    
  logs_Write(0, "\n");
  //Saving the statistical characteristics of the MC process
- if(mc_stat_file!=NULL)
+ if(save_to_files && mc_stat_file!=NULL)
  {
-  int res = safe_append_to_file(mc_stat_file, "%s %2.4E %2.4E %2.4E %2.4E %2.4E %2.4E\n", prefix, acceptance_rate, mean_recursion_depth, mean_nA, err_nA, maxnA, mean_sign);
+  int res = safe_append_to_file(mc_stat_file, io_sleep_time, io_write_attempts, "%s %2.4E %2.4E %2.4E %2.4E %2.4E %2.4E\n", prefix, acceptance_rate, mean_recursion_depth, mean_nA, err_nA, maxnA, mean_sign);
   if(res!=0)
    logs_WriteError("safe_append_to_file %s failed with code %i", mc_stat_file, res);
  }; 
@@ -114,4 +121,15 @@ void print_max_amplitudes()
  };
  logs_Write(0, " TOTAL: %2.4E\n", ampl_sum);
 }
+
+//Max. sum of all amplitudes - for the NAIVE tuning of cc and NN
+double f_max_ampl_sum()
+{
+ int adata = -1, iaction;
+ double ampl_sum = 0.0;
+ for(iaction=0; iaction<action_collection_size; iaction++)
+  ampl_sum += fabs((action_collection_amplitude[iaction])(&adata) );
+ return ampl_sum;
+}
+
 

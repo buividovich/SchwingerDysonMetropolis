@@ -15,6 +15,8 @@ extern int      mc_reporting_interval;  //The interval at which the current stat
 extern char*    mc_stat_file;           //File for the quantities characterizing the MC process itself
 extern char*    action_stat_file;       //Statistics on different actions
 extern char*    ns_history_file;        //File for saving the MC history of ns
+extern double   io_sleep_time;          //Time to sleep during append_str_to_file
+extern int      io_write_attempts;      //Attempts to write to the file if it is locked
 
 #define METROPOLIS_LONG_OPTIONS                                                            \
  {      "max-recursion-depth",  required_argument,                      NULL,  '0'},       \
@@ -27,6 +29,8 @@ extern char*    ns_history_file;        //File for saving the MC history of ns
  {             "mc-stat-file",  required_argument,                      NULL,  '7'},       \
  {         "action-stat-file",  required_argument,                      NULL,  '8'},       \
  {          "ns-history-file",  required_argument,                      NULL,  '9'},       \
+ {            "io-sleep-time",  required_argument,                      NULL,  'Z'},       \
+ {        "io-write-attempts",  required_argument,                      NULL,  'Y'},       \
  {           "no-ansi-colors",        no_argument,              &ansi_colors,    0},       \
  {   "print-errors-to-stderr",        no_argument,   &print_errors_to_stderr,    1}
  
@@ -66,10 +70,16 @@ extern char*    ns_history_file;        //File for saving the MC history of ns
  break;                                                                    \
  case '9':                                                                 \
   COPY_FILE_NAME(optarg, ns_history_file);                                 \
+ break;                                                                    \
+ case 'Z':                                                                 \
+  SAFE_SSCANF_BREAK(optarg, "%lf", io_sleep_time);                         \
+ break;                                                                    \
+ case 'Y':                                                                 \
+  SAFE_SSCANF_BREAK(optarg,  "%i", io_write_attempts);                     \
  break;
- 
-static const char  metropolis_short_option_list[] = "0:1:2:3:4:5:6:7:8:9:";  
 
-void print_metropolis_parameters();                                                                
+static const char metropolis_short_option_list[] = "0:1:2:3:4:5:6:7:8:9:Z:Y:";
+
+void print_metropolis_parameters();
 
 #endif

@@ -14,7 +14,6 @@
 #include "sd_metropolis_parameters.h"
 
 //Possible improvements in the code
-//Important: add momentum conservation test for the X stack
 //Can wait:  inline functions for momenta manipulations
 //Can wait:  add amplitudes to action_collection + max_ampl_sum based on action_collection
 //Can wait:  some optimization of rand_momentum

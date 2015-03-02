@@ -37,7 +37,4 @@ DECLARE_ACTION_UNDO(       join);
 //Action fetcher
 int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int list_length);
 
-//Function which returns the maximal possible sum of absolute values of amplitudes - for auto-minimizing and checking
-double f_max_ampl_sum();
-
 #endif

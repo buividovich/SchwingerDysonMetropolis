@@ -14,6 +14,9 @@
 #include "lattice_stack.h"
 #include "actions.h"
 
+extern int save_g4_hist;
+extern int save_g2_hist;
+
 int  parse_command_line_options(int argc, char **argv);
 void init_parameters();
 void print_parameters();
