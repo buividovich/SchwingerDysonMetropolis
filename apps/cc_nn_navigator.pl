@@ -9,8 +9,12 @@ require "./apps/app_globals.pl";
 $lambda   = 5.0;
 $meff_sq  = 0.0;
 $LT       = 2;
-$nmc      = 20000000;
+$nmc      = 100000000;
+$p_plus   = 0.030;
 $mc_reporting_interval = int($nmc/100);
+
+$epsilon = 0.025;
+$lambda_epsilon = 0.05;
 
 $suffix = sprintf("l%2.4f_nmc%i", $lambda, $nmc);
 
@@ -39,7 +43,3 @@ else
 };
 
 lambda_descent($cc0, $NN0);
-
-#Now join all the mc stats
-#system("cat @all_mc_stat_files > $global_mc_stat_file");
-#system("rm -f -v @all_mc_stat_files");

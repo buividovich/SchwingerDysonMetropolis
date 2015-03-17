@@ -40,3 +40,25 @@ set ylabel "Mean sign (over all observables)"
 plot \
 for [i=1:NFILES] \
 FILE(i) using ($1):($12) title LABEL(i) with points ls i 
+
+set out    'G:\\LAT\\sd_metropolis\\plots\\'.app_name.'\\mean_nA.eps'
+unset logscale y
+set key left top
+set xlabel "{/Symbol l}"
+set ylabel "<nA>"
+plot \
+1.0 with lines ls 17,\
+for [i=1:NFILES] \
+FILE(i) using ($1):($9):($10) title LABEL(i) with yerrorbars ls i 
+
+set out    'G:\\LAT\\sd_metropolis\\plots\\'.app_name.'\\acceptance_rate.eps'
+unset logscale y
+set key left top
+set xlabel "{/Symbol l}"
+set ylabel "Acceptance rate"
+plot \
+1.0 with lines ls 17,\
+for [i=1:NFILES] \
+FILE(i) using ($1):($7) title LABEL(i) with points ls i 
+
+#acceptance rate $7

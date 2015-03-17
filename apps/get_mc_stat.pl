@@ -9,6 +9,7 @@ sub run_app{
  $cmd0 = $cmd0." --meff-sq                  $meff_sq ";
  $cmd0 = $cmd0." --LT                       $LT ";
  $cmd0 = $cmd0." --prod-mc-steps            $nmc ";
+ $cmd0 = $cmd0." --p-plus                   $p_plus ";
  $cmd0 = $cmd0." --mc-reporting-interval    $mc_reporting_interval ";
 
  my $njobs = (int(scalar(@_)/2)>1? int(scalar(@_)/2) : 1);
@@ -28,13 +29,12 @@ sub run_app{
   }
   else
   {
-   $observa_file = sprintf("%s/G_l%2.4lf.dat", $DataDir, $lambda,   $_[0], $_[1]);
-   $mc_stat_file = sprintf("%s/mcs_l%2.4lf.dat", $DataDir, $lambda, $_[0], $_[1]);
+   $observa_file = sprintf("%s/G_l%2.4lf.dat", $DataDir, $lambda);
+   $mc_stat_file = sprintf("%s/mcs_l%2.4lf.dat", $DataDir, $lambda);
   };
   $cmd = $cmd." --mc-stat-file     $mc_stat_file ";
   $cmd = $cmd." --observables-file $observa_file ";
-  
-  print(" >>>>>>>>> Pre-job removal: \n"); 
+   
   system("rm -f -v $mc_stat_file");
   system("rm -f -v $observa_file");
  
@@ -89,6 +89,12 @@ sub run_app{
   close(MC_STAT); 
  };
  
+ print "List of files from run_job:\n";
+ foreach $mc_stat_file (@mc_stat_files)
+ {
+  print "\t\t $mc_stat_file\n";
+ };
+ 
  return @mc_stat_data;
 };
 
@@ -96,12 +102,14 @@ sub tune_cc_NN
 {
  #initial run with auto-tuning to get initial values
  my $cc0; my $NN0; my $v0; my @mc_stat_data;
+ my $suffix;
  if(scalar(@_)==0)
  {
   @mc_stat_data = run_app();
   $cc0 = $mc_stat_data[0];
   $NN0 = $mc_stat_data[1];
   $v0  = $mc_stat_data[2];
+  $suffix = sprintf("l%2.4f", $lambda);
  }
  else
  {
@@ -109,12 +117,18 @@ sub tune_cc_NN
   $NN0 = $_[1];
   @mc_stat_data = run_app($cc0, $NN0);
   $v0  = $mc_stat_data[2];
+  $suffix = sprintf("l%2.4f_cc%2.8f_NN%2.8f", $lambda, $cc0, $NN0);
  }; 
+ 
+ system("rm -f -v $DataDir/mcs_$suffix.dat");
+ system("rm -f -v $DataDir/G_$suffix.dat");
 
  my $sfinish = 0;
  while(!$sfinish)
  {
-  @mc_stat_data = run_app(0.95*$cc0, $NN0, 1.05*$cc0, $NN0, $cc0, 0.95*$NN0, $cc0, 1.05*$NN0);
+  @ccs = ((1.0 - $epsilon)*$cc0, (1.0 + $epsilon)*$cc0,                   $cc0,                  $cc0);
+  @NNs = (                 $NN0,                  $NN0,  (1.0 - $epsilon)*$NN0, (1.0 + $epsilon)*$NN0);
+  @mc_stat_data = run_app($ccs[0], $NNs[0], $ccs[1], $NNs[1], $ccs[2], $NNs[2], $ccs[3], $NNs[3]);
   my $minsdir = 0;
   my $minv0   = $mc_stat_data[4*0 + 2];
   my @mc_stat_files = ();
@@ -122,18 +136,18 @@ sub tune_cc_NN
   
   for(my $sdir=0; $sdir<4; $sdir++)
   {
-   my $cc = $mc_stat_data[4*$sdir + 0];
-   my $NN = $mc_stat_data[4*$sdir + 1];
+   my $cc = $ccs[$sdir];
+   my $NN = $NNs[$sdir];
    my $v  = $mc_stat_data[4*$sdir + 2];
    my $dv = $mc_stat_data[4*$sdir + 3];
    printf("At cc = %2.4lf, NN = %2.4lf, nA = %2.4lf +/- %2.4lf\n", $cc, $NN, $v, $dv);
-   $suffix = sprintf("l%2.4lf_cc%2.8lf_NN%2.8lf", $lambda, $cc, $NN);
+   $suffix = sprintf("l%2.4f_cc%2.8f_NN%2.8f", $lambda, $cc, $NN);
    push(@mc_stat_files, "$DataDir/mcs_$suffix.dat");
    push(@observa_files, "$DataDir/G_$suffix.dat");
    
-   if($mc_stat_data[4*$sdir + 2]<$minv0)
+   if($v<$minv0)
    {
-    $minv0 = $mc_stat_data[4*$sdir + 2];
+    $minv0 = $v;
     $minsdir = $sdir;
    };
   };
@@ -149,16 +163,17 @@ sub tune_cc_NN
   {
    $sfinish = 1;
   };
+  
   #Now delete all temporary files except for those which correspond to the minimum direction
-  print "Post-job removal: \n";
   for($sdir=0; $sdir<4; $sdir++)
   {
-   if($minv0>$v0 | $sdir!=$minsdir)
+   if($sfinish==1 | $sdir!=$minsdir)
    {
     system("rm -f -v $mc_stat_files[$sdir] $observa_files[$sdir]");
    }
    else
    {
+    print ">>>>>>>>>>> pushing $mc_stat_files[$sdir] and $observa_files[$sdir] to lists ...\n";
     push(@all_mc_stat_files, $mc_stat_files[$sdir]);
     push(@all_observa_files, $observa_files[$sdir]);
    };
@@ -176,24 +191,24 @@ sub lambda_descent
  my $v; my $cc; my $NN;
  printf("\n\n ##### Starting lambda descent with cc=%2.4lf, NN=%2.4lf\n\n", $cc0, $NN0);
  do{
-  $lambda *= 0.9;
+  $lambda *= (1.0 - $lambda_epsilon);
   ($cc, $NN, $v) = tune_cc_NN($cc0, $NN0);
   printf("With lambda = %2.4lf, cc = %2.4lf, NN = %2.4lf, <nA> = %2.4lf\n", $lambda, $cc, $NN, $v);
-  system("rm -f -v $global_mc_stat_file $global_observables_file");
   
-  foreach $mc_stat_file (@all_mc_stat_files)
+  while(scalar(@all_mc_stat_files)>0)
   {
+   my $mc_stat_file = pop(@all_mc_stat_files);
    system("cat $mc_stat_file >> $global_mc_stat_file");
+   system("rm -f -v $mc_stat_file");
   };
-  
-  foreach $mc_stat_file (@all_observa_files)
+  while(scalar(@all_observa_files)>0)
   {
-   system("cat $observal_file >> $global_observables_file");
-  }; 
+   my $observa_file = pop(@all_observa_files);
+   system("cat $observa_file >> $global_observables_file");
+   system("rm -f -v $observa_file");
+  };
    
   $cc0 = $cc; $NN0 = $NN;
-  
-  system("PAUSE");
  }while($v<0.8);
  
  return $v;

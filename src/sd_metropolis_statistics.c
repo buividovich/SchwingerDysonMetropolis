@@ -39,10 +39,10 @@ void init_metropolis_statistics()
   
  max_ampl_sum = f_max_ampl_sum(); 
  if(max_ampl_sum>0.0)
-  {
-   control_max_ampl_sum = 1;
-   max_ampl_sum_tol     = 0.001*max_ampl_sum;                   
-  }; 
+ {
+  control_max_ampl_sum = 1;
+  max_ampl_sum_tol     = 0.001*max_ampl_sum;                   
+ }; 
  //These are the variables which are only set by process_mc_stat
  acceptance_rate      = 0.0;
  mean_recursion_depth = 0.0;
@@ -86,7 +86,7 @@ void process_mc_stat(const char* prefix, int save_to_files)
  
  char* act_stat_str = NULL;
  sprintf_append(&act_stat_str, "%s ", prefix);
- logs_Write(0, "\tFACTUAL PROBABILITIES OF ACTIONS (over %i calls in %i mc steps): ",  action_counter_total, nmc);
+ logs_Write(0, "\tFACTUAL PROBABILITIES OF ACTIONS (over %i calls in %i mc steps (%i%% of all mc steps)): ",  action_counter_total, nmc, (int)round(100.0*(double)(action_counter_total)/(double)nmc) );
  for(int i=0; i<action_collection_size; i++)
  {
   double act_prob = (double)(action_counter[i])/(double)action_counter_total;
