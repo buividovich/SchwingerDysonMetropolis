@@ -403,6 +403,36 @@ In momentum space these free correlators read
  \frac{1}{V^3} \delta\lr{p_1 + q_1 + p_2 + q_2}
 \end{eqnarray}
 
+\section{Automated tuning of $c$ and $\mathcal{N}$ coefficients}
+
+ For the stochastic solution of a linear system of the form $\ket{\phi} = A \ket{\phi} + \ket{b}$, the expectation value $\vev{\mathcal{N}}$ can be expressed as
+\begin{eqnarray}
+\label{mean_nA}
+ \bar{\mathcal{N}} = \bra{1} A \ket{w} = \frac{\bra{1} A \lr{1 - A}^{-1} \ket{b}}{\bra{1} \lr{1 - A}^{-1} \ket{b}} .
+\end{eqnarray}
+In practice, one can perform a linear mapping $\ket{\phi} = C \ket{\phi'}$ of variables in order to minimize $\bar{\mathcal{N}}$ and thus enhance the performance of the algorithm. In terms of the new variables, the original linear system of equations looks like $\ket{\phi'} = A' \ket{\phi'} + \ket{b'} = C^{-1} A C \ket{\phi'} + C^{-1} \ket{b}$. Let us now calculate $\bar{\mathcal{N}}$ for the new system:
+\begin{eqnarray}
+\label{mean_nA_new}
+ \bar{\mathcal{N}}' = \bra{1} A' \ket{w'} 
+ = 
+ \frac{\bra{1} C^{-1} A \lr{1 - A}^{-1} \ket{b}}{\bra{1} C^{-1} \lr{1 - A}^{-1} \ket{b}}
+ = \nonumber \\ =
+ \frac{\bra{1} C^{-1} A \ket{\phi}}{\bra{1} C^{-1} \ket{\phi}}
+ = 
+ \frac{\bra{1} C^{-1} \lr{\ket{\phi} - \ket{b}} }{\bra{1} C^{-1} \ket{\phi}}
+ = \nonumber \\ =
+ 1 - \frac{\bra{1} C^{-1} \ket{b}}{\bra{1} C^{-1} \ket{\phi}} 
+ =
+ 1 - \frac{\bra{1} C^{-1} \ket{b}}{\bra{1} C^{-1} \ket{w}} \, \frac{1 - \bar{\mathcal{N}}}{\bra{1}\ket{b}}.
+\end{eqnarray}
+
+ Let us now calculate exactly $\bra{1} C^{-1} \ket{\phi}$ for the planar $\phi^4$ matrix model. To this end we need to calculate
+\begin{eqnarray}
+\label{Gnorm_rescaled}
+ \mathcal{N}_G\lr{c, \lambda} = \sum\limits_{n = 1}^{+\infty} c^n G_n =
+ \int d\lambda \rho\lr{\lambda} \frac{c \lambda^2}{1 - c \lambda^2} .
+\end{eqnarray}
+
 \begin{acknowledgments}
  This work was supported by the S.~Kowalevskaja award from the Alexander von Humboldt foundation.
 \end{acknowledgments}

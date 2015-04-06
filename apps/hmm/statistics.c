@@ -78,7 +78,9 @@ void process_observable_stat() //It is assumed that process_mc_stat was already 
   double SP = (double)(G_hist[0][ign] - G_hist[1][ign])/(double)(G_hist[0][ign] + G_hist[1][ign]);
   if(ofile!=NULL)
    fprintf(ofile, "%2.4E %2.4E %2.4E %2.4E ", G, dG, SP, G0);
-  logs_Write(0, "G_%i:\t %2.4E +/- %2.4E,\t sp = %2.4E", ign+1, G, dG, SP);
+  double G0diff  = 100.0*(G0 - G)/G0; 
+  double staterr = 100.0*dG/G;
+  logs_Write(0, "G_%i:\t %2.4E +/- %2.4E (should be %2.4E, deviation %+2.2lf%%, stat.error %2.2lf%%),\t sp = %2.4E", ign+1, G, dG, G0, G0diff, staterr, SP);
  };
  if(ofile!=NULL)
  {

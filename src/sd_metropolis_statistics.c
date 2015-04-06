@@ -9,6 +9,14 @@ double                     ans    = 0.0;
 int                        nmc    = 0;
 int*            action_counter    = NULL;
 
+//Variables for tuning of p_plus
+double  ppl_trial_min           = 0.00;
+double  ppl_trial_max           = 1.00;
+double  dppl                    = 0.111111;
+int     n_ppl_trials            = 10;
+double* acc_estimates           = NULL;
+int     pplus_tuning_ndata      = 0;
+
 //If control_max_ampl_sum=1 and max_ampl_sum is set to some nonzero value, 
 //an error message is generated everytime nA exceeds max_ampl_sum, 
 //this is useful for debugging
@@ -49,6 +57,15 @@ void init_metropolis_statistics()
  mean_nA              = 0.0;
  err_nA               = 0.0;
  mean_sign            = 0.0;
+ 
+ if(p_plus_tuning)
+  init_pplus_tuning();
+}
+
+void free_metropolis_statistics()
+{
+ if(p_plus_tuning)
+  free_pplus_tuning();    
 }
 
 void gather_mc_stat()
@@ -59,7 +76,13 @@ void gather_mc_stat()
  anA   += nA[ns];
  dnA   += SQR(nA[ns]);
  maxnA  = MAX(nA[ns], maxnA);
- msign += asign[ns]; 
+ msign += asign[ns];
+ 
+ if(p_plus_tuning)
+  collect_pplus_tuning_data();
+ if(p_plus_tuning && nmc>0 && nmc%p_plus_tuning_interval==0)
+  tune_pplus();  
+  
  nmc   ++;
 }
 
@@ -102,7 +125,7 @@ void process_mc_stat(const char* prefix, int save_to_files)
  //Saving the statistical characteristics of the MC process
  if(save_to_files && mc_stat_file!=NULL)
  {
-  int res = safe_append_to_file(mc_stat_file, io_sleep_time, io_write_attempts, "%s %2.4E %2.4E %2.4E %2.4E %2.4E %2.4E\n", prefix, acceptance_rate, mean_recursion_depth, mean_nA, err_nA, maxnA, mean_sign);
+  int res = safe_append_to_file(mc_stat_file, io_sleep_time, io_write_attempts, "%s %2.4E %2.4E %2.4E %2.4E %2.4E %2.4E\n", prefix, acceptance_rate, mean_recursion_depth, mean_nA, err_nA, maxnA, p_plus);
   if(res!=0)
    logs_WriteError("safe_append_to_file %s failed with code %i", mc_stat_file, res);
  }; 
@@ -132,4 +155,66 @@ double f_max_ampl_sum()
  return ampl_sum;
 }
 
+void init_pplus_tuning()
+{
+ ppl_trial_min           = 0.0;
+ ppl_trial_max           = 1.00;
+ n_ppl_trials            = 10;
+ 
+ dppl = (ppl_trial_max - ppl_trial_min)/(double)(n_ppl_trials - 1);
+ 
+ SAFE_MALLOC(acc_estimates, double, n_ppl_trials);
+ for(int ippl=0; ippl<n_ppl_trials; ippl++)
+  acc_estimates[ippl] = 0.0;
+ pplus_tuning_ndata = 0; 
+}
+
+void collect_pplus_tuning_data()
+{
+ for(int ippl=0; ippl<n_ppl_trials; ippl++)
+ {
+  double ppl_trial = ppl_trial_min + (double)ippl*dppl;
+  acc_estimates[ippl]  += MIN(ppl_trial, nA[ns]*(1.0 - ppl_trial));   
+ };
+ pplus_tuning_ndata ++;
+}
+
+void tune_pplus()
+{
+ double max_acceptance = 0.0;
+ double ppl_max        = 0.0;  
+ for(int ippl=0; ippl<n_ppl_trials; ippl++)
+ {
+  double ppl_trial = ppl_trial_min + (double)ippl*dppl;
+  double acceptance = 2.0*acc_estimates[ippl]/(double)pplus_tuning_ndata + (1.0 - ppl_trial)*(1.0 - anA/(double)nmc);
+  if(acceptance>max_acceptance)
+  {
+   max_acceptance = acceptance;
+   ppl_max        = ppl_trial;
+  };
+  acc_estimates[ippl] = 0.0;
+ };
+ logs_Write(0, "\n Auto-tuning of p_plus: ");
+ logs_WriteParameter(0, "Optimal value of p_plus", "%2.4lf (estimate over %i MC steps), expected acceptance %2.4lf", ppl_max, pplus_tuning_ndata, max_acceptance);
+ if(ppl_max>0.0 && fabs((p_plus-ppl_max)/ppl_max)<0.02)
+ {
+  p_plus_tuning = 0;
+  logs_WriteWarning("Automatic tuning of p_plus switched off, as the optimal value is already very close");
+ }
+ else
+ {
+  p_plus = ppl_max;
+  ppl_trial_min = MAX(ppl_max - dppl, 0.0);
+  ppl_trial_max = fabs(ppl_max + dppl);
+  dppl = (ppl_trial_max - ppl_trial_min)/(double)(n_ppl_trials - 1);
+  logs_WriteParameter(0, "New range of trial values of p_plus", "%2.4lf ... %2.4lf (in steps of %2.4E)", ppl_trial_min, ppl_trial_max, dppl);
+ }; 
+ logs_Write(0, "\n");
+ pplus_tuning_ndata = 0; 
+}
+
+void free_pplus_tuning()
+{
+ SAFE_FREE(acc_estimates);
+}
 

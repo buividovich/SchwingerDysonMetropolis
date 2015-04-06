@@ -18,6 +18,9 @@ set style line 15 lt 2 lc rgb '#FF00FF' lw 8 pt 13
 set style line 16 lt 2 lc rgb '#00FFFF' lw 8 pt 15
 set style line 17 lt 2 lc rgb '#888888' lw 8 pt 1
 
+a2(l) = (1 - sqrt(1 - 12*l))/(6*l)
+G(n, l) = gamma(2*n + 1)/(gamma(n+1)*gamma(n+3))*a2(l)**n*(2*n + 2 - n*a2(l))
+
 unset logscale y
 set out    'G:\\LAT\\sd_metropolis\\plots\\hmm\\mean_G2_sign.eps'
 set key right top
@@ -33,9 +36,11 @@ set xlabel "{/Symbol l}"
 set ylabel "G_n"
 plot\
 'G_nmc5000000.dat' using ($1):($2):($3)   title 'G_2'  with yerrorbars ls 2,\
-'G_nmc5000000.dat' using ($1):($5)        notitle      with lines      ls 3,\
 'G_nmc5000000.dat' using ($1):($6):($7)   title 'G_4'  with yerrorbars ls 4,\
-'G_nmc5000000.dat' using ($1):($9)        notitle      with lines      ls 5,\
 'G_nmc5000000.dat' using ($1):($10):($11) title 'G_6'  with yerrorbars ls 6,\
-'G_nmc5000000.dat' using ($1):($13)       notitle      with lines      ls 7
+G(1, x)                                   notitle      with lines      ls 3,\
+G(2, x)                                   notitle      with lines      ls 5,\
+G(3, x)                                   notitle      with lines      ls 7
 
+#'G_nmc5000000.dat' using ($1):($9)        notitle      with lines      ls 5,\
+#'G_nmc5000000.dat' using ($1):($13)       notitle      with lines      ls 7,\

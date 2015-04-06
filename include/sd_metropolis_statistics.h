@@ -34,10 +34,16 @@ extern double err_nA;
 extern double mean_sign;
 
 void init_metropolis_statistics();
+void free_metropolis_statistics();
 void gather_mc_stat();
 void process_mc_stat(const char* prefix, int save_to_files);
 
 double     f_max_ampl_sum();
 void print_max_amplitudes();
+
+void init_pplus_tuning();
+void collect_pplus_tuning_data();
+void tune_pplus();
+void free_pplus_tuning();
 
 #endif
