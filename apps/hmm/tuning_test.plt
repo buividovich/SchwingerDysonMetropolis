@@ -27,3 +27,12 @@ plot\
 'mc_stat_acctest_nmc20000000_l0.0400.dat'  using ($12):($7) title 'N_{mc} =  2x10^7, {/Symbol l} = 0.04'  with lines ls 2,\
 'mc_stat_acctest_nmc20000000_l0.0600.dat'  using ($12):($7) title 'N_{mc} =  2x10^7, {/Symbol l} = 0.06'  with lines ls 3,\
 'mc_stat_acctest_nmc20000000_l0.0800.dat'  using ($12):($7) title 'N_{mc} =  2x10^7, {/Symbol l} = 0.08'  with lines ls 4
+
+set out    'G:\\LAT\\sd_metropolis\\plots\\hmm\\meanna_vs_cc_NN.eps'
+set key right top
+set xlabel "cc"
+set ylabel "NN"
+set zlabel "<nA>"
+splot\
+'mc_stat_mnatest_nmc20000000_l0.0800.dat'  using ($3):($4):($9) title 'N_{mc} =  2x10^7, {/Symbol l} = 0.08'  with points ls 4
+

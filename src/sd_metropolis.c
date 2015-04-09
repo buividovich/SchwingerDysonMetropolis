@@ -61,8 +61,10 @@ int   metropolis_step()
  
  if(ns>=max_recursion_depth-1)
  {
-  logs_WriteError("Step %08i:\tOverflow detected - size of action_history is larger than the allocated memory!!! Resetting the state of the system!!!", step_number);
+  logs_WriteError("Step %08i:\tOverflow detected - size of action_history is larger than the allocted memory!!! %s", step_number, (exit_upon_overflow? "Stopping the MC process" : "Resetting the state of the system"));
   ns = 0;
+  if(exit_upon_overflow)
+   exit(EXIT_FAILURE);
   state_initializer(NULL);                           
  };
  
@@ -123,7 +125,9 @@ int   metropolis_step()
     };
     if(res==ERR_HISTORY_OVERFLOW || res==ERR_STACK_OVERFLOW)
     {
-     logs_WriteError("Action %s [id = %i] with action_data_in %i caused %s overflow at mc step %i, resetting the state of the system...", action_collection_name[action_list[todo].action_id], action_list[todo].action_id, action_list[todo].action_data_in, (res==ERR_HISTORY_OVERFLOW? "history" : "state"), step_number);
+     logs_WriteError("Action %s [id = %i] with action_data_in %i caused %s overflow at mc step %i!!! %s!!!", action_collection_name[action_list[todo].action_id], action_list[todo].action_id, action_list[todo].action_data_in, (res==ERR_HISTORY_OVERFLOW? "history" : "state"), step_number, (exit_upon_overflow? "Stopping the MC process" : "Resetting the state of the system"));
+     if(exit_upon_overflow)
+      exit(EXIT_FAILURE);
      ns = 0;
      state_initializer(NULL);
     };
@@ -152,7 +156,9 @@ int   metropolis_step()
      res = (action_collection_undo[action_history[ns].action_id])(&(action_history[ns].action_data_in));
      if(res==ERR_HISTORY_OVERFLOW || res==ERR_STACK_OVERFLOW)
      {
-      logs_WriteError("Undoing action %s [id = %i] with action_data_in %i caused %s overflow at mc step %i, resetting the state of the system...", action_collection_name[action_history[ns].action_id], action_history[ns].action_id, action_history[ns].action_data_in, (res==ERR_HISTORY_OVERFLOW? "history" : "state"), step_number);
+      logs_WriteError("Undoing action %s [id = %i] with action_data_in %i caused %s overflow at mc step %i!!! %s!!!", action_collection_name[action_history[ns].action_id], action_history[ns].action_id, action_history[ns].action_data_in, (res==ERR_HISTORY_OVERFLOW? "history" : "state"), step_number, (exit_upon_overflow? "Stopping the MC process" : "Resetting the state of the system"));
+      if(exit_upon_overflow)
+       exit(EXIT_FAILURE);
       ns = 0;
       state_initializer(NULL);
      };

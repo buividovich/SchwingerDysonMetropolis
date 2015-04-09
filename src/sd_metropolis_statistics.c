@@ -194,7 +194,7 @@ void tune_pplus()
   };
   acc_estimates[ippl] = 0.0;
  };
- logs_Write(0, "\n Auto-tuning of p_plus: ");
+ logs_Write(0, "\n Auto-tuning of p_plus at step %04i, acceptance so far %2.4lf: ", nmc, aac/(double)nmc);
  logs_WriteParameter(0, "Optimal value of p_plus", "%2.4lf (estimate over %i MC steps), expected acceptance %2.4lf", ppl_max, pplus_tuning_ndata, max_acceptance);
  if(ppl_max>0.0 && fabs((p_plus-ppl_max)/ppl_max)<0.02)
  {

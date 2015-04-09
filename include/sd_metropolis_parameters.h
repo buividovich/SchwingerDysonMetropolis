@@ -19,6 +19,7 @@ extern char*    action_stat_file;       //Statistics on different actions
 extern char*    ns_history_file;        //File for saving the MC history of ns
 extern double   io_sleep_time;          //Time to sleep during append_str_to_file
 extern int      io_write_attempts;      //Attempts to write to the file if it is locked
+extern int      exit_upon_overflow;     //Whether to stop the MC process once the history or the stack overflow is detected
 
 #define METROPOLIS_LONG_OPTIONS                                                            \
  {      "max-recursion-depth",  required_argument,                      NULL,  '0'},       \
@@ -36,7 +37,8 @@ extern int      io_write_attempts;      //Attempts to write to the file if it is
  {   "p-plus-tuning-interval",  required_argument,                      NULL,  'X'},       \
  {          "no-pplus-tuning",        no_argument,            &p_plus_tuning,    0},       \
  {           "no-ansi-colors",        no_argument,              &ansi_colors,    0},       \
- {   "print-errors-to-stderr",        no_argument,   &print_errors_to_stderr,    1}
+ {   "print-errors-to-stderr",        no_argument,   &print_errors_to_stderr,    1},       \
+ {       "exit-upon-overflow",        no_argument,       &exit_upon_overflow,    1}
  
 #define PARSE_METROPOLIS_OPTIONS                                           \
  case '0':                                                                 \

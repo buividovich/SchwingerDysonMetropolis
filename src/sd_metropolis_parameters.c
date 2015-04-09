@@ -12,8 +12,9 @@ int      mc_reporting_interval    = 1000;    //The interval at which the current
 char*    mc_stat_file             = NULL;    //File for the quantities characterizing the MC process itself
 char*    action_stat_file         = NULL;    //Statistics on different actions
 char*    ns_history_file          = NULL;    //File for saving the MC history of ns
-double   io_sleep_time            = 0.0;   //Time to sleep during append_str_to_file
-int      io_write_attempts        = 1;      //Attempts to write to the file if it is locked
+double   io_sleep_time            = 0.0;     //Time to sleep during append_str_to_file
+int      io_write_attempts        = 1;       //Attempts to write to the file if it is locked
+int      exit_upon_overflow       = 0;       //Whether to stop the MC process once the history or the stack overflow is detected
 
 void print_metropolis_parameters()
 {
@@ -26,6 +27,7 @@ void print_metropolis_parameters()
  logs_Write(0, "\tPARAMETERS OF THE METROPOLIS ALGORITHM");
  logs_WriteParameter(0,                  "Max. recursion depth",     "%i",   max_recursion_depth);
  logs_WriteParameter(0,           "Probability of forward move", "%2.4lf",   p_plus);
+ logs_WriteParameter(0,    "Action upon state/history overflow",     "%s",   (exit_upon_overflow? "Stop MC process" : "Reset MC process") );
  if(p_plus_tuning)
   logs_WriteParameter(0,               "p_plus tuning interval",     "%i",   p_plus_tuning_interval);
  logs_WriteParameter(0,     "Number of MC steps for production",     "%i (%i%% of INT_MAX)",    prod_mc_steps, (int)(round(100.0*(double)prod_mc_steps/(double)INT_MAX)) );

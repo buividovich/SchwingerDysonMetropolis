@@ -42,14 +42,15 @@ DECLARE_ACTION_AMPLITUDE(create)
 
 DECLARE_ACTION_DO(create)
 {
- RETURN_IF_FALSE(X.nel<X.max_nel-2, ERR_STACK_OVERFLOW);
  if(data_in == NULL)
  {
   X.top = 0; //If called with NULL, should completely reset the state
   X.nel = 0;
   H.top = 0;
   H.nel = 0;
- };  
+ };
+ 
+ RETURN_IF_FALSE(X.nel<X.max_nel-2, ERR_STACK_OVERFLOW);  
 
  X.start[ X.top] = (X.top>0? X.start[X.top-1] + X.len[X.top-1] : 0);
  X.len[   X.top] = 2; //We push a pair of momenta on the top of the stack

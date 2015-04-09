@@ -75,9 +75,11 @@ void init_lat_size_array();
    break;                                                                \
    case 'C':                                                             \
     SAFE_SSCANF_BREAK(optarg, "%lf", cc);                                \
+    param_auto_tuning = 0;                                               \
    break;                                                                \
    case 'D':                                                             \
     SAFE_SSCANF_BREAK(optarg, "%lf", NN);                                \
+    param_auto_tuning = 0;                                               \
    break;                                                                \
    case 'E':                                                             \
     SAFE_SSCANF_BREAK(optarg,  "%i", DIM);                               \
