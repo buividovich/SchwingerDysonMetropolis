@@ -125,7 +125,7 @@ void process_mc_stat(const char* prefix, int save_to_files)
  //Saving the statistical characteristics of the MC process
  if(save_to_files && mc_stat_file!=NULL)
  {
-  int res = safe_append_to_file(mc_stat_file, io_sleep_time, io_write_attempts, "%s %2.4E %2.4E %2.4E %2.4E %2.4E %2.4E\n", prefix, acceptance_rate, mean_recursion_depth, mean_nA, err_nA, maxnA, p_plus);
+  int res = safe_append_to_file(mc_stat_file, io_sleep_time, io_write_attempts, "%s %2.4E %2.4E %2.4E %2.4E %2.4E %2.4E %2.4E\n", prefix, acceptance_rate, mean_recursion_depth, mean_nA, err_nA, maxnA, p_plus, mean_sign);
   if(res!=0)
    logs_WriteError("safe_append_to_file %s failed with code %i", mc_stat_file, res);
  }; 

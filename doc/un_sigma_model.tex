@@ -93,7 +93,7 @@ Performing the Gaussian integral over $g_x$ and $g^{\dag}_x$, we arrive at the f
  \mathcal{Z} = \int d\xi_x
  \expa{N \tr\ln\lr{D_{xy} + i \xi_x \delta_{xy}} + \frac{i N}{\lambda} \sum\limits_x \tr \xi_x } .
 \end{eqnarray}
-In order to make this path integral over Hermitian matrices well-defined, we now analytically continue the integration variable to $\phi_x = i \xi_x$, assuming again that $\phi_x$ is Hermitian. Simultaneously, we have to change $\lambda \rightarrow -\lambda$. Such a prescription is motivated by a nontrivial structure of Lefshetz thimbles in this theory. This leads, finally, to the following representation of the partition function:
+In order to make this path integral over Hermitian matrices well-defined, we now analytically continue the integration variable to $\phi_x = i \xi_x$, assuming again that $\phi_x$ is Hermitian. Simultaneously, we change $\lambda \rightarrow -\lambda$. Such a prescription is motivated by a nontrivial structure of Lefshetz thimbles in this theory (see the discussion below). This leads, finally, to the following representation of the partition function:
 \begin{eqnarray}
 \label{sm_partition_matrix_lagrange_only}
  \mathcal{Z} = \int d\phi_x
@@ -130,7 +130,7 @@ Differentiating by parts and taking into account the last identity in (\ref{G_id
  \vev{G_{x_1 x_1} \phi_{x_1} G_{x_1 y_1} \ldots G_{x_n y_n}}
  - \lambda^{-1} \vev{\phi_{x_1} G_{x_1 y_1} \ldots G_{x_n y_n} } = 0
 \end{eqnarray}
-In order to get the equations which involve only correlators of $G_{x y}$, we should now use the first two identities in (\ref{G_identities}) to get rid of $\phi_x$. However, there are several ways to do that which leads to different equations. Here we choose the way which does not produce the terms which can be further transformed by using the unitarity conditions. That is, in the third summand in (\ref{sd_derivation2}) we apply the second identity in (\ref{G_identities}) to $G_{x_A x_1}$, and in the fourth summand - to $G_{x_1 x_1} \xi_{x_1}$. As a result, we obtain the following generic set of equations:
+In order to get the equations which involve only correlators of $G_{x y}$, we should now use the first two identities in (\ref{G_identities}) to get rid of $\phi_x$. However, there are several ways to do that which leads to different equations. Here we choose the way which does not produce the terms which can be further transformed by using the unitarity conditions. That is, in the third summand in (\ref{sd_derivation2}) we apply the second identity in (\ref{G_identities}) to $G_{x_A x_1}$, and in the fourth summand - to $G_{x_1 x_1} \phi_{x_1}$. As a result, we obtain the following generic set of equations:
 \begin{eqnarray}
 \label{sd_G_general}
  \vev{ G_{x_1 y_1} \ldots G_{x_n y_n} } \lr{1 + D_{x_1 z} \vev{G_{z x_1}}}
@@ -215,7 +215,7 @@ we can rewrite the above equations as
  =
   \frac{1}{V} \mathcal{G}\lr{p_1} \delta\lr{p_1 + q_1} \vev{G_{p_2 q_2} \ldots G_{p_n q_n}}
  + \nonumber \\ +
- \frac{1}{V} \mathcal{G}\lr{p_1} \sum\limits_{A=2}^{n} \sum\limits_{\tilde{p}_1, \tilde{p}_A} \delta\lr{p_1 + p_A - \tilde{p}_1 - \tilde{p}_A} \vev{G_{\tilde{p}_1 q_1} \ldots G_{p_{A-1} q_{A-1}}} \vev{G_{\tilde{p}_A q_A} \ldots G_{p_n q_n}}
+ \frac{\lambda}{V} \mathcal{G}\lr{p_1} \sum\limits_{A=2}^{n} \sum\limits_{\tilde{p}_1, \tilde{p}_A} \delta\lr{p_1 + p_A - \tilde{p}_1 - \tilde{p}_A} \vev{G_{\tilde{p}_1 q_1} \ldots G_{p_{A-1} q_{A-1}}} \vev{G_{\tilde{p}_A q_A} \ldots G_{p_n q_n}}
  - \nonumber \\ -
  \lambda \mathcal{G}\lr{p_1} \sum\limits_{A=2}^{n}
  \sum\limits_{\tilde{p}_1 \tilde{q}_A \tilde{p}_A}
@@ -413,15 +413,15 @@ In momentum space these free correlators read
 In practice, one can perform a linear mapping $\ket{\phi} = C \ket{\phi'}$ of variables in order to minimize $\bar{\mathcal{N}}$ and thus enhance the performance of the algorithm. In terms of the new variables, the original linear system of equations looks like $\ket{\phi'} = A' \ket{\phi'} + \ket{b'} = C^{-1} A C \ket{\phi'} + C^{-1} \ket{b}$. Let us now calculate $\bar{\mathcal{N}}$ for the new system:
 \begin{eqnarray}
 \label{mean_nA_new}
- \bar{\mathcal{N}}' = \bra{1} A' \ket{w'} 
- = 
+ \bar{\mathcal{N}}' = \bra{1} A' \ket{w'}
+ =
  \frac{\bra{1} C^{-1} A \lr{1 - A}^{-1} \ket{b}}{\bra{1} C^{-1} \lr{1 - A}^{-1} \ket{b}}
  = \nonumber \\ =
  \frac{\bra{1} C^{-1} A \ket{\phi}}{\bra{1} C^{-1} \ket{\phi}}
- = 
+ =
  \frac{\bra{1} C^{-1} \lr{\ket{\phi} - \ket{b}} }{\bra{1} C^{-1} \ket{\phi}}
  = \nonumber \\ =
- 1 - \frac{\bra{1} C^{-1} \ket{b}}{\bra{1} C^{-1} \ket{\phi}} 
+ 1 - \frac{\bra{1} C^{-1} \ket{b}}{\bra{1} C^{-1} \ket{\phi}}
  =
  1 - \frac{\bra{1} C^{-1} \ket{b}}{\bra{1} C^{-1} \ket{w}} \, \frac{1 - \bar{\mathcal{N}}}{\bra{1}\ket{b}}.
 \end{eqnarray}
