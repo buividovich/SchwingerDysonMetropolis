@@ -10,10 +10,10 @@
 //Lattice propagator structure
 typedef struct 
 {
- int     allocated;     //=1 if all the memory has already been allocated
- double* probabilities;
- double  sigma; // = sum of propagator over all momenta
- double  mass_sq; //Squared mass
+ int         allocated;     //=1 if all the memory has already been allocated
+ t_frc_data* frc_data;
+ double      sigma;         // = sum of propagator over all momenta
+ double      mass_sq;       //Squared mass
 } t_lat_propagator;
 
 void    init_lat_propagator(t_lat_propagator* P, int allocate, double mass_sq);

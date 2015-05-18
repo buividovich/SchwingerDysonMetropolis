@@ -32,6 +32,7 @@ void init_observable_stat()
     G4_hist[s][i] = 0;
   };  
  };
+ init_stack_statistics(max_stack_nel);
 }
 
 void gather_observable_stat()
@@ -58,7 +59,8 @@ void gather_observable_stat()
    G4_hist[(asign[ns]>0? 0 : 1)][m] ++;
   };
  };
-  
+ 
+ gather_stack_statistics(&X); 
 }
 
 void process_observable_stat() //It is assumed that process_mc_stat was already called!!!
@@ -66,6 +68,19 @@ void process_observable_stat() //It is assumed that process_mc_stat was already 
  char   *outstr = NULL;
  char   cstr[20];
  double rescaling_factor, G2_total = 0.0, G2_total_err = 0.0;
+ 
+ if(stack_stat_file!=NULL)
+ {
+  FILE* f = fopen(stack_stat_file, "w");
+  if(f==NULL)
+   logs_WriteError("Cannot open the file %s for writing", stack_stat_file);
+  else
+   print_stack_statistics(f);
+  fclose(f);
+ };
+ 
+ if(logs_noise_level>=1)
+  print_stack_statistics(stdout);
  
  double source_norm          = action_create_amplitude(NULL);
  double normalization_factor = source_norm/(1.0 - mean_nA);
@@ -95,20 +110,27 @@ void process_observable_stat() //It is assumed that process_mc_stat was already 
    SP = (double)(G2_hist[0][i] - G2_hist[1][i])/(double)(G2_hist[0][i] + G2_hist[1][i]);
    
   sprintf_coords(cstr, i);
-  sprintf_append(&outstr, "%s %2.4E %2.4E %2.4E ", cstr, G, dG, SP);
+  sprintf_append(&outstr, "%s %+2.4E %+2.4E %+2.4E ", cstr, G, dG, SP);
+  
+  char shouldbestr[500];
+  if(DIM==1 && LT==2)
+   sprintf(shouldbestr, " (should be %2.6lf)", (i==0? 0.5 + 1.0/lambda : 0.5 - 1.0/lambda) );
+  else
+   sprintf(shouldbestr, " ");
+   
   if(save_g2_hist)   
-   logs_Write(0, "\t G%s:\t %+2.4E +/- %+2.4E,\t sp = %2.4E, \t max. order = %i", cstr, G, dG, SP, max_G2_order);
+   logs_Write(0, "\t G%s:\t %+2.4E +/- %+2.4E%s,\t sp = %2.4E, \t max. order = %i", cstr, G, dG, shouldbestr, SP, max_G2_order);
  };
  G2_total_err = sqrt(G2_total_err);
- logs_Write(-1, " G2 TOTAL: %2.4E +/- %2.4E", G2_total, G2_total_err);
- sprintf_append(&outstr, "%2.4E %2.4E\n", G2_total, G2_total_err);
+ logs_Write(0, " G2 TOTAL: %2.4E +/- %2.4E", G2_total, G2_total_err);
+ sprintf_append(&outstr, "%+2.4E %+2.4E\n", G2_total, G2_total_err);
  
  if(observables_file!=NULL && save_g2_hist)
  {
-  int res = safe_append_str_to_file(observables_file, outstr);
+  int res = safe_append_str_to_file(observables_file, outstr, io_sleep_time, io_write_attempts);
   if(res!=0)
    logs_WriteError("safe_append_str_to_file %s failed with code %i", observables_file, res);
- }; 
+ };
  
  //Printing out the data for G4
  if(save_g4_hist)
@@ -158,8 +180,8 @@ void process_observable_stat() //It is assumed that process_mc_stat was already 
 
 void free_observable_stat()
 {
- int s;
- for(s=0; s<2; s++)
+ free_stack_statistics();
+ for(int s=0; s<2; s++)
   SAFE_FREE(G2_hist[s]);
 }
 

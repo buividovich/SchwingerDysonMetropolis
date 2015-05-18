@@ -16,6 +16,7 @@ int      min_observables_order    = 0;        //Minimal order of observables whi
 int      max_observables_order    = INT_MAX;  //Correspondingly, maximal order
 //Output files
 char*    observables_file         = NULL;     //File for the expectation values of the correlators
+char*    stack_stat_file          = NULL;     //File for histograms characterizing the stack usage
 //Parameter tuning parameters
 int      param_auto_tuning        = 1;        //Automatic tuning of transition amplitudes so that nAs are minimized
 double   param_tuning_accuracy    = 0.000001; //Accuracy of parameter auto-tuning
@@ -47,6 +48,8 @@ void print_largeN_QFT_parameters()
  logs_WriteParameter(0, "Check stack consistency at every step",       "%s",      (check_stack? "YES" : "NO"));
  if(observables_file!=NULL)
  logs_WriteParameter(0,                      "Observables file",       "%s",      observables_file);
+ if(stack_stat_file!=NULL)
+ logs_WriteParameter(0,                 "Stack statistics file",       "%s",      stack_stat_file);
 }
 
 void largeN_QFT_prefix(char* prefix) //Prints lambda, cc, NN, LT, LS to prefix

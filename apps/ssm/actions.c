@@ -288,7 +288,8 @@ DECLARE_ACTION_AMPLITUDE(flip_momenta)
 
 DECLARE_ACTION_DO(flip_momenta)
 {
- RETURN_IF_FALSE(X.top>1, ERR_WRONG_STATE);
+ RETURN_IF_FALSE(                X.top>1, ERR_WRONG_STATE);
+ RETURN_IF_FALSE(      H.nel<H.max_nel-2, ERR_HISTORY_OVERFLOW);
  RETURN_IF_FALSE( OH_top<max_history_nel, ERR_OTHER);
  RETURN_IF_FALSE(              OH_top>=0, ERR_OTHER);
  

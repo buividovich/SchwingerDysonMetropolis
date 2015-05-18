@@ -27,6 +27,7 @@ extern int      min_observables_order;    //Minimal order of observables which a
 extern int      max_observables_order;    //Correspondingly, maximal order
 //Output files
 extern char*    observables_file;         //File for the expectation values of the correlators
+extern char*    stack_stat_file;          //File for histograms characterizing the stack usage
 extern int      param_auto_tuning;        //Automatic tuning of transition amplitudes so that nAs are minimized
 extern double   param_tuning_accuracy;    //Accuracy of parameter tuning
 extern int      param_tuning_max_iter;    //Max. allowed number of iterations in param auto-tuning
@@ -63,6 +64,7 @@ void init_lat_size_array();
  {      "param-tuning-accuracy",  required_argument,                       NULL, 'M'}, \
  {      "param-tuning-max-iter",  required_argument,                       NULL, 'N'}, \
  {           "observables-file",  required_argument,                       NULL, 'O'}, \
+ {            "stack-stat-file",  required_argument,                       NULL, 'P'}, \
  {       "no-param-auto-tuning",        no_argument,         &param_auto_tuning,   0}, \
  {             "no-stack-check",        no_argument,               &check_stack,   0}
 
@@ -121,8 +123,11 @@ void init_lat_size_array();
    break;                                                                \
    case 'O':                                                             \
     COPY_FILE_NAME(optarg, observables_file);                            \
+   break;                                                                \
+   case 'P':                                                             \
+    COPY_FILE_NAME(optarg, stack_stat_file);                             \
    break;
 
-static const char largeN_QFT_short_option_list[] = "A:B:C:D:E:F:G:H:I:J:K:L:M:N:O:";
+static const char largeN_QFT_short_option_list[] = "A:B:C:D:E:F:G:H:I:J:K:L:M:N:O:P:";
 
 #endif

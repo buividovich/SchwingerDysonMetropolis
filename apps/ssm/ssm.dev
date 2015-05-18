@@ -1,7 +1,7 @@
 [Project]
 FileName=ssm.dev
 Name=ssm
-UnitCount=33
+UnitCount=35
 Type=1
 Ver=1
 ObjFiles=
@@ -348,9 +348,9 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit34]
-FileName=statistics.c
+FileName=..\..\include\stack_statistics.h
 CompileCpp=0
-Folder=hmm
+Folder=sd_metropolis_include
 Compile=1
 Link=1
 Priority=1000
@@ -358,9 +358,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit35]
-FileName=statistics.h
+FileName=..\..\src\stack_statistics.c
 CompileCpp=0
-Folder=hmm
+Folder=sd_metropolis_src
 Compile=1
 Link=1
 Priority=1000

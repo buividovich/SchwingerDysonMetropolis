@@ -12,7 +12,7 @@ ifeq ($(DEBUG), 1)
  CCFLAGS	+=	 -O0 -g3  -Wno-unknown-pragmas
  SUFF       :=   dbg
 else
- CCFLAGS	+=	-O3  -Wno-unknown-pragmas
+ CCFLAGS	+=	-O2  -Wno-unknown-pragmas
  SUFF       :=
 endif
 

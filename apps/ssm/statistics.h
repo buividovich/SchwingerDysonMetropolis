@@ -12,6 +12,7 @@
 
 #include "parameters.h"
 #include "actions.h"
+#include "stack_statistics.h"
 
 extern double    astop;
 extern int*      G2_hist[2];

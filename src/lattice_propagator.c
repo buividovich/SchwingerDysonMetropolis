@@ -10,31 +10,39 @@ void init_lat_propagator(t_lat_propagator* P, int allocate, double mass_sq)
   for(i=1; i<DIM; i++)
    my_lat_sizes[i] = LS;
   lat_init(DIM, my_lat_sizes);
-  SAFE_MALLOC(P->probabilities, double, lat_vol);
-  P->allocated = 1;
  };
- //Saving propagator values for all lattice momenta - to speed up the generation of random momenta
+ //Calculating the array of probabilities in order to initialize fast random choice
+ DECLARE_AND_MALLOC(probs, double, lat_vol);
  //At the same time, calculating sigma
  P->mass_sq = mass_sq;
  P->sigma   = 0.0;
  for(i=0; i<lat_vol; i++)
  {
   lat_idx2coords(i, m);
-  P->probabilities[i] = fabs(lat_propagator(m, mass_sq));
-  P->sigma += P->probabilities[i];
+  probs[i] = fabs(lat_propagator(m, mass_sq));
+  P->sigma += probs[i];
  };
  //Finally, normalizing the probabilities to unity
  for(i=0; i<lat_vol; i++)
-  P->probabilities[i] /= P->sigma;
+  probs[i] /= P->sigma;
+ //Initializing the fast random choice algorithm
+ if(allocate)
+  SAFE_MALLOC(P->frc_data, t_frc_data, 1); 
+ init_fast_rand_choice(probs, lat_vol, P->frc_data);
  //And the sigma itself should be normalized by volume
  P->sigma /= (double)lat_vol; 
+ 
  logs_Write(2, "init_lat_propagator: P->sigma = %2.4E, lat_vol = %i", P->sigma, lat_vol);
+ 
+ P->allocated = 1; 
+ SAFE_FREE(probs);
 }
 
 void free_lat_propagator(t_lat_propagator* P)
 {
  lat_free();
- SAFE_FREE(P->probabilities);
+ free_fast_rand_choice(P->frc_data);
+ SAFE_FREE(P->frc_data);
  P->allocated = 0;
 }
 
@@ -54,7 +62,7 @@ double  lat_propagator(int* m, double mass_sq)
 
 void rand_momentum(t_lat_propagator* P, int* m)
 {
- int i = rand_choice(P->probabilities, lat_vol);
+ int i = fast_rand_choice(P->frc_data);
  lat_idx2coords(i, m);    
 }
 

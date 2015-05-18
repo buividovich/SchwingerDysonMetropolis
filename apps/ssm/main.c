@@ -44,13 +44,13 @@ int main(int argc, char *argv[])
  ansi_colors = 1;
  print_errors_to_stderr = 0;
  
+ logs_Write(0, "\n\nDIAGRAMMATIC MONTE-CARLO FOR SU(N) SIGMA MODEL IN THE PLANAR LIMIT - BASED ON SC EXPANSION\n");
+ 
  init_rand(time(NULL));
  
  parse_command_line_options(argc, argv);
  init_actions();
  init_parameters();
- 
- logs_Write(0, "\n\nDIAGRAMMATIC MONTE-CARLO FOR SU(N) SIGMA MODEL IN THE PLANAR LIMIT - BASED ON SC EXPANSION\n");
 
  init_metropolis();
  init_observable_stat();
