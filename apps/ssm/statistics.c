@@ -2,36 +2,21 @@
 
 double                     astop  = 0.0;
 int*                   G2_hist[2] = {NULL, NULL};
-int*                   G4_hist[2] = {NULL, NULL};
 int                  max_G2_order = 0;
-int                  max_G4_order = 0;
-int                      lat_vol2 = 0;
-int                      lat_vol3 = 0;
-int                      lat_vol4 = 0;
 
 void init_observable_stat()
 {
  int s, i;
- lat_vol2 = lat_vol*lat_vol;
- lat_vol3 = lat_vol2*lat_vol;
- lat_vol4 = lat_vol3*lat_vol;
  
  max_G2_order = 0;
- max_G4_order = 0;
 
  for(s=0; s<2; s++)
  {
   SAFE_MALLOC(G2_hist[s], int, lat_vol);
   for(i=0; i<lat_vol; i++)
    G2_hist[s][i] = 0;
-   
-  if(save_g4_hist)
-  { 
-   SAFE_MALLOC(G4_hist[s], int, lat_vol4); 
-   for(i=0; i<lat_vol4; i++)
-    G4_hist[s][i] = 0;
-  };  
  };
+ 
  init_stack_statistics(max_stack_nel);
 }
 
@@ -46,29 +31,12 @@ void gather_observable_stat()
    G2_hist[(asign[ns]>0? 0 : 1)][m] ++;
   };
  };
- 
- if(save_g4_hist && X.len[X.top-1]==4)
- {
-  max_G4_order = MAX(O[X.top-1], max_G4_order);
-  if(O[X.top-1]<=max_observables_order && O[X.top-1]>=min_observables_order)
-  {
-   int m =          lat_coords2idx_safe(STACK_EL(X,0)) + 
-           lat_vol *lat_coords2idx_safe(STACK_EL(X,1)) +
-           lat_vol2*lat_coords2idx_safe(STACK_EL(X,2)) +
-           lat_vol3*lat_coords2idx_safe(STACK_EL(X,3)); 
-   G4_hist[(asign[ns]>0? 0 : 1)][m] ++;
-  };
- };
- 
+  
  gather_stack_statistics(&X); 
 }
 
 void process_observable_stat() //It is assumed that process_mc_stat was already called!!!
 {
- char   *outstr = NULL;
- char   cstr[20];
- double rescaling_factor, G2_total = 0.0, G2_total_err = 0.0;
- 
  if(stack_stat_file!=NULL)
  {
   FILE* f = fopen(stack_stat_file, "w");
@@ -79,7 +47,7 @@ void process_observable_stat() //It is assumed that process_mc_stat was already 
   fclose(f);
  };
  
- if(logs_noise_level>=1)
+ if(logs_noise_level>=2)
   print_stack_statistics(stdout);
  
  double source_norm          = action_create_amplitude(NULL);
@@ -87,95 +55,53 @@ void process_observable_stat() //It is assumed that process_mc_stat was already 
  logs_Write(0, "Normalization factor of multiple-trace correlators: %2.4E\n", normalization_factor);
  normalization_factor = normalization_factor/(1.0 + mean_sign*normalization_factor);
  logs_Write(0, "Normalization factor of factorized single-trace correlators: %2.4E\n", normalization_factor);
- 
- sprintf_append(&outstr, "%2.4E ", lambda);
- 
+
  //Saving the data for G2 
  logs_Write(0, "Collected data for G2:");
- rescaling_factor     = NN*cc;
+ double G2_total = 0.0, G2_total_err = 0.0;
+ double G2_link  = 0.0, G2_link_err  = 0.0;
+ 
+ double rescaling_factor     = NN*cc;
 
  for(int i=0; i<lat_vol; i++)
  {   
-  double G  =      (double)(G2_hist[0][i] - G2_hist[1][i])/(double)nmc;
+  int m[4];
+  lat_idx2coords(i, m); 
+  
+  double G  =      (double)(G2_hist[0][i] - G2_hist[1][i]) /(double)nmc;
   double dG = sqrt((double)(G2_hist[0][i] + G2_hist[1][i]))/(double)nmc;
     
   G  *= rescaling_factor*normalization_factor;
   dG *= rescaling_factor*normalization_factor;
+  
   G2_total     += G;
   G2_total_err += SQR(dG);
-   
-  //SP characterizes the strength of the sign problem
-  double SP = 0.0;
-  if(abs(G2_hist[0][i] + G2_hist[1][i])!=0)
-   SP = (double)(G2_hist[0][i] - G2_hist[1][i])/(double)(G2_hist[0][i] + G2_hist[1][i]);
-   
-  sprintf_coords(cstr, i);
-  sprintf_append(&outstr, "%s %+2.4E %+2.4E %+2.4E ", cstr, G, dG, SP);
-  
-  char shouldbestr[500];
-  if(DIM==1 && LT==2)
-   sprintf(shouldbestr, " (should be %2.6lf)", (i==0? 0.5 + 1.0/lambda : 0.5 - 1.0/lambda) );
-  else
-   sprintf(shouldbestr, " ");
-   
-  if(save_g2_hist)   
-   logs_Write(0, "\t G%s:\t %+2.4E +/- %+2.4E%s,\t sp = %2.4E, \t max. order = %i", cstr, G, dG, shouldbestr, SP, max_G2_order);
+ 
+  for(int mu=0; mu<DIM; mu++)
+  {
+   double cf = cos(2.0*M_PI*(double)m[mu]/(double)lat_size[mu]);
+   G2_link      += G*cf;
+   G2_link_err  += SQR(dG*cf);  
+  }; 
  };
  G2_total_err = sqrt(G2_total_err);
+ 
+ G2_link      = G2_link/(double)DIM;
+ G2_link_err  = sqrt(G2_link_err/(double)DIM);
+ 
  logs_Write(0, " G2 TOTAL: %2.4E +/- %2.4E", G2_total, G2_total_err);
- sprintf_append(&outstr, "%+2.4E %+2.4E\n", G2_total, G2_total_err);
+ logs_Write(0, " G2  LINK: %2.4E +/- %2.4E",  G2_link,  G2_link_err);
+ logs_Write(0, " max. G2 order: %i", max_G2_order);
  
- if(observables_file!=NULL && save_g2_hist)
+ if(observables_file!=NULL)
  {
-  int res = safe_append_str_to_file(observables_file, outstr, io_sleep_time, io_write_attempts);
-  if(res!=0)
-   logs_WriteError("safe_append_str_to_file %s failed with code %i", observables_file, res);
+  FILE* f = fopen(observables_file, "a");
+  if(f==NULL)
+   logs_WriteError("Cannot open the file %s for writing", observables_file);
+  else
+   fprintf(f, "%2.4E %2.4E %2.4E %2.4E %2.4E\n", lambda, G2_link, G2_link_err, G2_total, G2_total_err);
+  fclose(f);
  };
- 
- //Printing out the data for G4
- if(save_g4_hist)
- {
-  logs_Write(0, "\nCollected data for G4:");
-  rescaling_factor     = NN*SQR(cc);
-  double order0_err           = 0.0;
-  for(int i=0; i<lat_vol4; i++)
-  {   
-   double G  =      (double)(G4_hist[0][i] - G4_hist[1][i])/(double)nmc;
-   double dG = sqrt((double)(G4_hist[0][i] + G4_hist[1][i]))/(double)nmc;
-    
-   G  *= rescaling_factor*normalization_factor;
-   dG *= rescaling_factor*normalization_factor;
-   
-   //SP characterizes the strength of the sign problem
-   double SP = 0.0;
-   if(abs(G4_hist[0][i] + G4_hist[1][i])!=0)
-    SP = (double)(G4_hist[0][i] - G4_hist[1][i])/(double)(G4_hist[0][i] + G4_hist[1][i]);
-  
-   int tmp = i; 
-   int p1 = tmp%lat_vol; tmp = tmp/lat_vol;
-   int q1 = tmp%lat_vol; tmp = tmp/lat_vol;
-   int p2 = tmp%lat_vol; tmp = tmp/lat_vol;
-   int q2 = tmp%lat_vol;    
-  
-   #define DELTA(_x) ( (_x)%lat_vol==0? 1.0 : 0.0 )
-   double sbG4 = (DELTA(p1 + q1)*DELTA(p2 + q2) + DELTA(p1 + q2)*DELTA(p2 + q1))/(double)lat_vol2 - 1.0/(double)lat_vol3;
-   #undef DELTA
-    
-   if((p1 + q1 + p2 + q2)%lat_vol==0)
-   {
-    logs_Write(0, "\tG[%i%i%i%i]:\t %+2.4E +/- %+2.4E, should be %+2.4E, \t SP = %+2.4E, \t diff = %+2.4E, \t max.order = %i", p1, q1, p2, q2, G, dG, sbG4, SP, SQR(G - sbG4), max_G4_order);
-    order0_err += SQR(G - sbG4); 
-   }
-   else
-   {
-    if(fabs(G)>0.0) 
-     logs_WriteError("Nonzero result for G4 at (p1 + q1 + p2 + q2)!=0!!! p1 = %i, q1 = %i, p2 = %i, q2 = %i, G = %2.4E +/- %2.4E", p1, q1, p2, q2, G, dG);
-   };  
-  };
-  logs_Write(0, "Overall error for G4: %2.4E", order0_err);
- };
- 
- SAFE_FREE(outstr);
 }
 
 void free_observable_stat()

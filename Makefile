@@ -128,10 +128,10 @@ $(1)_dataget:
 endef
 
 define app_plots_template
- $(1)_PLT_FILES = $$(wildcard ./apps/$(1)/*.plt)
+$(1)_PLT_FILES = $$(wildcard ./apps/$(1)/*.plt)
 $(1)_plots:
-	$$(foreach plt_file, $$($(1)_PLT_FILES), gnuplot $$(plt_file);)
 	gnuplot -e "app_name = '$(1)'" ./plots/mc_stat.plt
+	$$(foreach plt_file, $$($(1)_PLT_FILES), gnuplot $$(plt_file);)
 endef
 
 APPS          = $(notdir $(shell find ./apps/* -type d))

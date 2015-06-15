@@ -1,14 +1,10 @@
 #include "parameters.h"
 
-int save_g4_hist = 0;
-int save_g2_hist = 1;
 
 static struct option long_options[] =
 {
  METROPOLIS_LONG_OPTIONS,
  LARGEN_QFT_LONG_OPTIONS,
- {          "save-g4-hist",        no_argument,              &save_g4_hist,   1},
- {     "dont-save-g2-hist",        no_argument,              &save_g2_hist,   0},
  {                       0,                  0,                       NULL,   0}
 };
 

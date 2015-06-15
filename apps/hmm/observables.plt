@@ -27,7 +27,8 @@ set key right top
 set xlabel "{/Symbol l}"
 set ylabel "Mean sign of G2"
 plot\
-'G_nmc5000000.dat'  using ($1):($4) title 'N_{mc} =  5x10^6'  with lines ls 2 
+'G_nmc20000000.dat'  using ($1):($6)  title 'G_2'  with lines ls 2,\
+'G_nmc20000000.dat'  using ($1):($12) title 'G_4'  with lines ls 3
 
 set logscale y
 set out    'G:\\LAT\\sd_metropolis\\plots\\hmm\\observable_comparison.eps'
@@ -35,12 +36,33 @@ set key left top
 set xlabel "{/Symbol l}"
 set ylabel "G_n"
 plot\
-'G_nmc5000000.dat' using ($1):($2):($3)   title 'G_2'  with yerrorbars ls 2,\
-'G_nmc5000000.dat' using ($1):($6):($7)   title 'G_4'  with yerrorbars ls 4,\
-'G_nmc5000000.dat' using ($1):($10):($11) title 'G_6'  with yerrorbars ls 6,\
-G(1, x)                                   notitle      with lines      ls 3,\
-G(2, x)                                   notitle      with lines      ls 5,\
-G(3, x)                                   notitle      with lines      ls 7
+'G_nmc20000000.dat'  using ($1):($4):($5)    title 'G_2'  with yerrorbars ls 2,\
+'G_nmc20000000.dat'  using ($1):($10):($11)  title 'G_4'  with yerrorbars ls 3,\
+G(1, x)                                    notitle        with lines      ls 2,\
+G(2, x)                                    notitle        with lines      ls 3,
 
-#'G_nmc5000000.dat' using ($1):($9)        notitle      with lines      ls 5,\
-#'G_nmc5000000.dat' using ($1):($13)       notitle      with lines      ls 7,\
+
+quit
+
+set logscale y
+set out    'G:\\LAT\\sd_metropolis\\plots\\hmm\\stack_stat.eps'
+set key left top
+set xlabel "{/Symbol l}"
+set ylabel "G_n"
+plot \
+for[i=1:8] \
+'stack_stat_l'.sprintf("%2.4f", 0.01*i).'_nmc5000000.dat' using ($1):($2):($3)   title '{/Symbol l}='.sprintf("%2.4f", 0.01*i)  with yerrorbars ls i
+
+unset logscale y
+set out    'G:\\LAT\\sd_metropolis\\plots\\hmm\\ns_histories.eps'
+set key left top
+set xlabel "t_{MC}/1000"
+set ylabel "m"
+set yrange [0:60]
+plot \
+'ns_history_l0.1000_nmc10000.dat' using ($1/1000):($2+1) title '{/Symbol l}/{/Symbol l}_c=1.20' with lines ls 1 lw 2,\
+'ns_history_l0.0850_nmc10000.dat' using ($1/1000):($2+1) title '{/Symbol l}/{/Symbol l}_c=1.02' with lines ls 2 lw 2,\
+'ns_history_l0.0800_nmc10000.dat' using ($1/1000):($2+1) title '{/Symbol l}/{/Symbol l}_c=0.96' with lines ls 3 lw 2,\
+'ns_history_l0.0500_nmc10000.dat' using ($1/1000):($2+1) title '{/Symbol l}/{/Symbol l}_c=0.60' with lines ls 4 lw 2
+
+

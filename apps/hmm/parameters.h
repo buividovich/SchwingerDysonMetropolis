@@ -16,6 +16,7 @@
 
 int  parse_command_line_options(int argc, char **argv);
 void init_parameters();
+void free_parameters();
 void print_parameters();
 
 #endif

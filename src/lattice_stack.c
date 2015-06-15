@@ -33,7 +33,7 @@ int   check_stack_consistency(t_lat_stack* lat_stack, const char* stack_name)
   if(lat_stack->start[0]!=0)
   {
    res = -1;
-   logs_WriteError("%s->start[0]!=0", stack_name);
+   logs_WriteError("STACK CHECK:\t %s->start[0]!=0", stack_name);
   };
   my_nel += lat_stack->len[0];
  }; 
@@ -43,9 +43,9 @@ int   check_stack_consistency(t_lat_stack* lat_stack, const char* stack_name)
   if(lat_stack->start[i] != (lat_stack->start[i-1] + lat_stack->len[i-1]))
   {
    res = -2;
-   logs_WriteError("%s->start[%i] = %i", stack_name,   i, lat_stack->start[i]);
-   logs_WriteError("%s->start[%i] = %i", stack_name, i-1, lat_stack->start[i-1]);
-   logs_WriteError("%s->len[%i]   = %i", stack_name, i-1, lat_stack->len[i-1]);
+   logs_WriteError("STACK CHECK:\t %s->start[%i] = %i", stack_name,   i, lat_stack->start[i]);
+   logs_WriteError("STACK CHECK:\t %s->start[%i] = %i", stack_name, i-1, lat_stack->start[i-1]);
+   logs_WriteError("STACK CHECK:\t %s->len[%i]   = %i", stack_name, i-1, lat_stack->len[i-1]);
   };
   my_nel += lat_stack->len[i];
  }; 

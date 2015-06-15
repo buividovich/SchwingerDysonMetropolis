@@ -43,3 +43,9 @@ void print_metropolis_parameters()
   logs_WriteParameter(0,         "Recursion depth history file",     "%s",   ns_history_file);
 }
 
+void  free_metropolis_parameters()
+{
+ SAFE_FREE(mc_stat_file);     
+ SAFE_FREE(action_stat_file); 
+ SAFE_FREE(ns_history_file);  
+}

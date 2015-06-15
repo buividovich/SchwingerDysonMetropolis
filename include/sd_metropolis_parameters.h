@@ -21,6 +21,8 @@ extern double   io_sleep_time;          //Time to sleep during append_str_to_fil
 extern int      io_write_attempts;      //Attempts to write to the file if it is locked
 extern int      exit_upon_overflow;     //Whether to stop the MC process once the history or the stack overflow is detected
 
+//TODO-not so urgent: cleanup for file names
+
 #define METROPOLIS_LONG_OPTIONS                                                            \
  {      "max-recursion-depth",  required_argument,                      NULL,  '0'},       \
  {                   "p-plus",  required_argument,                      NULL,  '1'},       \
@@ -90,5 +92,6 @@ extern int      exit_upon_overflow;     //Whether to stop the MC process once th
 static const char metropolis_short_option_list[] = "0:1:2:3:4:5:6:7:8:9:Z:Y:X:";
 
 void print_metropolis_parameters();
+void  free_metropolis_parameters();
 
 #endif

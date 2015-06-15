@@ -5,15 +5,19 @@ double   lambda                   = 0.05;     //tHooft coupling constant
 double   meff_sq                  = 0.0;      //Square of the effective mass
 double   cc                       = 1.0;      //Rescaling of observables according to the number of fields in the correlator
 double   NN                       = 1.0;      //Overall rescaling of observables
+double   genus_A                  = 1.0;      //Constant A in recursion for cc[g]
+double   genus_nu                 = 1.1;      //Constant nu in recursion for cc[g]
+double   genus_f_exponent         = 1.0;      //This is an exponent before the gamma function in f[g] 
 int      DIM                      = 1;        //Space-time dimensionality
 int      LT                       = 2;        //Temporal size of the system
 int      LS                       = 2;        //Spatial size of the system 
 //Parameters of the statistical analysis of the MC data
 int      max_stack_nel            = 10000;    //Maximal number of elements in the stack characterizing the system state
 int      max_history_nel          = 10000;    //Maximal number of elements in the stack containing the history of momenta contractions
-int      max_correlator_order     = 5;        //Maximal correlator order to trace
+int      max_correlator_order     = 2;        //Maximal correlator order to trace
 int      min_observables_order    = 0;        //Minimal order of observables which are included into statistics in some formal expansion (e.g. SC/WC expansion)
-int      max_observables_order    = INT_MAX;  //Correspondingly, maximal order
+int      max_observables_order    = INT_MAX;  //Correspondingly, maximal order      
+int      max_genus                = 0;        //Max order of 1/N^2 expansion
 //Output files
 char*    observables_file         = NULL;     //File for the expectation values of the correlators
 char*    stack_stat_file          = NULL;     //File for histograms characterizing the stack usage
@@ -23,6 +27,12 @@ double   param_tuning_accuracy    = 0.000001; //Accuracy of parameter auto-tunin
 int      param_tuning_max_iter    = 1000;     //Max. allowed number of iterations in param auto-tuning
 //In debug mode, we can also check the stack consistency at every step
 int      check_stack              = 1;
+//Calculable parameters - to be filled by initialization procedures
+double*  cc_genus                 = NULL;
+double*  NN_genus                 = NULL;
+double*   f_genus                 = NULL;
+//Variable for genus counting
+int         genus                 = 0;
 
 
 void print_largeN_QFT_parameters()
@@ -35,6 +45,13 @@ void print_largeN_QFT_parameters()
  logs_WriteParameter(0,          "Square of the effective mass",    "%2.4E",      meff_sq);
  logs_WriteParameter(0,                                    "cc", "%2.4E %s",      cc, (param_auto_tuning? "(Automatically tuned)" : ""));
  logs_WriteParameter(0,                                    "NN", "%2.4E %s",      NN, (param_auto_tuning? "(Automatically tuned)" : ""));
+ if(max_genus>0)
+ {
+  logs_WriteParameter(0,               "Max. observables genus",       "%i",      max_genus);
+  logs_WriteParameter(0,      "Constant A in genus reweighting",    "%2.4E",      genus_A);
+  logs_WriteParameter(0,     "Constant nu in genus reweighting",   "%2.2lf",      genus_nu);
+  logs_WriteParameter(0,      "f exponent in genus reweighting",    "%2.4E",      genus_f_exponent);
+ };
  if(param_auto_tuning)
  {
  logs_WriteParameter(0,     "Accuracy of parameter auto-tuning",    "%2.4E",      param_tuning_accuracy);
@@ -57,58 +74,70 @@ void largeN_QFT_prefix(char* prefix) //Prints lambda, cc, NN, LT, LS to prefix
  sprintf(prefix, "%2.4E %2.4E %2.4E %2.4E %i %i ", lambda, meff_sq, cc, NN, LT, LS);    
 }
 
-//The functions below implement auto-check of the minimization 
-void cc_NN_vicinity(double epsilon, double* data)
+double f_max_ampl_sum_genus()
 {
- double cc0 = cc;
- double NN0 = NN;
- 
- cc = cc0*(1.0 - epsilon);
- data[0] = f_max_ampl_sum();
- cc = cc0*(1.0 + epsilon);
- data[1] = f_max_ampl_sum();
- cc = cc0;
- 
- NN = NN0*(1.0 - epsilon);
- data[2] = f_max_ampl_sum();
- NN = NN0*(1.0 + epsilon);
- data[3] = f_max_ampl_sum();
- NN = NN0; 
-}
-
-int  check_cc_NN_minimum(double tol)
-{
- double vdata[4], S0;
- int res = 1, i;
- S0 = f_max_ampl_sum();
- cc_NN_vicinity(tol, vdata);
- for(i=0; i<4; i++)
-  res = res && (S0<vdata[i]); 
- if(res) 
-  logs_Write(0, "Max. amplitude sum has minimal value %2.4E at cc = %2.4E, NN = %2.4E", S0, cc, NN);
- else
-  logs_WriteWarning("Max. amplitude sum value %2.4E at cc = %2.4E, NN = %2.4E seems not to be the minimum...", S0, cc, NN); 
+ genus = 0;
+ double res = f_max_ampl_sum();
+ for(genus=1; genus<=max_genus; genus++)
+  res = MAX(res, f_max_ampl_sum());
  return res; 
 }
 
-int  find_cc_NN_minimum(double tol, double* min_val)
+//The functions below implement auto-check of the minimization 
+void param_vicinity(double epsilon, double** params, double* data, int nparams)
 {
- double vdata[4], S0, my_min_val = 0.0;
+ for(int ipar=0; ipar<nparams; ipar++)
+  for(int idir=0; idir<2; idir++)
+  {
+   double tmp = (params[ipar])[0];
+   (params[ipar])[0] = tmp*(1.0 + epsilon*(double)(2*idir - 1));
+   init_genus_constants(3);
+   data[2*ipar + idir] = f_max_ampl_sum_genus();
+   (params[ipar])[0] = tmp;
+  };
+ init_genus_constants(3); 
+}
+
+int  check_param_minimum(double epsilon, double** params, int nparams)
+{
+ DECLARE_AND_MALLOC(vdata, double, 2*nparams);
+ max_ampl_sum = f_max_ampl_sum_genus();
+ param_vicinity(epsilon, params, vdata, nparams);
+ 
+ int res = 1;
+ for(int i=0; i<2*nparams; i++)
+  res = res && (max_ampl_sum<vdata[i]); 
+  
+ if(res) 
+  logs_Write(0, "Max. amplitude sum has minimal value %2.4E at the current set of parameters", max_ampl_sum);
+ else
+  logs_WriteWarning("Max. amplitude sum value %2.4E seems not to be the minimum...", max_ampl_sum);
+ SAFE_FREE(vdata);
+ return res;
+}
+
+int  find_param_minimum(double tol, double** params, double* min_val, int nparams)
+{
+ DECLARE_AND_MALLOC(vdata, double, 2*nparams);
+     
+ double S0, my_min_val = 0.0;
  int res = 0, i, min_i, step_count;
  double epsilon = 0.1;
 
+ //TODO: better way of parameter output?
  while(epsilon>MIN(tol,0.01))
  {
-  logs_Write(1, "Searching for the minimal values of cc and NN with tolerance %2.4E, starting with cc = %2.4E, NN = %2.4E", epsilon, cc, NN);
+  logs_Write(1, "Searching for the minimal values of parameters with tolerance %2.4E", epsilon);
   res = 0;
   step_count = 0;
+  init_genus_constants(3);
   while(!res && step_count<param_tuning_max_iter)
   {
-   S0 = f_max_ampl_sum();
-   cc_NN_vicinity(epsilon, vdata);
+   S0 = f_max_ampl_sum_genus();
+   param_vicinity(epsilon, params, vdata, nparams);
    my_min_val = vdata[0];
    min_i      = 0;
-   for(i=1; i<4; i++)
+   for(i=1; i<2*nparams; i++)
     if(vdata[i]<my_min_val)
     {
      min_i      = i;
@@ -116,14 +145,15 @@ int  find_cc_NN_minimum(double tol, double* min_val)
     };
    res = (my_min_val>S0);
    
-   if(!res && min_i==0)
-    cc *= (1.0 - epsilon);
-   if(!res && min_i==1)
-    cc *= (1.0 + epsilon);
-   if(!res && min_i==2)
-    NN *= (1.0 - epsilon);
-   if(!res && min_i==3)
-    NN *= (1.0 + epsilon);
+   int iparam = min_i/2;
+   int idir   = min_i%2;
+   
+   if(!res)
+   {
+    (params[iparam])[0] *= (1.0 + epsilon*(double)(2*idir - 1));
+    init_genus_constants(3);
+   }; 
+      
    step_count ++;
    logs_Write(2, "Auto-minimizer step %03i: cc = %2.4E, NN = %2.4E, S = %2.4E", step_count, cc, NN, my_min_val);
   };
@@ -131,89 +161,66 @@ int  find_cc_NN_minimum(double tol, double* min_val)
   epsilon *= 0.1;
  };
  
+ init_genus_constants(3);
+
  logs_Write(0, "Minimal values of cc and NN (with precision %2.4E): \t cc = %2.4E, NN = %2.4E, max. amplitude sum = %2.4E", MIN(tol, 0.01), cc, NN, my_min_val);
  if(min_val!=NULL)
   *min_val = my_min_val;
 
+ SAFE_FREE(vdata);
  return res;
 }
 
-void cc_NN_vicinity_metropolis(double epsilon, int tune_mc_steps, double* v, double* dv, double* ccs, double* NNs, double* ms)
+double n2an_sup(double a)
 {
- double cc0 = cc;
- double NN0 = NN;
- double* sparam[2]  = { &cc,  &NN};
- double* sparam0[2] = {&cc0, &NN0};
- 
- for(int i=0; i<4; i++)
+ RETURN_IF_FALSE(a<1.0, 0.0);
+ double rp = 0.0;
+ double rn = 3.0*a;
+ int n = 2;
+ while(rn>=rp)
  {
-  (*(sparam[i/2])) = (*(sparam0[i/2]))*(1.0 + (double)(2*(i%2) - 1)*epsilon);
-  init_metropolis();
-  for(int imc=0; imc<tune_mc_steps; imc++)
-   metropolis_step();
-  //And now we should get the estimate of nA and its error
-  //We should be able to tell the minimal value within the error 
-  process_mc_stat("", 0);
-  ccs[i] = cc;
-  NNs[i] = NN;
-    v[i] = mean_nA;
-   dv[i] = err_nA;
-   ms[i] = mean_sign;
+  rp = rn;
+  rn = 0.5*(double)((n+1)*(n+2))*pow(a, (double)n);
+  n++;            
  };
- 
- cc = cc0;
- NN = NN0;
- init_metropolis();
+ return rp;  
 }
 
-//Tunes cc and NN using a real MC process in such a way that <nA> is minimized...
-double   tune_cc_NN_minimum(double tol, int tune_mc_steps)
+void init_genus_constants(int noise_level)
 {
- double v0, dv0, v[4], dv[4], ccs[4], NNs[4], ms[4], ret_val = 0.0;
- //First find the naive values of cc and NN - just to start with...
+ SAFE_MALLOC_IF_NULL(cc_genus, double, max_genus+2);
+ SAFE_MALLOC_IF_NULL(NN_genus, double, max_genus+2);
+ SAFE_MALLOC_IF_NULL( f_genus, double, max_genus+2);
+
+ cc_genus[0] = cc;
+ NN_genus[0] = NN;
+  f_genus[0] = 1.0;
+  
+ logs_Write(noise_level, "\t g=%02i,\t cc = %2.4E, f = %2.4E, sup = %2.4E", 0, cc_genus[0], f_genus[0], 0.0);
  
- logs_Write(-1, "Start auto-tuning of cc and NN with cc = %2.4E, NN = %2.4E\n", cc, NN);
- 
- init_metropolis();
- for(int imc=0; imc<tune_mc_steps; imc++)
-  metropolis_step();
- process_mc_stat("", 0);
- v0  = mean_nA;
- dv0 =  err_nA;
- 
- int step_count = 0, res = 0;
- while(!res && step_count<param_tuning_max_iter)
+ logs_Write(noise_level, "\nReweighting coefficients for the genus expansion");
+ for(int g=1; g<=max_genus; g++)
  {
-  cc_NN_vicinity_metropolis(0.05, tune_mc_steps, v, dv, ccs, NNs, ms);
-  double minv = v[0];
-  int    mini =    0;
-  logs_Write(-1, " Search step %i of %i: ", step_count, param_tuning_max_iter);
-  for(int i=0; i<4; i++)
-  {
-   logs_Write(-1, "\t At cc = %2.4E,\t NN = %2.4E,\t <nA> = %2.4E +/- %2.4E,\t <sign> = %+2.4E", ccs[i], NNs[i], v[i], dv[i], ms[i]);
-   if(v[i]<minv)
-   {
-    minv = v[i];
-    mini = i; 
-   };
-  }; 
-  if(minv<v0)
-  {
-   cc = ccs[mini];
-   NN = NNs[mini];
-   v0 = minv;
-   dv0 = dv[mini];
-   ret_val = minv;
-   logs_Write(-1, "  => Changed to cc = %2.4E, NN = %2.4E, <nA> = %2.4E, <sign> = %2.4E\n", cc, NN, minv, ms[mini]);
-  }
-  else
-  {
-   logs_Write(-1, " => Stopping the search at cc = %2.4E, NN = %2.4E, <nA> = %2.4E +/- %2.4E\n", cc, NN, v0, dv0);
-   res = 1; //Stop the search
-  };
-  step_count ++; 
+  cc_genus[g] = cc_genus[g-1]*(1.0 + genus_A/pow((double)g, genus_nu));
+  NN_genus[g] = NN_genus[g-1];
+  
+  double sup = n2an_sup(cc_genus[g-1]/cc_genus[g]);
+  
+  f_genus[g] = genus_f_exponent*f_genus[g-1]/(SQR(cc_genus[g])*NN_genus[g])*sup;
+  logs_Write(noise_level, "\t g=%02i,\t cc = %2.4E, f = %2.4E, sup = %2.4E", g, cc_genus[g], f_genus[g], sup);
  };
- 
- init_metropolis(); 
- return ret_val;
+ logs_Write(noise_level, " ");
+}
+
+void free_genus_constants()
+{
+ SAFE_FREE(cc_genus);
+ SAFE_FREE(NN_genus);
+ SAFE_FREE( f_genus);
+}
+
+void free_largeN_QFT_parameters()
+{
+ SAFE_FREE(observables_file);
+ SAFE_FREE(stack_stat_file);
 }

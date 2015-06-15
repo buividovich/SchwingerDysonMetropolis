@@ -8,6 +8,7 @@ int                        aac    = 0;
 double                     ans    = 0.0;
 int                        nmc    = 0;
 int*            action_counter    = NULL;
+int*                ns_history    = NULL; //MC history of sequence lengths
 
 //Variables for tuning of p_plus
 double  ppl_trial_min           = 0.00;
@@ -16,6 +17,13 @@ double  dppl                    = 0.111111;
 int     n_ppl_trials            = 10;
 double* acc_estimates           = NULL;
 int     pplus_tuning_ndata      = 0;
+
+//Variables for estimating return times
+int     prev_return_time        = 0;
+int     n_returns               = 0;
+double  mean_rt                 = 0.0;
+double  mean_rt2                = 0.0;
+int      max_rt                 = 0.0;
 
 //If control_max_ampl_sum=1 and max_ampl_sum is set to some nonzero value, 
 //an error message is generated everytime nA exceeds max_ampl_sum, 
@@ -44,8 +52,9 @@ void init_metropolis_statistics()
  SAFE_MALLOC_IF_NULL(action_counter, int, action_collection_size);
  for(int i=0; i<action_collection_size; i++)
   action_counter[i] = 0;
-  
- max_ampl_sum = f_max_ampl_sum(); 
+ 
+ if(max_ampl_sum==0.0) 
+  max_ampl_sum = f_max_ampl_sum(); 
  if(max_ampl_sum>0.0)
  {
   control_max_ampl_sum = 1;
@@ -58,14 +67,29 @@ void init_metropolis_statistics()
  err_nA               = 0.0;
  mean_sign            = 0.0;
  
+ //Variables for estimating return times
+ prev_return_time     = 0;
+ n_returns            = 0;
+ mean_rt              = 0.0;
+ mean_rt2             = 0.0;
+ max_rt               = 0.0;
+ 
+ if(ns_history_file!=NULL)
+ {
+  SAFE_MALLOC_IF_NULL(    ns_history,           int, (prod_mc_steps + therm_mc_steps));
+ } 
+ else
+  ns_history = NULL; 
+ 
  if(p_plus_tuning)
   init_pplus_tuning();
 }
 
 void free_metropolis_statistics()
 {
- if(p_plus_tuning)
-  free_pplus_tuning();    
+ free_pplus_tuning();
+ SAFE_FREE(action_counter); 
+ SAFE_FREE(ns_history);     
 }
 
 void gather_mc_stat()
@@ -82,6 +106,19 @@ void gather_mc_stat()
   collect_pplus_tuning_data();
  if(p_plus_tuning && nmc>0 && nmc%p_plus_tuning_interval==0)
   tune_pplus();  
+ 
+ if(ns_history!=NULL && step_number<(prod_mc_steps + therm_mc_steps))
+  ns_history[step_number] = ns;
+  
+ //Updating the statistics of return time
+ if(ns==0)
+ {
+  int rt = step_number - prev_return_time;
+  prev_return_time        = step_number;
+  n_returns ++;
+  mean_rt2 += (double)SQR(rt);
+  max_rt    = MAX(max_rt, rt);
+ }; 
   
  nmc   ++;
 }
@@ -120,15 +157,36 @@ void process_mc_stat(const char* prefix, int save_to_files)
  if(save_to_files && action_stat_file!=NULL)
   safe_append_str_to_file(action_stat_file, act_stat_str, io_sleep_time, io_write_attempts);
  SAFE_FREE(act_stat_str); 
-   
- logs_Write(0, "\n");
+ 
+ //Statistics on return times - to estimate autocorrelations
+ mean_rt  = (double)step_number/(double)n_returns;
+ mean_rt2 = sqrt(mean_rt2/(double)n_returns);
+ logs_Write(0, "\tSTATISTICS ON RETURN (AUTOCORRELATION) TIMES");
+ logs_WriteParameter(0,         "Mean return time", "%2.4E", mean_rt);
+ logs_WriteParameter(0, "Squared mean return time", "%2.4E", mean_rt2);
+ logs_WriteParameter(0,      "Maximal return time", "%2.4E", max_rt);
+ logs_Write(0, "");
+
  //Saving the statistical characteristics of the MC process
  if(save_to_files && mc_stat_file!=NULL)
  {
   int res = safe_append_to_file(mc_stat_file, io_sleep_time, io_write_attempts, "%s %2.4E %2.4E %2.4E %2.4E %2.4E %2.4E %2.4E\n", prefix, acceptance_rate, mean_recursion_depth, mean_nA, err_nA, maxnA, p_plus, mean_sign);
   if(res!=0)
    logs_WriteError("safe_append_to_file %s failed with code %i", mc_stat_file, res);
- }; 
+ };
+ 
+ if(save_to_files && ns_history_file!=NULL)
+ {
+  FILE* f = fopen(ns_history_file, "w");
+  if(f!=NULL)
+  {
+   for(int istep=0; istep<step_number; istep++)
+    fprintf(f, "%i %i\n", istep, ns_history[istep]);
+   fclose(f);           
+  }
+  else
+   logs_WriteError("Cannot open the file %s for writing", ns_history_file);
+ };
 }
 
 void print_max_amplitudes()
@@ -145,12 +203,12 @@ void print_max_amplitudes()
  logs_Write(0, " TOTAL: %2.4E\n", ampl_sum);
 }
 
-//Max. sum of all amplitudes - for the NAIVE tuning of cc and NN
+//Max. sum of all amplitudes - for the NAIVE parameter tuning
 double f_max_ampl_sum()
 {
- int adata = -1, iaction;
+ int adata = -1;
  double ampl_sum = 0.0;
- for(iaction=0; iaction<action_collection_size; iaction++)
+ for(int iaction=0; iaction<action_collection_size; iaction++)
   ampl_sum += fabs((action_collection_amplitude[iaction])(&adata) );
  return ampl_sum;
 }

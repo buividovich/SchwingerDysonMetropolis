@@ -1,7 +1,9 @@
 #include "statistics.h"
 
-double                     astop  = 0.0;
-int                   *G_hist[2]  = {NULL, NULL};
+double                     astop = 0.0;
+int**                     G_hist = NULL;
+int*                  genus_hist = NULL;
+int             actual_max_genus = 0;
 
 double IS(double a, double k)
 {
@@ -25,74 +27,105 @@ double G_analytic(double l, int n)
 
 void init_observable_stat()
 {
- int s, i;
- for(s=0; s<2; s++)
- {
-  SAFE_MALLOC(G_hist[s], int, max_correlator_order);
-  for(i=0; i<max_correlator_order; i++)
-   G_hist[s][i] = 0;
- };
+ SAFE_MALLOC(G_hist, int*, 2*(max_genus+1));
+ for(int g=0; g<(max_genus+1); g++)
+  for(int s=0; s<2; s++)
+  {
+   SAFE_MALLOC(G_hist[2*g + s], int, max_correlator_order);
+   for(int i=0; i<max_correlator_order; i++)
+    G_hist[2*g + s][i] = 0;
+  };
+ SAFE_MALLOC(genus_hist, int, max_genus+1);
+ for(int g=0; g<(max_genus+1); g++)
+  genus_hist[g] = 0;
+ actual_max_genus = 0;
+ init_stack_statistics(max_stack_nel);
+}
+
+void free_observable_stat()
+{
+ for(int g=0; g<(max_genus+1); g++)
+  for(int s=0; s<2; s++)
+   SAFE_FREE(G_hist[2*g + s]);
+ SAFE_FREE(G_hist);
+ SAFE_FREE(genus_hist);
+ free_stack_statistics(); 
 }
 
 void gather_observable_stat()
 {
- int gn = X.len[X.top-1]/2; 
- ASSERT(gn<=0);
- if(gn<=max_correlator_order)
-  G_hist[(asign[ns]>0? 0 : 1)][gn-1]++;
+ if(genus<=max_genus)
+  genus_hist[genus] ++;
+ if(X.top==1)
+ {
+  int gn = X.len[X.top-1]/2; 
+  ASSERT(gn<=0);
+  if(gn<=max_correlator_order && genus<=max_genus)
+   G_hist[2*genus + (asign[ns]>0? 0 : 1)][gn-1]++;
+ };  
+ actual_max_genus = MAX(actual_max_genus, genus);
+ gather_stack_statistics(&X); 
 }
 
 void process_observable_stat() //It is assumed that process_mc_stat was already called!!!
 {
- int ign;
  FILE* ofile = NULL;
  
+ if(stack_stat_file!=NULL)
+ {
+  FILE* f = fopen(stack_stat_file, "w");
+  if(f==NULL)
+   logs_WriteError("Cannot open the file %s for writing", stack_stat_file);
+  else
+   print_stack_statistics(f);
+  fclose(f);
+ };
+ 
+ if(logs_noise_level>=1)
+  print_stack_statistics(stdout);
+ 
+ genus = 0;
  double source_norm          = action_create_amplitude(NULL);
  double normalization_factor = source_norm/(1.0 - mean_nA);
  logs_Write(0, "Normalization factor of multiple-trace correlators: %2.4E\n", normalization_factor);
- normalization_factor = normalization_factor/(1.0 + mean_sign*normalization_factor);
- logs_Write(0, "Normalization factor of factorized single-trace correlators: %2.4E\n", normalization_factor);
- 
+
  if(observables_file!=NULL)
  { 
   ofile = fopen(observables_file, "a");
   if(ofile!=NULL)
-   fprintf(ofile, "%2.4E ", lambda);
+   fprintf(ofile, "%+2.4E ", lambda);
   else
    logs_WriteError("Could not open the file %s for writing", observables_file); 
  };
-  
- for(ign=0; ign<max_correlator_order; ign++)
+ 
+ for(int g=0; g<=MIN(max_genus, actual_max_genus); g++)
  {
-  double rescaling_factor     = NN*pow(cc,(double)(ign));
+  logs_Write(0, "Genus %i (%2.2E occurences for all correlators)", g, (double)(genus_hist[g])); 
+  for(int ign=0; ign<max_correlator_order; ign++)
+  {
+   double rescaling_factor     = f_genus[g]*NN_genus[g]*pow(cc_genus[g],(double)(2*ign+2));
     
-  double G  = (double)(G_hist[0][ign] - G_hist[1][ign])/(double)nmc;
-  double dG = sqrt((double)(G_hist[0][ign] + G_hist[1][ign]))/(double)nmc;
+   double G  =      (double)(G_hist[2*g + 0][ign] - G_hist[2*g + 1][ign] )/(double)nmc;
+   double dG = sqrt((double)(G_hist[2*g + 0][ign] + G_hist[2*g + 1][ign]))/(double)nmc;
     
-  G  *= rescaling_factor*normalization_factor;
-  dG *= rescaling_factor*normalization_factor;
+   G  *= rescaling_factor*normalization_factor;
+   dG *= rescaling_factor*normalization_factor;
   
-  double G0 = G_analytic(lambda, ign+1);
+   //double G0 = G_analytic(lambda, ign+1);
+   //double G0diff  = 100.0*(G0 - G)/G0; 
+   //double staterr = 100.0*dG/G;
     
-  //SP characterizes the strength of the sign problem
-  double SP = (double)(G_hist[0][ign] - G_hist[1][ign])/(double)(G_hist[0][ign] + G_hist[1][ign]);
-  if(ofile!=NULL)
-   fprintf(ofile, "%2.4E %2.4E %2.4E %2.4E ", G, dG, SP, G0);
-  double G0diff  = 100.0*(G0 - G)/G0; 
-  double staterr = 100.0*dG/G;
-  logs_Write(0, "G_%i:\t %2.4E +/- %2.4E (should be %2.4E, deviation %+2.2lf%%, stat.error %2.2lf%%),\t sp = %2.4E", ign+1, G, dG, G0, G0diff, staterr, SP);
+   //SP characterizes the strength of the sign problem
+   double SP = (double)(G_hist[2*g + 0][ign] - G_hist[2*g + 1][ign])/(double)(G_hist[2*g + 0][ign] + G_hist[2*g + 1][ign]);
+   if(ofile!=NULL)
+    fprintf(ofile, "%i %i %+2.4E %+2.4E %+2.4E ", g, 2*(ign+1), G, dG, SP);
+   logs_Write(0, "G_%02i:\t %+2.4E +/- %+2.4E, \t sp = %+2.4E (%i occurences)", ign+1, G, dG, SP, G_hist[2*g + 0][ign] +  G_hist[2*g + 1][ign]);
+  };
  };
+  
  if(ofile!=NULL)
  {
   fprintf(ofile, "\n"); 
   fclose(ofile);   
  };
 }
-
-void free_observable_stat()
-{
- int s;
- for(s=0; s<2; s++)
-  SAFE_FREE(G_hist[s]);
-}
-

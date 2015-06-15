@@ -1,7 +1,7 @@
 [Project]
-FileName=hmm.dev
+FileName=free_hmm_analytics.dev
 Name=hmm
-UnitCount=37
+UnitCount=33
 Type=1
 Ver=1
 ObjFiles=
@@ -90,9 +90,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit30]
-FileName=..\..\src\lattice_propagator.c
+FileName=..\..\..\clue\src\clue_io.c
 CompileCpp=0
-Folder=sd_metropolis_src
+Folder=clue_src
 Compile=1
 Link=1
 Priority=1000
@@ -100,9 +100,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit31]
-FileName=..\..\include\lattice_propagator.h
+FileName=..\..\..\clue\include\clue_io.h
 CompileCpp=0
-Folder=sd_metropolis_include
+Folder=clue_include
 Compile=1
 Link=1
 Priority=1000
@@ -110,9 +110,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit32]
-FileName=..\..\src\stack_statistics.c
+FileName=..\..\include\free_hmm_genus_expansion.h
 CompileCpp=0
-Folder=sd_metropolis_src
+Folder=sd_metropolis_include
 Compile=1
 Link=1
 Priority=1000
@@ -120,9 +120,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit33]
-FileName=..\..\include\stack_statistics.h
+FileName=..\..\src\free_hmm_genus_expansion.c
 CompileCpp=0
-Folder=sd_metropolis_include
+Folder=sd_metropolis_src
 Compile=1
 Link=1
 Priority=1000
@@ -260,26 +260,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit23]
-FileName=actions.c
-CompileCpp=0
-Folder=
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit24]
-FileName=actions.h
-CompileCpp=0
-Folder=
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit25]
 FileName=main.c
 CompileCpp=0
 Folder=
@@ -289,7 +269,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit26]
+[Unit24]
 FileName=parameters.c
 CompileCpp=0
 Folder=
@@ -299,7 +279,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit27]
+[Unit25]
 FileName=parameters.h
 CompileCpp=0
 Folder=
@@ -309,10 +289,30 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit28]
-FileName=statistics.c
+[Unit26]
+FileName=..\..\src\lattice_propagator.c
 CompileCpp=0
-Folder=
+Folder=sd_metropolis_src
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit27]
+FileName=..\..\include\lattice_propagator.h
+CompileCpp=0
+Folder=sd_metropolis_include
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit28]
+FileName=..\..\src\stack_statistics.c
+CompileCpp=0
+Folder=sd_metropolis_src
 Compile=1
 Link=1
 Priority=1000
@@ -320,9 +320,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit29]
-FileName=statistics.h
+FileName=..\..\include\stack_statistics.h
 CompileCpp=0
-Folder=
+Folder=sd_metropolis_include
 Compile=1
 Link=1
 Priority=1000

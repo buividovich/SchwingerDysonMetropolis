@@ -14,6 +14,8 @@
 #include "lattice_stack.h"
 #include "actions.h"
 
+extern char* gtotal_file;
+
 int  parse_command_line_options(int argc, char **argv);
 void init_parameters();
 void print_parameters();

@@ -46,6 +46,7 @@ void   init_metropolis()
 
 void  free_metropolis()
 {
+ free_metropolis_statistics();
  SAFE_FREE(nA);
  SAFE_FREE(asign);
  SAFE_FREE(action_history);
@@ -119,7 +120,7 @@ int   metropolis_step()
      //...save it to the history
      action_history[ns] = action_list[todo];
      //...add this choice to the statistics
-     action_counter[todo]++;
+     action_counter[action_list[todo].action_id]++;
      //Modify the reweighting sign/phase
      asign[ns] = asign[ns-1]*SIGN(amplitude_list[todo]);         
     };

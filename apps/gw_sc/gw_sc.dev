@@ -1,7 +1,7 @@
 [Project]
-FileName=hmm.dev
-Name=hmm
-UnitCount=37
+FileName=gw_sc.dev
+Name=gw_sc
+UnitCount=33
 Type=1
 Ver=1
 ObjFiles=
@@ -110,9 +110,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit32]
-FileName=..\..\src\stack_statistics.c
+FileName=..\..\..\clue\src\clue_io.c
 CompileCpp=0
-Folder=sd_metropolis_src
+Folder=clue_src
 Compile=1
 Link=1
 Priority=1000
@@ -120,9 +120,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit33]
-FileName=..\..\include\stack_statistics.h
+FileName=..\..\..\clue\include\clue_io.h
 CompileCpp=0
-Folder=sd_metropolis_include
+Folder=clue_include
 Compile=1
 Link=1
 Priority=1000
@@ -348,9 +348,9 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit34]
-FileName=..\..\..\clue\src\clue_io.c
+FileName=statistics.c
 CompileCpp=0
-Folder=clue_src
+Folder=hmm
 Compile=1
 Link=1
 Priority=1000
@@ -358,24 +358,20 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit35]
-FileName=..\..\..\clue\include\clue_io.h
+FileName=statistics.h
 CompileCpp=0
-Folder=clue_include
+Folder=hmm
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
+[Unit36]
+FileName=..\..\src\lattice_propagator.c
+
 [Unit37]
-FileName=..\..\src\free_hmm_genus_expansion.c
-CompileCpp=0
-Folder=sd_metropolis_src
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
+FileName=..\..\include\lattice_propagator.h
 
 [Unit7]
 FileName=..\..\..\clue\include\clue_utils.h
@@ -401,16 +397,6 @@ BuildCmd=
 FileName=..\..\..\clue\src\rand_num_generators.c
 CompileCpp=0
 Folder=clue_src
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit36]
-FileName=..\..\include\free_hmm_genus_expansion.h
-CompileCpp=0
-Folder=sd_metropolis_include
 Compile=1
 Link=1
 Priority=1000

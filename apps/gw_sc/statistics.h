@@ -6,12 +6,10 @@
 
 #include "parameters.h"
 #include "actions.h"
-#include "stack_statistics.h"
+
 
 extern double    astop;
-extern int**     G_hist;
-extern int*      genus_hist;
-extern int       actual_max_genus;
+extern int*      G_hist[2];
 
 void init_observable_stat();
 void gather_observable_stat();

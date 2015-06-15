@@ -1,13 +1,16 @@
 #include "parameters.h"
 
+int nphi = 0;
+
 static struct option long_options[] =
 {
  METROPOLIS_LONG_OPTIONS, //0-9, Z, Y, X
  LARGEN_QFT_LONG_OPTIONS, //A-P
- {             0,                  0,    NULL,   0}
+ {        "nphi",  required_argument,    NULL,   'a'},
+ {             0,                  0,    NULL,     0}
 };
 
-static char my_short_option_list[] = "";
+static char my_short_option_list[] = "a";
 
 int parse_command_line_options(int argc, char **argv)
 {
@@ -32,6 +35,10 @@ int parse_command_line_options(int argc, char **argv)
   {
    PARSE_METROPOLIS_OPTIONS;
    PARSE_LARGEN_QFT_OPTIONS;
+   case 'a':
+    SAFE_SSCANF_BREAK(optarg,  "%i", nphi);
+    ASSERT(nphi<=0 || nphi%2!=0);
+   break;
    case   0:
    break;
    case '?':
@@ -46,38 +53,3 @@ int parse_command_line_options(int argc, char **argv)
  SAFE_FREE(short_option_list);  
  return 0;
 }
-
-void init_parameters()
-{
- double* my_params[2]     = {&cc, &NN};
- int     n_tunable_params = 2;
- if(param_auto_tuning)
- {
-  find_param_minimum(param_tuning_accuracy, my_params, &max_ampl_sum, n_tunable_params);  
-  if(max_ampl_sum>0.0)
-  {
-   control_max_ampl_sum = 1;
-   max_ampl_sum_tol     = 0.001*max_ampl_sum;                   
-  };
- };
- init_genus_constants(1);
- check_param_minimum(0.05, my_params, n_tunable_params);
- genus = 0; 
-}
-
-void free_parameters()
-{
- free_genus_constants();
- free_largeN_QFT_parameters();
- free_metropolis_parameters();
-}
-
-void print_parameters()
-{
- logs_Write(0, "\n");
- print_metropolis_parameters();
- print_largeN_QFT_parameters();
-}
-
-
-

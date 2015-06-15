@@ -1,6 +1,6 @@
 reset
 set term postscript color enhanced landscape "Helvetica" 24
-cd 'G:\\LAT\\sd_metropolis\\data\\ssm\\'
+cd 'G:\\LAT\\sd_metropolis\\data\\gw_sc\\'
 set pointsize 1.5
 set bar 1
 set style line 1  lt 1 lc rgb '#000000' lw 8 pt 5
@@ -24,34 +24,23 @@ FILE(i)       = word(OBS_FILES, i);
 LABEL(i)      = FILE(i)[3:strstrt(FILE(i), ".dat")-1]
 
 unset logscale y
-set out    'G:\\LAT\\sd_metropolis\\plots\\ssm\\mean_G2_sign.eps'
+set out    'G:\\LAT\\sd_metropolis\\plots\\gw_sc\\mean_G1_sign.eps'
 set key left top
 set xlabel "{/Symbol l}"
-set ylabel "Mean sign of G2"
+set ylabel "Mean sign of G_1"
 plot \
 for [i=1:NFILES] \
-FILE(i) using ($1):($5) title LABEL(i) with points ls i 
+FILE(i) using ($1):($6) title LABEL(i) with points ls i 
 
 unset logscale y
-set yrange [0.0:0.05]
+set yrange [-0.01:]
 
-set out    'G:\\LAT\\sd_metropolis\\plots\\ssm\\observable_comparison_G20.eps'
+set out    'G:\\LAT\\sd_metropolis\\plots\\gw_sc\\observable_comparison.eps'
 set key right top
 set xlabel "{/Symbol l}"
-set ylabel "G2(0)"
+set ylabel "G_n"
 plot \
 1/x notitle with lines ls 17, \
 for [i=1:NFILES] \
-FILE(i) using ($1):(abs($3-0.5)):($4) title LABEL(i) with yerrorbars ls i 
-
-set out    'G:\\LAT\\sd_metropolis\\plots\\ssm\\observable_comparison_G21.eps'
-set key right top
-set xlabel "{/Symbol l}"
-set ylabel "G2(1)"
-plot \
-1/x notitle with lines ls 17, \
-for [i=1:NFILES] \
-FILE(i) using ($1):(abs($7-0.5)):($8) title LABEL(i) with yerrorbars ls i 
-
-#1/x notitle with lines ls 17, \
-#1/x notitle with lines ls 17, \
+FILE(i) using ($1):($4):($5) title "G_1".LABEL(i) with yerrorbars ls i,\
+FILE(i) using ($1):($7):($8) title "G_2".LABEL(i) with yerrorbars ls i+7 

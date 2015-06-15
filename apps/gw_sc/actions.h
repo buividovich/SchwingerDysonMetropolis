@@ -20,28 +20,21 @@ DECLARE_ACTION_DO(        create);
 DECLARE_ACTION_UNDO(      create);
 
 //Create new factorized-in line
-DECLARE_ACTION_AMPLITUDE( evolve_line);
-DECLARE_ACTION_DO(        evolve_line);
-DECLARE_ACTION_UNDO(      evolve_line);
+DECLARE_ACTION_AMPLITUDE( increase);
+DECLARE_ACTION_DO(        increase);
+DECLARE_ACTION_UNDO(      increase);
 
 //Create new vertex
-DECLARE_ACTION_AMPLITUDE( evolve_vertex);
-DECLARE_ACTION_DO(        evolve_vertex);
-DECLARE_ACTION_UNDO(      evolve_vertex);
+DECLARE_ACTION_AMPLITUDE( decrease);
+DECLARE_ACTION_DO(        decrease);
+DECLARE_ACTION_UNDO(      decrease);
 
 //Join two sets of lines
 DECLARE_ACTION_AMPLITUDE( join);
 DECLARE_ACTION_DO(        join);
 DECLARE_ACTION_UNDO(      join);
 
-//Split singlet operators and increase genus
-DECLARE_ACTION_AMPLITUDE( split);
-DECLARE_ACTION_DO(        split);
-DECLARE_ACTION_UNDO(      split);
-
 //Action fetcher
 int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int list_length);
-
-double f_max_ampl_sum(); //Max. sum of all amplitudes - for the tuning of cc and NN
 
 #endif

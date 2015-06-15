@@ -17,11 +17,6 @@
 extern double    astop;
 extern int*      G2_hist[2];
 extern int       max_G2_order;
-extern int       max_G4_order;
-
-extern int       lat_vol2;
-extern int       lat_vol3;
-extern int       lat_vol4;
 
 void init_observable_stat();
 void gather_observable_stat();

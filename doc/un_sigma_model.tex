@@ -426,12 +426,89 @@ In practice, one can perform a linear mapping $\ket{\phi} = C \ket{\phi'}$ of va
  1 - \frac{\bra{1} C^{-1} \ket{b}}{\bra{1} C^{-1} \ket{w}} \, \frac{1 - \bar{\mathcal{N}}}{\bra{1}\ket{b}}.
 \end{eqnarray}
 
- Let us now calculate exactly $\bra{1} C^{-1} \ket{\phi}$ for the planar $\phi^4$ matrix model. To this end we need to calculate
+ Let us now apply the above general formulae to the prediction of $\bar{\mathcal{N}} \equiv \vev{nA}$ in the case of large-N Schwinger-Dyson equations. In this case we typically introduce the rescaled functions $w\lr{X}$ which are related to the field correlators $G\lr{X}$ as $G\lr{X} = \mathcal{N} c\lr{X} w\lr{X}$. Typically, the behaviour of the MC process quite strongly depends on the choice of $\mathcal{N}$ and $c\lr{X}$, and the question is how to predict $\vev{nA}$ for some values $c'\lr{X}$ and $\mathcal{N}'$. The functions $w'\lr{X}$ with these new values are related to $w\lr{X}$ as
 \begin{eqnarray}
-\label{Gnorm_rescaled}
- \mathcal{N}_G\lr{c, \lambda} = \sum\limits_{n = 1}^{+\infty} c^n G_n =
- \int d\lambda \rho\lr{\lambda} \frac{c \lambda^2}{1 - c \lambda^2} .
+\label{wnew_wold}
+ w'\lr{X} = \frac{\mathcal{N}}{\mathcal{N}'} \frac{c\lr{X}}{c'\lr{X}} w\lr{X} \equiv C^{-1} w\lr{X}
 \end{eqnarray}
+
+ In order to use the expression (\ref{mean_nA_new}), we have to find first
+\begin{eqnarray}
+\label{nA_prediction_denominator1}
+ \bra{1} C^{-1} \ket{w} = \sum\limits_{m=1}^{+\infty} \lr{\frac{\mathcal{N}}{\mathcal{N}'}}^m
+ \times \nonumber \\ \times
+ \sum\limits_{X_m \ldots X_0}
+ \frac{c\lr{X_m}}{c'\lr{X_m}} \ldots \frac{c\lr{X_0}}{c'\lr{X_0}} P\lr{X_m, \ldots, X_0} ,
+\end{eqnarray}
+where $P\lr{X_m, \ldots, X_0}$ is the probability to get the ``sequence of sequences'' $X_m, \ldots, X_0$:
+\begin{eqnarray}
+\label{overall_probability}
+ P\lr{X_m, \ldots, X_0} = \mathcal{N}_p^{-1} w\lr{X_m} \ldots w\lr{X_0} ,
+\end{eqnarray}
+where
+\begin{eqnarray}
+\label{Np_def}
+ \mathcal{N}_p = \frac{\mathcal{N}_b}{1 - \vev{nA}}, \quad
+ \mathcal{N}_b = \sum\limits_X b\lr{X} .
+\end{eqnarray}
+Inserting (\ref{overall_probability}) into (\ref{nA_prediction_denominator}), we get
+\begin{eqnarray}
+\label{nA_prediction_denominator}
+ \bra{1} C^{-1} \ket{w} = \frac{1}{\mathcal{N}_p} \, \frac{\frac{\mathcal{N}}{\mathcal{N}'} \eta}{1 - \frac{\mathcal{N}}{\mathcal{N}'} \eta},
+\end{eqnarray}
+where we define $\eta = \sum\limits_x \frac{c\lr{X}}{c'\lr{X}} w\lr{X}$. Inserting this result into (\ref{mean_nA_new}) and taking into account the definition (\ref{Np_def}), we get
+\begin{eqnarray}
+\label{nA_prediction1}
+ \vev{nA}' = 1 - \frac{\mathcal{N}_b' \lr{\mathcal{N}' - \mathcal{N} \eta}}{\mathcal{N} \eta} .
+\end{eqnarray}
+In order to make this expression more explicit and suitable for real calculations, we can explicitly take into account the dependence of $\mathcal{N}_b'$ on $\mathcal{N}'$:
+\begin{eqnarray}
+\label{new_source_norm}
+ \mathcal{N}_b' = \sum\limits_x C^{-1} b\lr{x} = \frac{\mathcal{N}}{\mathcal{N}'} \beta,
+ \quad \beta = \sum\limits_x \frac{c\lr{X}}{c'\lr{X}} b\lr{X} ,
+\end{eqnarray}
+where now $\beta$ depends only on $c\lr{X}/c'\lr{X}$ but not on $\mathcal{N}/\mathcal{N}'$. Combining (\ref{nA_prediction1}) with (\ref{new_source_norm}), we get
+\begin{eqnarray}
+\label{nA_prediction}
+ \vev{nA}' = 1 - \beta \, \lr{\frac{1}{\eta} - \frac{\mathcal{N}}{\mathcal{N}'}}
+\end{eqnarray}
+
+Also it is convenient to express $\eta$ in terms of probability distribution $\pi\lr{X}$ of the topmost element in the sequence:
+\begin{eqnarray}
+\label{topmost_distrib}
+ w\lr{X} = \frac{\mathcal{N}_p}{1 + \mathcal{N}_p} \, \pi\lr{X} ,
+\end{eqnarray}
+from which we immediately get
+\begin{eqnarray}
+\label{topmost_distrib}
+ \eta = \frac{\mathcal{N}_p}{1 + \mathcal{N}_p} \, \vev{ \frac{c\lr{X}}{c'\lr{X}} } ,
+\end{eqnarray} .
+
+\section{Schwinger-Dyson equations for $\phi^4$ matrix model beyond the planar approximation}
+\label{sec:phi4sd_nonplanar}
+
+\begin{eqnarray}
+\label{phi4sd_nonplanar}
+ G\lr{n_1, \ldots, n_m} 
+ = \nonumber \\ =
+ 2 G\lr{n_1 - 2, n_2, \ldots, n_m}
+ + \nonumber \\ +
+ \sum\limits_{a=1}^{n_1-2}
+ G\lr{a, n_1 - 2 - a, n_2, \ldots, n_m}
+ + \nonumber \\ +
+ \lambda G\lr{n_1 + 2, n_2, \ldots, n_m}
+ + \nonumber \\ +
+ \frac{1}{N^2} \sum\limits_{A=2}^{m} n_A  
+ G\lr{n_2, \ldots, n_{A-1}, n_A + n_1 - 2, n_{A+1}, \ldots, n_m}
+\end{eqnarray}
+
+Basic operations:
+\begin{description}
+  \item[Insert line:] $\lrc{n_1, \ldots, n_m} \rightarrow \lrc{n_1 + 2, n_2, \ldots, n_m}$
+  \item[Merge two singlet operators:] $\lrc{n_1, \ldots, n_m} \rightarrow \lrc{n_1 + n_2 + 2, n_3, \ldots, n_m}$
+  \item[Create vertex:] $\lrc{n_1, \ldots, n_m} \rightarrow \lrc{n_1 - 2, n_2, \ldots, n_m}$
+  \item[Split singlet operator:] $\lrc{n_1, \ldots, n_m} \rightarrow \lrc{a, n_1, \ldots, n_{A-1}, n_A + 2 - a, n_{A+1}, \ldots, n_m}$
+\end{description}
 
 \begin{acknowledgments}
  This work was supported by the S.~Kowalevskaja award from the Alexander von Humboldt foundation.

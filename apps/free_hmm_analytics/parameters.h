@@ -11,11 +11,9 @@
 #include "sd_metropolis_parameters.h"
 #include "sd_metropolis_statistics.h"
 #include "largeN_QFT_parameters.h"
-#include "lattice_stack.h"
-#include "actions.h"
+
+extern int nphi;
 
 int  parse_command_line_options(int argc, char **argv);
-void init_parameters();
-void print_parameters();
 
 #endif

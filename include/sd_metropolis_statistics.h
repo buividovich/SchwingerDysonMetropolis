@@ -17,6 +17,7 @@ extern int                        aac;
 extern double                     ans;
 extern int                        nmc; //Counter of calls to gather_mc_stat()
 extern int*            action_counter;
+extern int*                ns_history;       //MC history of sequence lengths
 
 //If control_max_ampl_sum=1 and max_ampl_sum is set to some nonzero value, 
 //an error message is generated everytime nA exceeds max_ampl_sum, 
@@ -24,6 +25,13 @@ extern int*            action_counter;
 extern int       control_max_ampl_sum; 
 extern double            max_ampl_sum;
 extern double        max_ampl_sum_tol;
+
+//Variables for estimating return times
+extern int     prev_return_time;
+extern int     n_returns;
+extern double  mean_rt;
+extern double  mean_rt2;
+extern int      max_rt;
 
 
 //These are the variables which are only set by process_mc_stat

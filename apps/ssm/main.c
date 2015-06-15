@@ -15,7 +15,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-void lambda_descent(int tune_mc_steps, int tune_iterations)
+/*void lambda_descent(int tune_mc_steps, int tune_iterations)
 {
  find_cc_NN_minimum(param_tuning_accuracy, NULL);
  int prev_logs_noise_level = logs_noise_level;
@@ -37,7 +37,7 @@ void lambda_descent(int tune_mc_steps, int tune_iterations)
   lambda /= 0.9;
  }; 
  logs_noise_level = prev_logs_noise_level;    
-}
+}*/
 
 int main(int argc, char *argv[])
 {
@@ -75,6 +75,11 @@ int main(int argc, char *argv[])
  largeN_QFT_prefix(prefix);
  process_mc_stat(prefix, 1);
  process_observable_stat();
+ 
+ double cc_new = 1.5*cc;
+ double NN_new = 1.2*NN;
+ logs_WriteWarning("\n Predicted <nA> for cc = %2.4E, NN = %2.4E:\t %2.4E\n",     cc,     NN, mean_nA_prediction(    NN,     cc, action_create_amplitude(NULL)));
+ logs_WriteWarning("\n Predicted <nA> for cc = %2.4E, NN = %2.4E:\t %2.4E\n", cc_new, NN_new, mean_nA_prediction(NN_new, cc_new, action_create_amplitude(NULL)));
  
  free_observable_stat();
  free_metropolis();
