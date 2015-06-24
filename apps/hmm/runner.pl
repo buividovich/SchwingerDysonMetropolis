@@ -48,7 +48,7 @@ for($lambda=$lambda_min; $lambda<=$lambda_max; $lambda += $dlambda)
  
  $cmd = $cmd." --cc                         3.46 ";
  $cmd = $cmd." --NN                         2.0 "; #was 1.29
- $cmd = $cmd." --max-correlator-order       3 ";
+ $cmd = $cmd." --max-correlator-order       7 ";
  
  $cmd = $cmd." --max-genus                  7 ";
  $cmd = $cmd." --genus-f-exponent           1.4 ";

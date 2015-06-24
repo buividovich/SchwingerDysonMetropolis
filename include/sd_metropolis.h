@@ -96,4 +96,6 @@ void  init_metropolis();
 void  free_metropolis();
 int   metropolis_step();
 
+void  print_action_history();
+
 #endif

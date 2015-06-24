@@ -11,6 +11,8 @@
 #include "actions.h"
 #include "statistics.h"
 
+#include "detailed_statistics.h"
+
 int main(int argc, char *argv[])
 {
  ansi_colors = 1;
@@ -37,13 +39,17 @@ int main(int argc, char *argv[])
  {
   metropolis_step(imc);
   if(imc%mc_interval==0)
-   gather_observable_stat(); 
+  {
+   gather_observable_stat();
+   gather_detailed_statistics();
+  }; 
  }; 
  
  char prefix[500];
  largeN_QFT_prefix(prefix);
  process_mc_stat(prefix, 1);
  process_observable_stat();
+ print_detailed_statistics();
  
  free_observable_stat();
  free_metropolis();

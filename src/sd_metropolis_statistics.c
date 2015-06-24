@@ -23,6 +23,7 @@ int     prev_return_time        = 0;
 int     n_returns               = 0;
 double  mean_rt                 = 0.0;
 double  mean_rt2                = 0.0;
+double  mean_rt4                = 0.0;
 int      max_rt                 = 0.0;
 
 //If control_max_ampl_sum=1 and max_ampl_sum is set to some nonzero value, 
@@ -72,6 +73,7 @@ void init_metropolis_statistics()
  n_returns            = 0;
  mean_rt              = 0.0;
  mean_rt2             = 0.0;
+ mean_rt4             = 0.0;
  max_rt               = 0.0;
  
  if(ns_history_file!=NULL)
@@ -117,6 +119,7 @@ void gather_mc_stat()
   prev_return_time        = step_number;
   n_returns ++;
   mean_rt2 += (double)SQR(rt);
+  mean_rt4 += (double)(SQR(rt)*SQR(rt));
   max_rt    = MAX(max_rt, rt);
  }; 
   
@@ -160,11 +163,13 @@ void process_mc_stat(const char* prefix, int save_to_files)
  
  //Statistics on return times - to estimate autocorrelations
  mean_rt  = (double)step_number/(double)n_returns;
- mean_rt2 = sqrt(mean_rt2/(double)n_returns);
+ mean_rt2 = pow(mean_rt2/(double)n_returns, 0.50);
+ mean_rt4 = pow(mean_rt4/(double)n_returns, 0.25);
  logs_Write(0, "\tSTATISTICS ON RETURN (AUTOCORRELATION) TIMES");
  logs_WriteParameter(0,         "Mean return time", "%2.4E", mean_rt);
  logs_WriteParameter(0, "Squared mean return time", "%2.4E", mean_rt2);
- logs_WriteParameter(0,      "Maximal return time", "%2.4E", max_rt);
+ logs_WriteParameter(0, "Quartic mean return time", "%2.4E", mean_rt4);
+ logs_WriteParameter(0,      "Maximal return time",    "%i", max_rt);
  logs_Write(0, "");
 
  //Saving the statistical characteristics of the MC process

@@ -31,6 +31,7 @@ extern int     prev_return_time;
 extern int     n_returns;
 extern double  mean_rt;
 extern double  mean_rt2;
+extern double  mean_rt4;
 extern int      max_rt;
 
 
