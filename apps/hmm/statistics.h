@@ -8,6 +8,8 @@
 #include "actions.h"
 #include "stack_statistics.h"
 
+#include "free_hmm_genus_expansion.h"
+
 extern double    astop;
 extern int**     G_hist;
 extern int*      genus_hist;

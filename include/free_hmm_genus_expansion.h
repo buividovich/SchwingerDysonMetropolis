@@ -7,6 +7,18 @@
 #include <clue_logs.h>
 #include <clue_io.h>
 
+/******* Exact results for the Hermitian matrix model ***************/
+#define FREE_HMM_TABLE_MAX_CORDER (8)
+#define FREE_HMM_TABLE_MAX_GENUS  (5)
+
+static const int free_hmm_res[FREE_HMM_TABLE_MAX_GENUS][FREE_HMM_TABLE_MAX_CORDER] = {
+ { 1, 2,  5, 14,  42,  132,   429,    1430},
+ { 0, 1, 10, 70, 420, 2310, 12012,   60060},
+ { 0, 0,  0, 21, 483, 6468, 66066,  570570},
+ { 0, 0,  0,  0,   0, 1485, 56628, 1169740},
+ { 0, 0,  0,  0,   0,    0,     0,  225225}
+};
+
 typedef void (*t_pairing_processor)(int* p, int n, int* data);
 
 int get_num_pairings(int n);

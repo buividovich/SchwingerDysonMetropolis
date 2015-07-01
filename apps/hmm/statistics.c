@@ -84,8 +84,8 @@ void process_observable_stat() //It is assumed that process_mc_stat was already 
  if(logs_noise_level>=1)
   print_stack_statistics(stdout);
  
- genus = 0;
- double source_norm          = action_create_amplitude(NULL);
+ double source_norm          = my_source_norm();
+  
  double normalization_factor = source_norm/(1.0 - mean_nA);
  logs_Write(0, "Normalization factor of multiple-trace correlators: %2.4E\n", normalization_factor);
 
@@ -101,6 +101,7 @@ void process_observable_stat() //It is assumed that process_mc_stat was already 
  for(int g=0; g<=MIN(max_genus, actual_max_genus); g++)
  {
   logs_Write(0, "Genus %i (%2.2E occurences for all correlators)", g, (double)(genus_hist[g])); 
+  
   for(int ign=0; ign<max_correlator_order; ign++)
   {
    double rescaling_factor     = f_genus[g]*NN_genus[g]*pow(cc_genus[g],(double)(2*ign+2));
@@ -114,18 +115,19 @@ void process_observable_stat() //It is assumed that process_mc_stat was already 
    //double G0 = G_analytic(lambda, ign+1);
    //double G0diff  = 100.0*(G0 - G)/G0; 
    //double staterr = 100.0*dG/G;
-    
+   
+   //Commented output is for simulations with nontrivial lambda 
    //SP characterizes the strength of the sign problem
    double SP = (double)(G_hist[2*g + 0][ign] - G_hist[2*g + 1][ign])/(double)(G_hist[2*g + 0][ign] + G_hist[2*g + 1][ign]);
-   if(ofile!=NULL)
-    fprintf(ofile, "%i %i %+2.4E %+2.4E %+2.4E ", g, 2*(ign+1), G, dG, SP);
-   logs_Write(0, "G_%02i:\t %+2.4E +/- %+2.4E, \t sp = %+2.4E (%i occurences)", ign+1, G, dG, SP, G_hist[2*g + 0][ign] +  G_hist[2*g + 1][ign]);
+   if(ofile!=NULL && ign==1)
+    fprintf(ofile, "%i %+2.4E %+2.4E ", g, G, dG); 
+   logs_Write(0, "G_%02i:\t %+2.4E +/- %+2.4E, \t sp = %+2.4E (%i occurences)", ign+1, G, dG, SP, G_hist[2*g + 0][ign] +  G_hist[2*g + 1][ign]); 
   };
  };
   
  if(ofile!=NULL)
  {
-  fprintf(ofile, "\n"); 
+  fprintf(ofile, "\n");  
   fclose(ofile);   
  };
 }

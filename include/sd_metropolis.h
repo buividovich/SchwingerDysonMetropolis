@@ -15,8 +15,6 @@
 
 //Possible improvements in the code
 //Can wait:  inline functions for momenta manipulations
-//Can wait:  add amplitudes to action_collection + max_ampl_sum based on action_collection
-//Can wait:  some optimization of rand_momentum
 //Can wait:  Numerical values for characters in getopt
 //Can wait:  Coordinates as integers in stack, not as lists - can give some speedup...
 //Can wait:  Timing? Compare, how much time is taken by stack manipulations? How fast is ranlux?
@@ -95,6 +93,8 @@ extern t_action_data* action_history;   //History of actions, elements up to ns 
 void  init_metropolis();
 void  free_metropolis();
 int   metropolis_step();
+
+void  call_state_initializer();
 
 void  print_action_history();
 

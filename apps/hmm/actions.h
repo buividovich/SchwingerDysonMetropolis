@@ -14,10 +14,15 @@ extern t_lat_stack H; //This stack will contain the data related to the sequence
 void init_actions();
 void free_actions();
 
-//Create new factorized-out line
-DECLARE_ACTION_AMPLITUDE( create);
-DECLARE_ACTION_DO(        create);
-DECLARE_ACTION_UNDO(      create);
+//Create new tr(phi^2)
+DECLARE_ACTION_AMPLITUDE( create0);
+DECLARE_ACTION_DO(        create0);
+DECLARE_ACTION_UNDO(      create0);
+
+//Create new tr(phi) tr(phi)
+DECLARE_ACTION_AMPLITUDE( create1);
+DECLARE_ACTION_DO(        create1);
+DECLARE_ACTION_UNDO(      create1);
 
 //Create new factorized-in line
 DECLARE_ACTION_AMPLITUDE( evolve_line);
@@ -38,6 +43,10 @@ DECLARE_ACTION_UNDO(      join);
 DECLARE_ACTION_AMPLITUDE( split);
 DECLARE_ACTION_DO(        split);
 DECLARE_ACTION_UNDO(      split);
+
+//State initializer and source norm
+int my_state_initializer(int* data_in);
+double my_source_norm();
 
 //Action fetcher
 int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int list_length);

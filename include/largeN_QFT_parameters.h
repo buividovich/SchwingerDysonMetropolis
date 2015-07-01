@@ -17,6 +17,8 @@ extern double   cc;                       //Rescaling of observables according t
 extern double   NN;                       //Overall rescaling of observables, also genus-dependent
 extern double   genus_A;                  //Constant A in recursion for cc[g]
 extern double   genus_nu;                 //Constant nu in recursion for cc[g]
+extern double   genus_B;                  //Constant B in recursion for NN[g]
+extern double   genus_mu;                 //Constant mu in recursion for NN[g]
 extern double   genus_f_exponent;         //This is an exponent before the gamma function in f[g] extern int      DIM;                      //Space-time dimensionality
 extern int      DIM;                      //Dimension of space
 extern int      LT;                       //Temporal size of the system
@@ -63,20 +65,22 @@ void free_genus_constants();
  {                         "NN",  required_argument,                       NULL, 'D'}, \
  {                    "genus-A",  required_argument,                       NULL, 'E'}, \
  {                   "genus-nu",  required_argument,                       NULL, 'F'}, \
- {           "genus-f-exponent",  required_argument,                       NULL, 'G'}, \
- {                        "DIM",  required_argument,                       NULL, 'H'}, \
- {                         "LT",  required_argument,                       NULL, 'I'}, \
- {                         "LS",  required_argument,                       NULL, 'J'}, \
- {              "max-stack-nel",  required_argument,                       NULL, 'K'}, \
- {            "max-history-nel",  required_argument,                       NULL, 'L'}, \
- {       "max-correlator-order",  required_argument,                       NULL, 'M'}, \
- {      "min-observables-order",  required_argument,                       NULL, 'N'}, \
- {      "max-observables-order",  required_argument,                       NULL, 'O'}, \
- {                  "max-genus",  required_argument,                       NULL, 'P'}, \
- {      "param-tuning-accuracy",  required_argument,                       NULL, 'Q'}, \
- {      "param-tuning-max-iter",  required_argument,                       NULL, 'R'}, \
- {           "observables-file",  required_argument,                       NULL, 'S'}, \
- {            "stack-stat-file",  required_argument,                       NULL, 'T'}, \
+ {                    "genus-B",  required_argument,                       NULL, 'G'}, \
+ {                   "genus-mu",  required_argument,                       NULL, 'H'}, \
+ {           "genus-f-exponent",  required_argument,                       NULL, 'I'}, \
+ {                        "DIM",  required_argument,                       NULL, 'J'}, \
+ {                         "LT",  required_argument,                       NULL, 'K'}, \
+ {                         "LS",  required_argument,                       NULL, 'L'}, \
+ {              "max-stack-nel",  required_argument,                       NULL, 'M'}, \
+ {            "max-history-nel",  required_argument,                       NULL, 'N'}, \
+ {       "max-correlator-order",  required_argument,                       NULL, 'O'}, \
+ {      "min-observables-order",  required_argument,                       NULL, 'P'}, \
+ {      "max-observables-order",  required_argument,                       NULL, 'Q'}, \
+ {                  "max-genus",  required_argument,                       NULL, 'R'}, \
+ {      "param-tuning-accuracy",  required_argument,                       NULL, 'S'}, \
+ {      "param-tuning-max-iter",  required_argument,                       NULL, 'T'}, \
+ {           "observables-file",  required_argument,                       NULL, 'U'}, \
+ {            "stack-stat-file",  required_argument,                       NULL, 'V'}, \
  {       "no-param-auto-tuning",        no_argument,         &param_auto_tuning,   0}, \
  {             "no-stack-check",        no_argument,               &check_stack,   0}
 
@@ -102,57 +106,63 @@ void free_genus_constants();
     SAFE_SSCANF_BREAK(optarg, "%lf", genus_nu);                          \
    break;                                                                \
    case 'G':                                                             \
-    SAFE_SSCANF_BREAK(optarg, "%lf", genus_f_exponent);                  \
+    SAFE_SSCANF_BREAK(optarg, "%lf", genus_B);                           \
    break;                                                                \
    case 'H':                                                             \
+    SAFE_SSCANF_BREAK(optarg, "%lf", genus_mu);                          \
+   break;                                                                \
+   case 'I':                                                             \
+    SAFE_SSCANF_BREAK(optarg, "%lf", genus_f_exponent);                  \
+   break;                                                                \
+   case 'J':                                                             \
     SAFE_SSCANF_BREAK(optarg,  "%i", DIM);                               \
     ASSERT(DIM<0);                                                       \
    break;                                                                \
-   case 'I':                                                             \
+   case 'K':                                                             \
     SAFE_SSCANF_BREAK(optarg,  "%i", LT);                                \
     ASSERT(LT<0);                                                        \
    break;                                                                \
-   case 'J':                                                             \
+   case 'L':                                                             \
     SAFE_SSCANF_BREAK(optarg,  "%i", LS);                                \
     ASSERT(LS<0);                                                        \
    break;                                                                \
-   case 'K':                                                             \
+   case 'M':                                                             \
     SAFE_SSCANF_BREAK(optarg,  "%i", max_stack_nel);                     \
     ASSERT(max_stack_nel<10);                                            \
    break;                                                                \
-   case 'L':                                                             \
+   case 'N':                                                             \
     SAFE_SSCANF_BREAK(optarg,  "%i", max_history_nel);                   \
     ASSERT(max_history_nel<10);                                          \
    break;                                                                \
-   case 'M':                                                             \
+   case 'O':                                                             \
     SAFE_SSCANF_BREAK(optarg,  "%i", max_correlator_order);              \
     ASSERT(max_correlator_order<0);                                      \
    break;                                                                \
-   case 'N':                                                             \
+   case 'P':                                                             \
     SAFE_SSCANF_BREAK(optarg,  "%i", min_observables_order);             \
    break;                                                                \
-   case 'O':                                                             \
+   case 'Q':                                                             \
     SAFE_SSCANF_BREAK(optarg,  "%i", max_observables_order);             \
    break;                                                                \
-   case 'P':                                                             \
+   case 'R':                                                             \
     SAFE_SSCANF_BREAK(optarg,  "%i", max_genus);                         \
    break;                                                                \
-   case 'Q':                                                             \
+   case 'S':                                                             \
     SAFE_SSCANF_BREAK(optarg,  "%lf", param_tuning_accuracy);            \
     ASSERT(param_tuning_accuracy<0.0);                                   \
    break;                                                                \
-   case 'R':                                                             \
+   case 'T':                                                             \
     SAFE_SSCANF_BREAK(optarg,   "%i", param_tuning_max_iter);            \
     ASSERT(param_tuning_max_iter<1);                                     \
    break;                                                                \
-   case 'S':                                                             \
+   case 'U':                                                             \
     COPY_FILE_NAME(optarg, observables_file);                            \
    break;                                                                \
-   case 'T':                                                             \
+   case 'V':                                                             \
     COPY_FILE_NAME(optarg, stack_stat_file);                             \
    break;
 
-static const char largeN_QFT_short_option_list[] = "A:B:C:D:E:F:G:H:I:J:K:L:M:N:O:P:Q:R:S:T:";
+static const char largeN_QFT_short_option_list[] = "A:B:C:D:E:F:G:H:I:J:K:L:M:N:O:P:Q:R:S:T:U:V:";
 
 void free_largeN_QFT_parameters();
 

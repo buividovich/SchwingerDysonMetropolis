@@ -38,10 +38,24 @@ void   init_metropolis()
  ASSERT( action_collection_undo      == NULL);
  ASSERT( action_collection_amplitude == NULL);
  ASSERT( action_collection_name      == NULL);
- ASSERT(      state_initializer      == NULL);
- ASSERT( action_collection_size      <= 0);
  
- asign[ns] = state_initializer(NULL);      
+ ASSERT( action_collection_size      <= 0);
+ for(int iact=0; iact<action_collection_size; iact++)
+ {
+  ASSERT( action_collection_do[iact]        == NULL);
+  ASSERT( action_collection_undo[iact]      == NULL);
+  ASSERT( action_collection_amplitude[iact] == NULL);
+  ASSERT( action_collection_name[iact]      == NULL);      
+ };
+  
+ ASSERT(      state_initializer      == NULL);
+ 
+ //Add a name for state_initializer
+ SAFE_REALLOC(action_collection_name, char*, action_collection_size+1);
+ SAFE_MALLOC( action_collection_name[action_collection_size], char, 20);
+ sprintf(action_collection_name[action_collection_size], "State initializer");
+  
+ call_state_initializer();
 }
 
 void  free_metropolis()
@@ -55,6 +69,14 @@ void  free_metropolis()
  SAFE_FREE(probability_list);
 }
 
+void call_state_initializer()
+{
+ ns = 0;
+ action_history[ns].action_id = action_collection_size;
+ action_history[ns].action_data_in = -1;
+ asign[ns] = state_initializer(&(action_history[ns].action_data_in));
+}
+
 int   metropolis_step()
 {
  int n_actions, iaction, todo, accepted = 0, res;
@@ -62,11 +84,11 @@ int   metropolis_step()
  
  if(ns>=max_recursion_depth-1)
  {
-  logs_WriteError("Step %08i:\tOverflow detected - size of action_history is larger than the allocted memory!!! %s", step_number, (exit_upon_overflow? "Stopping the MC process" : "Resetting the state of the system"));
+  logs_WriteError("Step %08i:\tOverflow detected - size of action_history is larger than the allocated memory!!! %s", step_number, (exit_upon_overflow? "Stopping the MC process" : "Resetting the state of the system"));
   ns = 0;
   if(exit_upon_overflow)
    exit(EXIT_FAILURE);
-  state_initializer(NULL);                           
+  call_state_initializer();
  };
  
  n_actions = action_fetcher(&action_list, &amplitude_list, action_list_length); //Action fetcher should also perform reallocation of the action_list if necessary
@@ -130,7 +152,7 @@ int   metropolis_step()
      if(exit_upon_overflow)
       exit(EXIT_FAILURE);
      ns = 0;
-     state_initializer(NULL);
+     call_state_initializer();
     };
     if(res==ERR_WRONG_STATE)
      logs_WriteError("Attempted to apply action %s [id = %i] with action_data_in %i to the improper system state, nothing was really done...", action_collection_name[action_list[todo].action_id], action_list[todo].action_id, action_list[todo].action_data_in); 
@@ -161,7 +183,7 @@ int   metropolis_step()
       if(exit_upon_overflow)
        exit(EXIT_FAILURE);
       ns = 0;
-      state_initializer(NULL);
+      call_state_initializer();
      };
      if(res==ERR_WRONG_STATE)
       logs_WriteError("Attempted to undo action %s [id = %i] with action_data_in %i from the improper system state, nothing was really done...", action_collection_name[action_history[ns].action_id], action_history[ns].action_id, action_history[ns].action_data_in);
@@ -177,7 +199,7 @@ int   metropolis_step()
   else
   {
    accepted = 1;
-   asign[ns] = state_initializer(NULL);
+   call_state_initializer();
    //Write to the log
    logs_Write((step_number%mc_reporting_interval==0? 1 : 2), "Step %08i:\t state_initializer has been just called", step_number);
   };
@@ -189,5 +211,16 @@ int   metropolis_step()
  step_number ++;
  
  return accepted; //Return 1 if some new state is accepted, otherwise 0
+}
+
+void  print_action_history()
+{
+ logs_Write(0, "\nAction history at step %i:", step_number);
+ for(int ins=0; ins<=ns; ins++)
+  if(action_history[ins].action_id>=0 && action_history[ins].action_id<=action_collection_size)
+   logs_Write(0, "ins=%i, action \"%s\"(id=%i), action_data_in = %i", ins, action_collection_name[action_history[ins].action_id], action_history[ins].action_id, action_history[ins].action_data_in);
+  else
+   logs_WriteError("ins=%i, action id=%i is out of range...", ins, action_history[ins].action_id);
+ logs_Write(0, "");      
 }
 

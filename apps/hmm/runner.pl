@@ -13,9 +13,9 @@ system("make hmm");
 
 system("$OutputCleanupCmd");
 
-$lambda_min =  0.0;
-$lambda_max =  0.0;
-$dlambda    =  0.005;
+$lambda_min =  0.00;
+$lambda_max =  0.04;
+$dlambda    =  0.002;
 
 $nmc  = 20000000;
 $maxn = 20000;
@@ -48,11 +48,11 @@ for($lambda=$lambda_min; $lambda<=$lambda_max; $lambda += $dlambda)
  
  $cmd = $cmd." --cc                         3.46 ";
  $cmd = $cmd." --NN                         2.0 "; #was 1.29
- $cmd = $cmd." --max-correlator-order       7 ";
+ $cmd = $cmd." --max-correlator-order       2 ";
  
- $cmd = $cmd." --max-genus                  7 ";
+ $cmd = $cmd." --max-genus                  6 ";
  $cmd = $cmd." --genus-f-exponent           1.4 ";
- $cmd = $cmd." --genus-A                    0.3 ";
+ $cmd = $cmd." --genus-A                    0.2 ";
  
 #$cmd = $cmd." --stack-stat-file            $stack_stat_file ";
 #$cmd = $cmd." --ns-history-file            $ns_history_file ";

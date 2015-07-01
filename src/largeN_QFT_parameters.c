@@ -7,6 +7,8 @@ double   cc                       = 1.0;      //Rescaling of observables accordi
 double   NN                       = 1.0;      //Overall rescaling of observables
 double   genus_A                  = 1.0;      //Constant A in recursion for cc[g]
 double   genus_nu                 = 1.1;      //Constant nu in recursion for cc[g]
+double   genus_B                  = 1.0;      //Constant B in recursion for NN[g]
+double   genus_mu                 = 1.1;      //Constant mu in recursion for NN[g]
 double   genus_f_exponent         = 1.0;      //This is an exponent before the gamma function in f[g] 
 int      DIM                      = 1;        //Space-time dimensionality
 int      LT                       = 2;        //Temporal size of the system
@@ -50,6 +52,8 @@ void print_largeN_QFT_parameters()
   logs_WriteParameter(0,               "Max. observables genus",       "%i",      max_genus);
   logs_WriteParameter(0,      "Constant A in genus reweighting",    "%2.4E",      genus_A);
   logs_WriteParameter(0,     "Constant nu in genus reweighting",   "%2.2lf",      genus_nu);
+  logs_WriteParameter(0,      "Constant B in genus reweighting",    "%2.4E",      genus_B);
+  logs_WriteParameter(0,     "Constant mu in genus reweighting",   "%2.2lf",      genus_mu);
   logs_WriteParameter(0,      "f exponent in genus reweighting",    "%2.4E",      genus_f_exponent);
  };
  if(param_auto_tuning)
@@ -186,6 +190,7 @@ double n2an_sup(double a)
  return rp;  
 }
 
+
 void init_genus_constants(int noise_level)
 {
  SAFE_MALLOC_IF_NULL(cc_genus, double, max_genus+2);
@@ -202,7 +207,7 @@ void init_genus_constants(int noise_level)
  for(int g=1; g<=max_genus; g++)
  {
   cc_genus[g] = cc_genus[g-1]*(1.0 + genus_A/pow((double)g, genus_nu));
-  NN_genus[g] = NN_genus[g-1];
+  NN_genus[g] = NN_genus[g-1]*(1.0 + genus_B/pow((double)g, genus_mu));
   
   double sup = n2an_sup(cc_genus[g-1]/cc_genus[g]);
   

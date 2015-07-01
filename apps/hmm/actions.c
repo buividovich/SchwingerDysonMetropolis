@@ -11,19 +11,20 @@ int     max_a_choices  = 0;
 void init_actions()
 {
  //Initialize the collection of actions to be used in the MC process
- action_collection_size = 5;
+ action_collection_size = 6;
  SAFE_MALLOC( action_collection_do,        t_action,           action_collection_size);
  SAFE_MALLOC( action_collection_undo,      t_action,           action_collection_size);
  SAFE_MALLOC( action_collection_amplitude, t_action_amplitude, action_collection_size);
  SAFE_MALLOC( action_collection_name,      char*,              action_collection_size);
  
- ADD_TO_ACTION_COLLECTION(        create, 0);
- ADD_TO_ACTION_COLLECTION(   evolve_line, 1);
- ADD_TO_ACTION_COLLECTION( evolve_vertex, 2);
- ADD_TO_ACTION_COLLECTION(          join, 3);
- ADD_TO_ACTION_COLLECTION(         split, 4);
+ ADD_TO_ACTION_COLLECTION(       create0, 0);
+ ADD_TO_ACTION_COLLECTION(       create1, 1);
+ ADD_TO_ACTION_COLLECTION(   evolve_line, 2);
+ ADD_TO_ACTION_COLLECTION( evolve_vertex, 3);
+ ADD_TO_ACTION_COLLECTION(          join, 4);
+ ADD_TO_ACTION_COLLECTION(         split, 5);
  
- state_initializer       = &action_create_do;
+ state_initializer       = &my_state_initializer;
  action_fetcher          = &my_action_fetcher;
  
  //Initialize the lattice stack
@@ -42,7 +43,7 @@ void free_actions()
  SAFE_FREE(action_collection_do);
  SAFE_FREE(action_collection_undo);
  SAFE_FREE(action_collection_amplitude);
- for(int i=0; i<action_collection_size; i++)
+ for(int i=0; i<=action_collection_size; i++) //Number of freed elements is action_collection_size+1 since one more element is allocated by init_metropolis
   SAFE_FREE(action_collection_name[i]);
  SAFE_FREE(action_collection_name); 
  
@@ -53,80 +54,104 @@ void free_actions()
  //SAFE_FREE(genus_history);
 }
 
-/************* Create new factorized-out line ****************/
-DECLARE_ACTION_AMPLITUDE(create)
+
+
+/******************** Create new tr(phi^2) *************************/
+DECLARE_ACTION_AMPLITUDE(create0)
 {                                
- double aG2  = 1.0/(NN_genus[genus]*SQR(cc_genus[genus])*f_genus[genus]);
- double aG11 = (genus<max_genus? 1.0/(SQR(NN_genus[genus+1])*SQR(cc_genus[genus+1])*f_genus[genus+1]) : 0.0);
- return (aG2 + aG11); 
+ return 1.0/(SQR(cc_genus[genus])*NN_genus[genus]);
 }
 
-DECLARE_ACTION_DO(create)
+DECLARE_ACTION_DO(create0)
 {
- if(data_in == NULL)
- {
-  X.top = 0; //If called with NULL, should completely reset the state
-  X.nel = 0;
-  H.top = 0;
-  H.nel = 0;
-  genus = 0;
- };
  RETURN_IF_FALSE(X.nel<X.max_nel-2, ERR_STACK_OVERFLOW);
-
- //For higher genera, we can create either tr\phi^2 or \tr\phi\tr\phi, here we calculate the relative probabilities
- double aG2  = 1.0/(NN_genus[genus]*SQR(cc_genus[genus])*f_genus[genus]);
- double aG11 = (genus<max_genus? 1.0/(SQR(NN_genus[genus+1])*SQR(cc_genus[genus+1])*f_genus[genus+1]) : 0.0);
- double p[2] = {aG2/(aG2 + aG11), aG11/(aG2 + aG11)};
  
- int c = rand_choice(p, 2);
+ X.start[ X.top] = (X.top>0? X.start[X.top-1] + X.len[X.top-1] : 0);
+ X.len[   X.top] = 2; //We push a pair of momenta on the top of the stack
+ X.top ++;
+ X.nel += 2;
  
- if(c==0) //Create tr\phi^2
- {
-  X.start[ X.top] = (X.top>0? X.start[X.top-1] + X.len[X.top-1] : 0);
-  X.len[   X.top] = 2; //We push a pair of momenta on the top of the stack
-  X.top ++;
-  X.nel += 2;
- }
- else //Create tr\phi tr\phi
- {
-  //The first trace...
-  X.start[ X.top] = (X.top>0? X.start[X.top-1] + X.len[X.top-1] : 0);
-  X.len[   X.top] = 1; //We push a pair of momenta on the top of the stack
-  X.top ++;
-  X.nel += 1;
-  //And the second one
-  X.start[ X.top] = (X.top>0? X.start[X.top-1] + X.len[X.top-1] : 0);
-  X.len[   X.top] = 1; //We push a pair of momenta on the top of the stack
-  X.top ++;
-  X.nel += 1;
-  //Finally, increase the genus counter
-  genus ++;   
- };
- //We also have to remember which operation was done
- if(data_in!=NULL)
-  (*data_in) = c;
  return ACTION_SUCCESS; 
 }
 
-DECLARE_ACTION_UNDO(create)
+DECLARE_ACTION_UNDO(create0)
 {
- RETURN_IF_FALSE((*data_in)==0 || (*data_in)==1, ERR_WRONG_STATE);
- if((*data_in)==0)
+ RETURN_IF_FALSE(          X.top>0, ERR_WRONG_STATE);
+ RETURN_IF_FALSE(X.len[X.top-1]==2, ERR_WRONG_STATE);
+
+ X.top --;
+ X.nel -= 2;
+
+ return ACTION_SUCCESS;
+}
+
+/******************** Create new tr(phi) tr(phi) *************************/
+DECLARE_ACTION_AMPLITUDE(create1)
+{                                
+ double res = 0.0;
+ if(genus<max_genus)
  {
-  RETURN_IF_FALSE(          X.top>0, ERR_WRONG_STATE);
-  RETURN_IF_FALSE(X.len[X.top-1]==2, ERR_WRONG_STATE);
-  X.top --;
-  X.nel -= 2;
- }
- else
+  res  = (f_genus[genus]/f_genus[genus+1]);
+  res *= (double)(X.top+1)*pow(NN_genus[genus]/NN_genus[genus+1], (double)X.top);
+  res *= pow(cc_genus[genus]/cc_genus[genus+1], (double)X.nel);
+  res /= SQR(NN_genus[genus+1])*SQR(cc_genus[genus+1]);
+ }; 
+ return res;
+}
+
+DECLARE_ACTION_DO(create1)
+{
+ RETURN_IF_FALSE(X.nel<X.max_nel-2, ERR_STACK_OVERFLOW);
+ //Choose where to insert the second trace and save in (*data_in)
+ (*data_in) = rand_int(X.top+1);
+ 
+ //First, we insert single trace at position (*data_in)
+ //We shift all the momenta in X starting from position (*data_in) to free up the place for the newly inserted line
+ for(int i=X.top; i>(*data_in); i--) 
  {
-  RETURN_IF_FALSE(          X.top>1, ERR_WRONG_STATE);
-  RETURN_IF_FALSE(X.len[X.top-1]==1, ERR_WRONG_STATE);
-  RETURN_IF_FALSE(X.len[X.top-2]==1, ERR_WRONG_STATE);
-  X.top -= 2;
-  X.nel -= 2;
-  genus --;
+  X.start[i] = X.start[i-1] + 1;
+  X.len[i]   = X.len[i-1];
  };
+ X.start[(*data_in)] = ((*data_in)>0? X.start[(*data_in)-1] + X.len[(*data_in)-1] : 0);
+ X.len[(*data_in)] = 1;
+ X.top ++;
+ X.nel ++;
+ 
+ //And now the second trace at the top of the stack
+ X.start[ X.top] = (X.top>0? X.start[X.top-1] + X.len[X.top-1] : 0);
+ X.len[   X.top] = 1; //We push a pair of momenta on the top of the stack
+ X.top ++;
+ X.nel ++;
+ 
+ //Finally, increase the genus counter
+ genus ++;   
+  
+ return ACTION_SUCCESS; 
+}
+
+DECLARE_ACTION_UNDO(create1)
+{
+ RETURN_IF_FALSE(              X.top>1, ERR_WRONG_STATE);
+ RETURN_IF_FALSE(        (*data_in)>=0, ERR_WRONG_STATE);
+ RETURN_IF_FALSE(   (*data_in)<X.top-1, ERR_WRONG_STATE);
+ RETURN_IF_FALSE(    X.len[X.top-1]==1, ERR_WRONG_STATE);
+ RETURN_IF_FALSE( X.len[(*data_in)]==1, ERR_WRONG_STATE);
+ 
+ //Removing the first trace - at position (*data_in)
+ for(int i=(*data_in); i<X.top-2; i++)
+ {
+  X.start[i] = X.start[i+1] - 1;
+  X.len[i]   = X.len[i+1];
+ };
+ X.top --;
+ X.nel --;
+ 
+ //Removing the second trace - at the top of the stack 
+ X.top --;
+ X.nel --;
+ 
+ //Finally, decreasing the genus
+ genus --;
  
  return ACTION_SUCCESS;
 }
@@ -326,6 +351,49 @@ DECLARE_ACTION_UNDO(split)
  return ACTION_SUCCESS;
 }
 
+/************** Source norm  ********************/
+double my_source_norm()
+{
+ double res = 1.0/(f_genus[0]*SQR(cc_genus[0])*NN_genus[0]);
+ if(max_genus>0)
+  res += 1.0/(f_genus[1]*SQR(cc_genus[1])*SQR(NN_genus[1]));
+ return res; 
+}
+
+/************** State initializer ***************/
+int my_state_initializer(int* data_in)
+{
+ //First we completely reset the history
+ H.top = 0;
+ H.nel = 0;
+ //Nonzero elements of the source vector
+ double b11 = 0.0, b2, p[2];
+ b2   = 1.0/(f_genus[0]*SQR(cc_genus[0])*NN_genus[0]);
+ if(max_genus>0)
+  b11 = 1.0/(f_genus[1]*SQR(cc_genus[1])*SQR(NN_genus[1]));
+ p[0] =  b2/(b11 + b2); //Relative probabilities of restart with tr phi^2 and tr phi tr phi
+ p[1] = b11/(b11 + b2);
+ (*data_in) = rand_choice(p, 2);
+ if((*data_in)==0)
+ { //Create tr phi^2
+  X.top      = 1;
+  X.start[0] = 0;
+  X.len[0]   = 2;
+  X.nel      = 2;
+  genus      = 0;
+ }
+ else
+ {
+  X.top      = 2;
+  X.start[0] = 0;
+  X.len[0]   = 1;
+  X.start[1] = 1;
+  X.len[1]   = 1;
+  X.nel      = 2;
+  genus      = 1;
+ };
+ return ACTION_SUCCESS;
+}
 
 /************** Action fetcher *****************/
 int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int list_length)
@@ -343,11 +411,12 @@ int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int 
   if(res!=0) system("PAUSE");
  }; 
  
- FETCH_ACTION(         create, 0, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
- FETCH_ACTION(    evolve_line, 1, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
- FETCH_ACTION(  evolve_vertex, 2, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
- FETCH_ACTION(           join, 3, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
- FETCH_ACTION(          split, 4, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
+ FETCH_ACTION(        create0, 0, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
+ FETCH_ACTION(        create1, 1, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
+ FETCH_ACTION(    evolve_line, 2, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
+ FETCH_ACTION(  evolve_vertex, 3, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
+ FETCH_ACTION(           join, 4, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
+ FETCH_ACTION(          split, 5, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
  
  return nact;
 }
