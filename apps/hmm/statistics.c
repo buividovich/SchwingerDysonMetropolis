@@ -2,8 +2,11 @@
 
 double                     astop = 0.0;
 int**                     G_hist = NULL;
-int*                  genus_hist = NULL;
+
+int*                    gmn_hist = NULL;
 int             actual_max_genus = 0;
+int             actual_max_top   = 0;
+int             actual_max_nel   = 0;
 
 double IS(double a, double k)
 {
@@ -35,10 +38,15 @@ void init_observable_stat()
    for(int i=0; i<max_correlator_order; i++)
     G_hist[2*g + s][i] = 0;
   };
- SAFE_MALLOC(genus_hist, int, max_genus+1);
- for(int g=0; g<(max_genus+1); g++)
-  genus_hist[g] = 0;
+  
+ SAFE_MALLOC(gmn_hist, int, gmn_hist_vol);
+ for(int i=0; i<gmn_hist_vol; i++)
+  gmn_hist[i] = 0;
+  
  actual_max_genus = 0;
+ actual_max_top   = 0;
+ actual_max_nel   = 0;
+ 
  init_stack_statistics(max_stack_nel);
 }
 
@@ -48,14 +56,15 @@ void free_observable_stat()
   for(int s=0; s<2; s++)
    SAFE_FREE(G_hist[2*g + s]);
  SAFE_FREE(G_hist);
- SAFE_FREE(genus_hist);
+ SAFE_FREE(gmn_hist);
  free_stack_statistics(); 
 }
 
 void gather_observable_stat()
 {
- if(genus<=max_genus)
-  genus_hist[genus] ++;
+ if(genus<gmn_hist_max_genus && X.top<gmn_hist_max_traces && X.nel<gmn_hist_max_nel)
+  gmn_hist[GMN_HIST_INDEX(genus, X.top, X.nel)] ++;
+ 
  if(X.top==1)
  {
   int gn = X.len[X.top-1]/2; 
@@ -64,6 +73,9 @@ void gather_observable_stat()
    G_hist[2*genus + (asign[ns]>0? 0 : 1)][gn-1]++;
  };  
  actual_max_genus = MAX(actual_max_genus, genus);
+ actual_max_top   = MAX(actual_max_top  , X.top);
+ actual_max_nel   = MAX(actual_max_nel  , X.nel);
+ 
  gather_stack_statistics(&X); 
 }
 
@@ -98,9 +110,28 @@ void process_observable_stat() //It is assumed that process_mc_stat was already 
    logs_WriteError("Could not open the file %s for writing", observables_file); 
  };
  
+ logs_Write(0, "\nSTATISTICS ON OBSERVABLES:");
+ logs_WriteParameter(0, "Max. genus   reached", "%i", actual_max_genus);
+ logs_WriteParameter(0, "Max. traces  reached", "%i",   actual_max_top);
+ logs_WriteParameter(0, "Max. no. el. reached", "%i",   actual_max_nel);
+ 
+ if(gmn_hist_file!=NULL)
+ {
+  FILE* f = fopen(gmn_hist_file, "w");
+  for(int ig=0; ig<gmn_hist_max_genus; ig++)
+   for(int it=0; it<gmn_hist_max_traces; it++)
+    for(int in=0; in<gmn_hist_max_nel;    in++)
+    {
+     int i = GMN_HIST_INDEX(ig, it, in);
+     if(gmn_hist[i]>0)
+      fprintf(f, "%i %i %i %2.4E\n", ig, it, in, (double)gmn_hist[i]/(double)nmc);      
+    };
+  fclose(f);
+ };
+ 
  for(int g=0; g<=MIN(max_genus, actual_max_genus); g++)
  {
-  logs_Write(0, "Genus %i (%2.2E occurences for all correlators)", g, (double)(genus_hist[g])); 
+  logs_Write(0, "Genus %i", g); 
   
   for(int ign=0; ign<max_correlator_order; ign++)
   {
@@ -108,9 +139,11 @@ void process_observable_stat() //It is assumed that process_mc_stat was already 
     
    double G  =      (double)(G_hist[2*g + 0][ign] - G_hist[2*g + 1][ign] )/(double)nmc;
    double dG = sqrt((double)(G_hist[2*g + 0][ign] + G_hist[2*g + 1][ign]))/(double)nmc;
+   
+   double ac_time_estimate = MAX(mean_rt, MAX(mean_rt2, mean_rt4));
     
    G  *= rescaling_factor*normalization_factor;
-   dG *= rescaling_factor*normalization_factor;
+   dG *= rescaling_factor*normalization_factor*sqrt(ac_time_estimate);
   
    //double G0 = G_analytic(lambda, ign+1);
    //double G0diff  = 100.0*(G0 - G)/G0; 

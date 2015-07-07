@@ -49,9 +49,6 @@ void free_actions()
  
  SAFE_FREE(A_choice_probs);
  SAFE_FREE(a_choice_probs);
- 
- //SAFE_FREE(genus);
- //SAFE_FREE(genus_history);
 }
 
 

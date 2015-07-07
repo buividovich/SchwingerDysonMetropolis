@@ -3,6 +3,8 @@
 %\usepackage[colorlinks=false]{hyperref}
 \usepackage{graphicx}
 
+\newcommand{\CG}{\mathfrak{G}}
+
 \newcommand{\comment}[1]{}
 
 \newcommand{\lr}[1]{ \left( #1 \right) }
@@ -226,6 +228,26 @@ we can rewrite the above equations as
  \lambda \mathcal{G}\lr{p_1} \sum\limits_{\tilde{p}_1, \tilde{p}_2, \tilde{q}_1}
  \delta\lr{p_1 - \tilde{p}_1 - \tilde{p}_2 - \tilde{q}_1} K^2\lr{\tilde{q}_1} \vev{G_{\tilde{p}_1 \tilde{q}_1} G_{\tilde{p}_2 q_1} G_{p_2 q_2} \ldots G_{p_n q_n}}
 \end{eqnarray}
+Finally, it is also convenient to restore the normalization by defining $G_{pq} = \frac{1}{\lambda} \CG_{p,q}$. Now $\CG$ is normalized as $\sum\limits_{p,q} \CG_{pq} = 1$:
+
+\begin{eqnarray}
+\label{sd_G_general_rescaled}
+ \vev{ \CG_{p_1 q_1} \ldots \CG_{p_n q_n} }
+ =
+  \frac{\lambda}{V} \mathcal{G}\lr{p_1} \delta\lr{p_1 + q_1} \vev{\CG_{p_2 q_2} \ldots \CG_{p_n q_n}}
+ + \nonumber \\ +
+ \frac{\lambda}{V} \mathcal{G}\lr{p_1} \sum\limits_{A=2}^{n} \sum\limits_{\tilde{p}_1, \tilde{p}_A} \delta\lr{p_1 + p_A - \tilde{p}_1 - \tilde{p}_A} \vev{\CG_{\tilde{p}_1 q_1} \ldots \CG_{p_{A-1} q_{A-1}}} \vev{\CG_{\tilde{p}_A q_A} \ldots \CG_{p_n q_n}}
+ - \nonumber \\ -
+ \mathcal{G}\lr{p_1} \sum\limits_{A=2}^{n}
+ \sum\limits_{\tilde{p}_1 \tilde{q}_A \tilde{p}_A}
+ \delta\lr{p_1 - \tilde{p}_1 - \tilde{q}_A - \tilde{p}_A}
+ K^2\lr{\tilde{q}_A}
+ \vev{\CG_{\tilde{p}_1 q_1} \ldots \CG_{p_{A} \tilde{q}_A}} \vev{\CG_{\tilde{p}_A q_A} \ldots \CG_{p_n q_n}}
+ + \nonumber \\ +
+ \mathcal{G}\lr{p_1} \sum\limits_{\tilde{p}_1, \tilde{p}_2, \tilde{q}_1}
+ \delta\lr{p_1 - \tilde{p}_1 - \tilde{p}_2 - \tilde{q}_1} K^2\lr{\tilde{q}_1} \vev{\CG_{\tilde{p}_1 \tilde{q}_1} \CG_{\tilde{p}_2 q_1} \CG_{p_2 q_2} \ldots \CG_{p_n q_n}}
+\end{eqnarray}
+
 \end{widetext}
 
 
@@ -489,7 +511,7 @@ from which we immediately get
 
 \begin{eqnarray}
 \label{phi4sd_nonplanar}
- G\lr{n_1, \ldots, n_m} 
+ G\lr{n_1, \ldots, n_m}
  = \nonumber \\ =
  2 G\lr{n_1 - 2, n_2, \ldots, n_m}
  + \nonumber \\ +
@@ -498,7 +520,7 @@ from which we immediately get
  + \nonumber \\ +
  \lambda G\lr{n_1 + 2, n_2, \ldots, n_m}
  + \nonumber \\ +
- \frac{1}{N^2} \sum\limits_{A=2}^{m} n_A  
+ \frac{1}{N^2} \sum\limits_{A=2}^{m} n_A
  G\lr{n_2, \ldots, n_{A-1}, n_A + n_1 - 2, n_{A+1}, \ldots, n_m}
 \end{eqnarray}
 

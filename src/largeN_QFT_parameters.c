@@ -203,18 +203,21 @@ void init_genus_constants(int noise_level)
   
  logs_Write(noise_level, "\t g=%02i,\t cc = %2.4E, f = %2.4E, sup = %2.4E", 0, cc_genus[0], f_genus[0], 0.0);
  
- logs_Write(noise_level, "\nReweighting coefficients for the genus expansion");
- for(int g=1; g<=max_genus; g++)
+ if(max_genus>0)
  {
-  cc_genus[g] = cc_genus[g-1]*(1.0 + genus_A/pow((double)g, genus_nu));
-  NN_genus[g] = NN_genus[g-1]*(1.0 + genus_B/pow((double)g, genus_mu));
+  logs_Write(noise_level, "\nReweighting coefficients for the genus expansion");
+  for(int g=1; g<=max_genus; g++)
+  {
+   cc_genus[g] = cc_genus[g-1]*(1.0 + genus_A/pow((double)g, genus_nu));
+   NN_genus[g] = NN_genus[g-1]*(1.0 + genus_B/pow((double)g, genus_mu));
   
-  double sup = n2an_sup(cc_genus[g-1]/cc_genus[g]);
+   double sup = n2an_sup(cc_genus[g-1]/cc_genus[g]);
   
-  f_genus[g] = genus_f_exponent*f_genus[g-1]/(SQR(cc_genus[g])*NN_genus[g])*sup;
-  logs_Write(noise_level, "\t g=%02i,\t cc = %2.4E, f = %2.4E, sup = %2.4E", g, cc_genus[g], f_genus[g], sup);
+   f_genus[g] = genus_f_exponent*f_genus[g-1]*sup;
+   logs_Write(noise_level, "\t g=%02i,\t cc = %2.4E, f = %2.4E, sup = %2.4E", g, cc_genus[g], f_genus[g], sup);
+  };
+  logs_Write(noise_level, " ");
  };
- logs_Write(noise_level, " ");
 }
 
 void free_genus_constants()

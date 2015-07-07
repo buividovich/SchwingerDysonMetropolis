@@ -74,7 +74,7 @@ void init_metropolis_statistics()
  mean_rt              = 0.0;
  mean_rt2             = 0.0;
  mean_rt4             = 0.0;
- max_rt               = 0.0;
+ max_rt               = 0;
  
  if(ns_history_file!=NULL)
  {
@@ -115,8 +115,8 @@ void gather_mc_stat()
  //Updating the statistics of return time
  if(ns==0)
  {
-  int rt = step_number - prev_return_time;
-  prev_return_time        = step_number;
+  int rt = nmc - prev_return_time;
+  prev_return_time = nmc;
   n_returns ++;
   mean_rt2 += (double)SQR(rt);
   mean_rt4 += (double)(SQR(rt)*SQR(rt));

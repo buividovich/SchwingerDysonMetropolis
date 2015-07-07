@@ -14,6 +14,14 @@
 #include "lattice_stack.h"
 #include "actions.h"
 
+extern int gmn_hist_max_genus;
+extern int gmn_hist_max_traces;
+extern int gmn_hist_max_nel;
+extern int gmn_hist_vol;
+
+extern char* gmn_hist_file;
+extern char* fcn_data_file;
+
 int  parse_command_line_options(int argc, char **argv);
 void init_parameters();
 void free_parameters();
