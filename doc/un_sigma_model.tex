@@ -124,6 +124,9 @@ Note that these are now the operator identities which hold on configuration per 
 \end{eqnarray}
 Differentiating by parts and taking into account the last identity in (\ref{G_identities}), we arrive at the following relations:
 \begin{eqnarray}
+\label{sd_derivation2_lowest}
+ \vev{G_{x y}} - \vev{\phi_x G_{x x}} \vev{G_{x y}}
+ + \vev{G_{x x} \phi_x G_{x y} } - \lambda^{-1} \vev{\phi_x G_{x y}} = 0\\ 
 \label{sd_derivation2}
  \vev{G_{x_1 y_1} \ldots G_{x_n y_n}} - \vev{\phi_{x_1} G_{x_1 x_1}} \vev{G_{x_1 y_1} \ldots G_{x_n y_n}}
  - \nonumber \\ -
@@ -163,26 +166,16 @@ Let us first consider these equations in the coordinate space. It is then conven
  D_{z x_1} \vev{G_{x_1 z} G_{x_1 y_1} \ldots G_{x_n y_n}} = 0 .
 \end{eqnarray}
 
+ Let us now simplify the ``effective mass'' term $\lr{1 + D_{x_1 z} \vev{G_{z x_1}}}$ for the standard kinetic operator $D_{x y} = \lr{2 D + m_0^2} \delta_{xy} + \sum\limits_{\pm \mu} \delta_{x\pm\hat{\mu}, y}$ on the isotropic lattice. A direct substitution yields
+\begin{eqnarray}
+\label{eff_mass_term}
+ 1 + \sum \limits_z D_{x_1 z} \vev{G_{z x_1}} = 
+ 1 + \lr{2 D + m_0^2} \vev{G_{x_1 x_1}} - \sum\limits_{\pm \mu} \vev{G_{x_1 x_1 \pm \hat{\mu}}}
+ = \nonumber \\ = 
+ 1 + \frac{2 D + m_0^2}{\lambda} - \frac{2 D \vev{g^{\dag}_0 g_{0 + \hat{0}}} }{\lambda}
+ = \lambda^{-1} \lr{\lambda + m_0^2 + 2 D \lr{1 - \vev{g^{\dag}_0 g_{0 + \hat{0}}}}}
+\end{eqnarray}
 
-Introducing now the effective ``hopping parameter''
-\begin{eqnarray}
-\label{eff_hopping}
- \kappa = \lr{2 D \vev{g^{\dag}_x g_{x+\hat{\mu}}} - \lambda}
-\end{eqnarray}
-we can rewrite the above equations as
-\begin{eqnarray}
-\label{sd_G_general_kappa}
- \vev{ G_{x_1 y_1} \ldots G_{x_n y_n} }
- =
- -\kappa \delta_{x_1 y_1} \vev{G_{x_2 y_2} \ldots G_{x_n y_n}}
- -\kappa \sum\limits_{\mu} \vev{ G_{x_1 \pm \hat{\mu} y_1} \ldots G_{x_n y_n} }
- - \nonumber \\ -
- \lambda \kappa \sum\limits_{A=2}^{n} \delta_{x_1 x_A} \vev{G_{x_1 y_1} \ldots G_{x_{A-1} y_{A-1}}} \vev{G_{x_1 y_A} \ldots G_{x_n y_n}}
- - \nonumber \\ -
- \lambda \kappa \sum\limits_{A=2}^{n} \vev{G_{x_1 y_1} \ldots G_{x_{A} x_{1} \pm \hat{\mu}}} \vev{G_{x_1 y_A} \ldots G_{x_n y_n}}
- +
- \lambda \kappa \sum\limits_{\mu} \vev{G_{x_1 x_1 \pm \hat{\mu}} G_{x_1 y_1} \ldots G_{x_n y_n}}
-\end{eqnarray}
 Let us now go to the momentum space and define the new observables
 \begin{eqnarray}
 \label{momentum_space_observables}
@@ -205,7 +198,7 @@ where the momenta $p, q$ take discrete values $\vec{p} = 2 \pi \vec{m}/L$ and $L
  \lambda \sum\limits_{\tilde{p}_1, \tilde{p}_2, \tilde{q}_1}
  \delta\lr{p_1 - \tilde{p}_1 - \tilde{p}_2 - \tilde{q}_1} K^2\lr{\tilde{q}_1} \vev{G_{\tilde{p}_1 \tilde{q}_1} G_{\tilde{p}_2 q_1} G_{p_2 q_2} \ldots G_{p_n q_n}} ,
 \end{eqnarray}
-where $K^2\lr{p} = \sum\limits_{\mu} 4 \sin^2\lr{k_{\mu}/2}$ and $m^2 \equiv \lambda + 2 D\lr{1 - \vev{g^{\dag}_x g_{x + \hat{0}}}}$. Introducing now the ``propagator''
+where $K^2\lr{p} = m_0^2 + \sum\limits_{\mu} 4 \sin^2\lr{k_{\mu}/2}$ and $m^2 \equiv m_0^2 + \lambda + 2 D\lr{1 - \vev{g^{\dag}_x g_{x + \hat{0}}}}$. Introducing now the ``propagator''
 \begin{eqnarray}
 \label{propagator_def}
  \mathcal{G}\lr{p} = \frac{1}{m^2 + K^2\lr{p}}
