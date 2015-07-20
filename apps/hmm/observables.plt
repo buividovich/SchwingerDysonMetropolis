@@ -32,16 +32,17 @@ for [g=1:6] \
 for [g=1:6] \
 'hmm_G4_analytics.dat' using ($1):(column(g+1)):(1.0)  every ::1          notitle         with lines  ls g
 
-set logscale y
-set out    'G:\\LAT\\sd_metropolis\\plots\\hmm\\G4.eps'
-set key left top
-set xlabel "{/Symbol l}"
-set ylabel "G_4^{(g)}({/Symbol l})"
+unset logscale y
+set out    'G:\\LAT\\sd_metropolis\\plots\\hmm\\G4_ratios.eps'
+set key left bottom
+set xrange [0.0:1.0]
+set xlabel "{/Symbol l}/{/Symbol l}_c"
+set ylabel "G_4(MC)/G_4(analytics)"
 plot \
-for [g=1:6] \
-'G_nmc2000000000.dat'  using ($1):(column(3*g)):(column(3*g+1)) title 'g='.sprintf("%i", g) with yerrorbars ls g,\
-for [g=1:6] \
-'hmm_G4_analytics.dat' using ($1):(column(g+1)):(1.0)  every ::1          notitle         with lines  ls g
+1 with lines notitle ls 1, \
+for [g=0:6] \
+'rg'.sprintf("%i", g).'.dat' using (12*$1):($2):($3) title 'g='.sprintf("%i", g) with yerrorbars ls (g+1)
+
 
 quit
 
