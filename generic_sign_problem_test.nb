@@ -1,1478 +1,795 @@
-(************** Content-type: application/mathematica **************
-                     CreatedBy='Mathematica 5.1'
+(* Content-type: application/vnd.wolfram.mathematica *)
 
-                    Mathematica-Compatible Notebook
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
 
-This notebook can be used with any Mathematica-compatible
-application, such as Mathematica, MathReader or Publicon. The data
-for the notebook starts with the line containing stars above.
+(* CreatedBy='Mathematica 8.0' *)
 
-To get the notebook into a Mathematica-compatible application, do
-one of the following:
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[     26706,        786]
+NotebookOptionsPosition[     26460,        773]
+NotebookOutlinePosition[     26804,        788]
+CellTagsIndexPosition[     26761,        785]
+WindowFrame->Normal*)
 
-* Save the data starting with the line of stars above into a file
-  with a name ending in .nb, then open the file inside the
-  application;
-
-* Copy the data starting with the line of stars above to the
-  clipboard, then use the Paste menu command inside the application.
-
-Data for notebooks contains only printable 7-bit ASCII and can be
-sent directly in email or through ftp in text mode.  Newlines can be
-CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
-
-NOTE: If you modify the data for this notebook not in a Mathematica-
-compatible application, you must delete the line below containing
-the word CacheID, otherwise Mathematica-compatible applications may
-try to use invalid cache data.
-
-For more information on notebooks and Mathematica-compatible 
-applications, contact Wolfram Research:
-  web: http://www.wolfram.com
-  email: info@wolfram.com
-  phone: +1-217-398-0700 (U.S.)
-
-Notebook reader applications are available free of charge from 
-Wolfram Research.
-*******************************************************************)
-
-(*CacheID: 232*)
-
-
-(*NotebookFileLineBreakTest
-NotebookFileLineBreakTest*)
-(*NotebookOptionsPosition[     68946,       1401]*)
-(*NotebookOutlinePosition[     69590,       1423]*)
-(*  CellTagsIndexPosition[     69546,       1419]*)
-(*WindowFrame->Normal*)
-
-
-
+(* Beginning of Notebook Content *)
 Notebook[{
-
-Cell[CellGroupData[{
-Cell[BoxData[{\(NC = 
-        5;\), "\[IndentingNewLine]", \(Pts = {};\), "\[IndentingNewLine]", 
+Cell[BoxData[{
+ StyleBox[
+  RowBox[{
+   RowBox[{"NC", "=", "5"}], ";"}],
+  FontFamily->"Courier New",
+  FontSize->16], "\[IndentingNewLine]", 
+ StyleBox[
+  RowBox[{
+   RowBox[{"Pts", "=", 
+    RowBox[{"{", "}"}]}], ";"}],
+  FontFamily->"Courier New",
+  FontSize->16], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   StyleBox["For",
+    FontFamily->"Courier New",
+    FontSize->16], 
+   StyleBox["[",
+    FontFamily->"Courier New",
+    FontSize->16], 
+   RowBox[{
+    StyleBox[
+     RowBox[{"itrial", "=", "1"}],
+     FontFamily->"Courier New",
+     FontSize->16], 
+    StyleBox[",",
+     FontFamily->"Courier New",
+     FontSize->16], 
+    StyleBox[
+     RowBox[{"itrial", "\[LessEqual]", "100000"}],
+     FontFamily->"Courier New",
+     FontSize->16], 
+    StyleBox[",",
+     FontFamily->"Courier New",
+     FontSize->16], 
+    StyleBox[
+     RowBox[{"itrial", "++"}],
+     FontFamily->"Courier New",
+     FontSize->16], 
+    StyleBox[",",
+     FontFamily->"Courier New",
+     FontSize->16], 
+    StyleBox["\[IndentingNewLine]",
+     FontFamily->"Courier New",
+     FontSize->16], 
+    StyleBox[
+     RowBox[{"(*", " ", 
+      RowBox[{"Random", " ", "test", " ", "matrix"}], " ", "*)"}],
+     FontFamily->"Courier New",
+     FontSize->16,
+     FontColor->RGBColor[0, 0, 1]], 
+    StyleBox["\[IndentingNewLine]",
+     FontFamily->"Courier New",
+     FontSize->16], 
     RowBox[{
-      RowBox[{"For", "[", 
-        RowBox[{\(itrial = 1\), ",", \(itrial \[LessEqual] 100\), 
-          ",", \(itrial++\), ",", "\[IndentingNewLine]", 
-          StyleBox[\( (*\ Random\ test\ matrix\ *) \),
-            FontColor->RGBColor[0, 0, 1]], "\[IndentingNewLine]", 
-          
-          RowBox[{\(T1 = 
-              Table[Random[Real, {\(-1\), 1}], {i, 1, NC}, {j, 1, \ NC}]\), 
-            ";", "\[IndentingNewLine]", \(\[CapitalLambda]1 = 
-              Eigenvalues[T1]\), ";", "\[IndentingNewLine]", 
-            RowBox[{"If", "[", 
-              RowBox[{\(Max[Abs[\[CapitalLambda]1]] < 1.0\), ",", 
-                
-                StyleBox[\( (*\ 
-                    From\ now\ on\ we\ have\ a\ soluble\ system\ x\  = \ 
-                      A\ x\  + \ b\ *) \),
-                  FontColor->RGBColor[0, 0, 1]], 
-                StyleBox["\[IndentingNewLine]",
-                  FontColor->RGBColor[0, 0, 1]], 
-                
-                StyleBox[\( (*\ 
-                    We\ construct\ now\ the\ matrices\ which\ contain\ \
-separately\ the\ negative\ and\ the\ positive\ parts\ *) \),
-                  FontColor->RGBColor[0, 0, 1]], "\[IndentingNewLine]", 
-                
-                RowBox[{\(T2 = Table[0, {i, 1, 2  NC}, {j, 1, 2  NC}]\), ";", 
-                  "\[IndentingNewLine]", \(TP = 
-                    Table[0, {i, 1, NC}, {j, 1, NC}]\), ";", 
-                  "\[IndentingNewLine]", \(TM = 
-                    Table[0, {i, 1, NC}, {j, 1, NC}]\), ";", 
-                  "\[IndentingNewLine]", \(For[i = 1, 
-                    i \[LessEqual] 
-                      NC, \(i++\), \[IndentingNewLine]\(For[j = 1, 
-                        j \[LessEqual] 
-                          NC, \(j++\), \[IndentingNewLine]\(If[
-                            T1[\([i, j]\)] > 
-                              0, \[IndentingNewLine]TP[\([i, j]\)] = 
-                              T1[\([i, j]\)]; \[IndentingNewLine]T2[\([i, 
-                                  j]\)] = 
-                              T1[\([i, 
-                                  j]\)]; \[IndentingNewLine]T2[\([NC + i, 
-                                  NC + j]\)] = 
-                              T1[\([i, j]\)], \[IndentingNewLine]TM[\([i, 
-                                  j]\)] = \(-T1[\([i, 
-                                    j]\)]\); \[IndentingNewLine]T2[\([i + NC, 
-                                  j]\)] = \(-T1[\([i, 
-                                    j]\)]\); \[IndentingNewLine]T2[\([i, 
-                                  NC + j]\)] = \(-T1[\([i, 
-                                    j]\)]\)\[IndentingNewLine]];\)\
-\[IndentingNewLine]];\)\[IndentingNewLine]]\), ";", 
-                  "\[IndentingNewLine]", \(Print["\<T, TP and TM matrices: \
-\>"]\), ";", "\[IndentingNewLine]", \(Print["\<T1 = \>", 
-                    MatrixForm[T1], "\< \>", Abs[Eigenvalues[T1]]]\), ";", 
-                  "\[IndentingNewLine]", \(Print["\<TP = \>", 
-                    MatrixForm[TP], "\< \>", Abs[Eigenvalues[TP]]]\), ";", 
-                  "\[IndentingNewLine]", \(Print["\<TM = \>", 
-                    MatrixForm[TM], "\< \>", Abs[Eigenvalues[TM]]]\), ";", 
+     StyleBox[
+      RowBox[{"A", "=", 
+       RowBox[{"Table", "[", 
+        RowBox[{
+         RowBox[{"RandomReal", "[", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"-", "1.0"}], ",", "1.0"}], "}"}], "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"i", ",", "1", ",", "NC"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"j", ",", "1", ",", " ", "NC"}], "}"}]}], "]"}]}],
+      FontFamily->"Courier New",
+      FontSize->16], 
+     StyleBox[";",
+      FontFamily->"Courier New",
+      FontSize->16], 
+     StyleBox["\[IndentingNewLine]",
+      FontFamily->"Courier New",
+      FontSize->16], 
+     StyleBox[
+      RowBox[{"\[CapitalLambda]A", "=", 
+       RowBox[{"Eigenvalues", "[", "A", "]"}]}],
+      FontFamily->"Courier New",
+      FontSize->16], 
+     StyleBox[";",
+      FontFamily->"Courier New",
+      FontSize->16], 
+     StyleBox["\[IndentingNewLine]",
+      FontFamily->"Courier New",
+      FontSize->16], 
+     RowBox[{
+      StyleBox[
+       RowBox[{
+        StyleBox["(",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox["*",
+         FontFamily->"Courier New",
+         FontSize->16]}]], 
+      StyleBox[
+       RowBox[{
+        RowBox[{"Print", "[", 
+         RowBox[{"Abs", "[", "\[CapitalLambda]A", "]"}], "]"}], ";"}],
+       FontFamily->"Courier New",
+       FontSize->16], 
+      StyleBox[
+       StyleBox[
+        RowBox[{"*", ")"}]],
+       FontFamily->"Courier New",
+       FontSize->16]}], 
+     StyleBox["\[IndentingNewLine]",
+      FontFamily->"Courier New",
+      FontSize->16], 
+     RowBox[{
+      StyleBox["If",
+       FontFamily->"Courier New",
+       FontSize->16], 
+      StyleBox["[",
+       FontFamily->"Courier New",
+       FontSize->16], 
+      RowBox[{
+       StyleBox[
+        RowBox[{
+         RowBox[{"Max", "[", 
+          RowBox[{"Abs", "[", "\[CapitalLambda]A", "]"}], "]"}], "<", "1.0"}],
+        FontFamily->"Courier New",
+        FontSize->16], 
+       StyleBox[",",
+        FontFamily->"Courier New",
+        FontSize->16], 
+       StyleBox[
+        RowBox[{"(*", " ", 
+         RowBox[{
+          RowBox[{
+          "From", " ", "now", " ", "on", " ", "we", " ", "have", " ", "a", 
+           " ", "soluble", " ", "system", " ", "x"}], " ", "=", " ", 
+          RowBox[{
+           RowBox[{"A", " ", "x"}], " ", "+", " ", "b"}]}], " ", "*)"}],
+        FontFamily->"Courier New",
+        FontSize->16,
+        FontColor->RGBColor[0, 0, 1]], 
+       StyleBox["\[IndentingNewLine]",
+        FontFamily->"Courier New",
+        FontSize->16,
+        FontColor->RGBColor[0, 0, 1]], 
+       StyleBox[
+        RowBox[{"(*", " ", 
+         RowBox[{
+         "We", " ", "construct", " ", "now", " ", "the", " ", "matrices", " ",
+           "which", " ", "contain", " ", "separately", " ", "the", " ", 
+          "negative", " ", "and", " ", "the", " ", "positive", " ", "parts"}],
+          " ", "*)"}],
+        FontFamily->"Courier New",
+        FontSize->16,
+        FontColor->RGBColor[0, 0, 1]], 
+       StyleBox["\[IndentingNewLine]",
+        FontFamily->"Courier New",
+        FontSize->16], 
+       RowBox[{
+        StyleBox[
+         RowBox[{"A2", "=", 
+          RowBox[{"Table", "[", 
+           RowBox[{"0", ",", 
+            RowBox[{"{", 
+             RowBox[{"i", ",", "1", ",", 
+              RowBox[{"2", "NC"}]}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"j", ",", "1", ",", 
+              RowBox[{"2", "NC"}]}], "}"}]}], "]"}]}],
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox[";",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox["\[IndentingNewLine]",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox[
+         RowBox[{"A2B", "=", 
+          RowBox[{"Table", "[", 
+           RowBox[{"0", ",", 
+            RowBox[{"{", 
+             RowBox[{"i", ",", "1", ",", 
+              RowBox[{"2", "NC"}]}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"j", ",", "1", ",", 
+              RowBox[{"2", "NC"}]}], "}"}]}], "]"}]}],
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox[";",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox["\[IndentingNewLine]",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox[
+         RowBox[{"B", "=", 
+          RowBox[{"Table", "[", 
+           RowBox[{
+            RowBox[{"RandomReal", "[", 
+             RowBox[{"{", 
+              RowBox[{
+               StyleBox[
+                RowBox[{"0", ".0"}]], ",", "1.0"}], "}"}], "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"i", ",", "1", ",", "NC"}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"j", ",", "1", ",", " ", "NC"}], "}"}]}], "]"}]}],
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox[";",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox["\[IndentingNewLine]",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox[
+         RowBox[{"AP", "=", 
+          RowBox[{"Table", "[", 
+           RowBox[{"0", ",", 
+            RowBox[{"{", 
+             RowBox[{"i", ",", "1", ",", "NC"}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"j", ",", "1", ",", "NC"}], "}"}]}], "]"}]}],
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox[";",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox["\[IndentingNewLine]",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox[
+         RowBox[{"AM", "=", 
+          RowBox[{"Table", "[", 
+           RowBox[{"0", ",", 
+            RowBox[{"{", 
+             RowBox[{"i", ",", "1", ",", "NC"}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"j", ",", "1", ",", "NC"}], "}"}]}], "]"}]}],
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox[";",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox["\[IndentingNewLine]",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox[
+         RowBox[{"For", "[", 
+          RowBox[{
+           RowBox[{"i", "=", "1"}], ",", 
+           RowBox[{"i", "\[LessEqual]", "NC"}], ",", 
+           RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"For", "[", 
+             RowBox[{
+              RowBox[{"j", "=", "1"}], ",", 
+              RowBox[{"j", "\[LessEqual]", "NC"}], ",", 
+              RowBox[{"j", "++"}], ",", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"If", "[", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"A", "[", 
+                   RowBox[{"[", 
+                    RowBox[{"i", ",", "j"}], "]"}], "]"}], ">", "0"}], ",", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"AP", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"i", ",", "j"}], "]"}], "]"}], "=", 
+                   RowBox[{"A", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"i", ",", "j"}], "]"}], "]"}]}], ";", 
                   "\[IndentingNewLine]", 
-                  
-                  StyleBox[\( (*\ 
-                      Now\ form\ the\ effective\ matrix\ without\ the\ sign\ \
-problem\ *) \),
-                    FontColor->RGBColor[0, 0, 1]], 
-                  "\[IndentingNewLine]", \(TE = 
-                    Inverse[IdentityMatrix[NC] + TM] . TP\), ";", 
-                  "\[IndentingNewLine]", \(Print["\<TE = \>", 
-                    MatrixForm[TE], "\< \>", Abs[Eigenvalues[TE]], "\< \>", 
-                    Abs[Eigenvalues[TP\  + \ TM]]]\), ";"}]}], 
-              "\[IndentingNewLine]", "]"}], ";"}]}], "\[IndentingNewLine]", 
-        "]"}], ";"}]}], "Input"],
-
-Cell[BoxData[
-    \("T, TP and TM matrices: "\)], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"T1 = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0.47315001134361223`", "0.046267480724642374`", 
-                  "0.7878505130761015`", "0.6477271515551082`", 
-                  "0.0804499744837337`"},
-                {"0.8437483591153585`", \(-0.9027546548854166`\), 
-                  "0.893244593753854`", "0.9980718461220819`", 
-                  "0.8985864390686022`"},
-                {\(-0.8104994920400738`\), \(-0.16831250857752933`\), \
-\(-0.0006423202826754126`\), \(-0.0027241150030405947`\), \
-\(-0.21527196603752308`\)},
-                {\(-0.14585275307839518`\), "0.08672564948704675`", 
-                  "0.22817401127655534`", 
-                  "0.5284310955157383`", \(-0.21545839401247513`\)},
-                {\(-0.1422213773108092`\), \(-0.21854287206966438`\), \
-\(-0.42643782745127445`\), \(-0.32313989314532854`\), "0.3846286113455786`"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({0.7779430309904004`, 0.7779430309904004`, 
-          0.7340500736217455`, 0.5077860170132737`, 0.2577127586970287`}\)}],
-      SequenceForm[ "T1 = ", 
-        MatrixForm[ {{.47315001134361223, .046267480724642374, \
-.78785051307610154, .64772715155510818, .080449974483733699}, \
-{.8437483591153585, -.90275465488541662, .89324459375385401, \
-.99807184612208188, .89858643906860225}, {-.81049949204007377, \
--.16831250857752933, -.00064232028267541263, -.0027241150030405947, \
--.21527196603752308}, {-.14585275307839518, .086725649487046752, \
-.22817401127655534, .5284310955157383, -.21545839401247513}, \
-{-.14222137731080919, -.21854287206966438, -.42643782745127445, \
--.32313989314532854, .38462861134557857}}], 
-        " ", {.77794303099040041, .77794303099040041, .73405007362174546, \
-.50778601701327375, .2577127586970287}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TP = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0.47315001134361223`", "0.046267480724642374`", 
-                  "0.7878505130761015`", "0.6477271515551082`", 
-                  "0.0804499744837337`"},
-                {"0.8437483591153585`", "0", "0.893244593753854`", 
-                  "0.9980718461220819`", "0.8985864390686022`"},
-                {"0", "0", "0", "0", "0"},
-                {"0", "0.08672564948704675`", "0.22817401127655534`", 
-                  "0.5284310955157383`", "0"},
-                {"0", "0", "0", "0", "0.3846286113455786`"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({0.8313907699732969`, 0.3846286113455786`, 
-          0.24099649657066333`, 0.0708061596846096`, 0.`}\)}],
-      SequenceForm[ "TP = ", 
-        MatrixForm[ {{.47315001134361223, .046267480724642374, \
-.78785051307610154, .64772715155510818, .080449974483733699}, \
-{.8437483591153585, 
-          0, .89324459375385401, .99807184612208188, .89858643906860225}, {0, 
-          0, 0, 0, 0}, {
-          0, .086725649487046752, .22817401127655534, .5284310955157383, 0}, {
-          0, 0, 0, 0, .38462861134557857}}], 
-        " ", {.83139076997329686, .38462861134557857, .24099649657066333, \
-.070806159684609599, 0.0}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TM = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0", "0", "0", "0", "0"},
-                {"0", "0.9027546548854166`", "0", "0", "0"},
-                {"0.8104994920400738`", "0.16831250857752933`", 
-                  "0.0006423202826754126`", "0.0027241150030405947`", 
-                  "0.21527196603752308`"},
-                {"0.14585275307839518`", "0", "0", "0", 
-                  "0.21545839401247513`"},
-                {"0.1422213773108092`", "0.21854287206966438`", 
-                  "0.42643782745127445`", "0.32313989314532854`", "0"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({0.9027546548854166`, 0.40273121882424007`, 
-          0.4008153939146741`, 0.0012735046268904265`, 0.`}\)}],
-      SequenceForm[ "TM = ", 
-        MatrixForm[ {{0, 0, 0, 0, 0}, {0, .90275465488541662, 0, 0, 
-          0}, {.81049949204007377, .16831250857752933, .00064232028267541263, \
-.0027241150030405947, .21527196603752308}, {.14585275307839518, 0, 0, 
-          0, .21545839401247513}, {.14222137731080919, .21854287206966438, \
-.42643782745127445, .32313989314532854, 0}}], 
-        " ", {.90275465488541662, .40273121882424007, .40081539391467408, \
-.0012735046268904265, 0.0}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TE = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0.47315001134361223`", "0.046267480724642374`", 
-                  "0.7878505130761015`", "0.6477271515551082`", 
-                  "0.0804499744837337`"},
-                {"0.4434351832744137`", "0.`", "0.4694481190522406`", 
-                  "0.5245404832196747`", "0.47225554632670963`"},
-                {\(-0.4712614371310503`\), \(-0.033511816055221154`\), \
-\(-0.731400955178357`\), \(-0.5922854413201561`\), \
-\(-0.23035065920978742`\)},
-                {\(-0.08268792394526037`\), "0.08417677907778458`", 
-                  "0.09921765396344595`", 
-                  "0.4558223113330772`", \(-0.09788247347842957`\)},
-                {"0.06348182550236899`", \(-0.019490394197337942`\), 
-                  "0.0651921269120781`", \(-0.10147668748525265`\), 
-                  "0.39983878841082576`"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({0.43755452379924054`, 0.3327717895963978`, 
-          0.2160201288834059`, 0.2160201288834059`, 
-          3.9017471168919615`*^-17}\), "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({1.8351350072114527`, 0.6153344119888536`, 
-          0.6102012845907862`, 0.26953190675483446`, 0.1798066520086668`}\)}],
-      
-      SequenceForm[ "TE = ", 
-        MatrixForm[ {{.47315001134361223, .046267480724642374, \
-.78785051307610154, .64772715155510818, .080449974483733699}, \
-{.44343518327441372, 
-          0.0, .4694481190522406, .52454048321967472, .47225554632670963}, \
-{-.47126143713105029, -.033511816055221154, -.73140095517835702, \
--.59228544132015615, -.23035065920978742}, {-.082687923945260366, \
-.084176779077784578, .099217653963445951, .45582231133307721, \
--.097882473478429571}, {.063481825502368985, -.019490394197337942, \
-.065192126912078097, -.10147668748525265, .39983878841082576}}], 
-        " ", {.43755452379924054, .3327717895963978, .21602012888340591, \
-.21602012888340591, .39017471168919615*^-16}, " ", {
-        1.8351350072114527, .61533441198885364, .61020128459078615, \
-.26953190675483446, .1798066520086668}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    \("T, TP and TM matrices: "\)], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"T1 = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {\(-0.6119094237416882`\), 
-                  "0.8300537273089572`", \(-0.5885302803162751`\), 
-                  "0.3675078874712334`", \(-0.4418194090227109`\)},
-                {"0.09550305213288923`", 
-                  "0.46320106662874805`", \(-0.02252123603241174`\), 
-                  "0.7306635474922392`", \(-0.9655334517582147`\)},
-                {\(-0.6188764909749034`\), \(-0.33153673012851914`\), 
-                  "0.3082564325846535`", \(-0.6350702079670136`\), 
-                  "0.9883225993642433`"},
-                {"0.27589389990670066`", "0.0759733213886793`", 
-                  "0.7933899960735034`", \(-0.4909716423964776`\), 
-                  "0.1867374543840008`"},
-                {\(-0.4897080624318072`\), "0.15989126573506618`", 
-                  "0.35656556194994615`", \(-0.28959652009292636`\), \
-\(-0.877798638690119`\)}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({0.9260182577189267`, 0.9260182577189267`, 
-          0.921389541725933`, 0.7348175377927919`, 0.7348175377927919`}\)}],
-      SequenceForm[ "T1 = ", 
-        MatrixForm[ {{-.61190942374168822, .83005372730895721, \
--.58853028031627508, .36750788747123342, -.44181940902271089}, \
-{.095503052132889232, .46320106662874805, -.02252123603241174, \
-.73066354749223916, -.9655334517582147}, {-.61887649097490338, \
--.33153673012851914, .30825643258465352, -.63507020796701363, \
-.98832259936424327}, {.27589389990670066, .075973321388679294, \
-.79338999607350336, -.49097164239647761, .1867374543840008}, \
-{-.4897080624318072, .15989126573506618, .35656556194994615, \
--.28959652009292636, -.87779863869011898}}], 
-        " ", {.92601825771892665, .92601825771892665, .92138954172593301, \
-.73481753779279191, .73481753779279191}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TP = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0", "0.8300537273089572`", "0", "0.3675078874712334`", 
-                  "0"},
-                {"0.09550305213288923`", "0.46320106662874805`", "0", 
-                  "0.7306635474922392`", "0"},
-                {"0", "0", "0.3082564325846535`", "0", 
-                  "0.9883225993642433`"},
-                {"0.27589389990670066`", "0.0759733213886793`", 
-                  "0.7933899960735034`", "0", "0.1867374543840008`"},
-                {"0", "0.15989126573506618`", "0.35656556194994615`", "0", 
-                  "0"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({1.0505476713122546`, 0.551462454874667`, 
-          0.5239273680114797`, 0.35972674616408706`, 
-          0.35972674616408706`}\)}],
-      SequenceForm[ "TP = ", 
-        MatrixForm[ {{0, .83005372730895721, 0, .36750788747123342, 
-          0}, {.095503052132889232, .46320106662874805, 0, .73066354749223916,
-           0}, {0, 0, .30825643258465352, 
-          0, .98832259936424327}, {.27589389990670066, .075973321388679294, \
-.79338999607350336, 0, .1867374543840008}, {
-          0, .15989126573506618, .35656556194994615, 0, 0}}], " ", {
-        1.0505476713122546, .55146245487466705, .52392736801147965, \
-.35972674616408706, .35972674616408706}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TM = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0.6119094237416882`", "0", "0.5885302803162751`", "0", 
-                  "0.4418194090227109`"},
-                {"0", "0", "0.02252123603241174`", "0", 
-                  "0.9655334517582147`"},
-                {"0.6188764909749034`", "0.33153673012851914`", "0", 
-                  "0.6350702079670136`", "0"},
-                {"0", "0", "0", "0.4909716423964776`", "0"},
-                {"0.4897080624318072`", "0", "0", "0.28959652009292636`", 
-                  "0.877798638690119`"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({1.3904134560004215`, 0.5184646749206901`, 
-          0.4909716423964776`, 0.36235668732970583`, 
-          0.36235668732970583`}\)}],
-      SequenceForm[ "TM = ", 
-        MatrixForm[ {{.61190942374168822, 0, .58853028031627508, 
-          0, .44181940902271089}, {0, 0, .02252123603241174, 
-          0, .9655334517582147}, {.61887649097490338, .33153673012851914, 
-          0, .63507020796701363, 0}, {0, 0, 0, .49097164239647761, 
-          0}, {.4897080624318072, 0, 
-          0, .28959652009292636, .87779863869011898}}], " ", {
-        1.3904134560004215, .51846467492069015, .49097164239647761, \
-.36235668732970583, .36235668732970583}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TE = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0.09857391731544786`", 
-                  "0.8252790778796222`", \(-0.04675073910217868`\), 
-                  "0.4731879573244458`", \(-0.487557721068237`\)},
-                {"0.15304113565498137`", 
-                  "0.613190237013333`", \(-0.11672953572268081`\), 
-                  "0.8628500292769065`", \(-0.13236797665770406`\)},
-                {\(-0.22925914883540024`\), \(-0.7464012752531309`\), 
-                  "0.037949901668193724`", \(-0.5789113798982979`\), 
-                  "1.2544057860249358`"},
-                {"0.18504302299354883`", "0.050955577710764095`", 
-                  "0.5321295009999432`", "0.`", "0.1252454768917354`"},
-                {\(-0.054244504965837076`\), \(-0.1379333785351503`\), 
-                  "0.12001122987380612`", \(-0.12340192019153921`\), 
-                  "0.10783386912241975`"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({0.8337954559841212`, 0.8337954559841212`, 
-          0.3592934402758478`, 0.2288769839438058`, 0.2288769839438058`}\), 
-        "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({2.369946648660113`, 0.5231134392083236`, 
-          0.5231134392083236`, 0.3801763239938186`, 0.35927832559581263`}\)}],
-      
-      SequenceForm[ "TE = ", 
-        MatrixForm[ {{.098573917315447859, .82527907787962218, \
--.046750739102178682, .4731879573244458, -.48755772106823703}, \
-{.15304113565498137, .61319023701333297, -.11672953572268081, \
-.86285002927690646, -.13236797665770406}, {-.22925914883540024, \
--.74640127525313094, .037949901668193724, -.57891137989829788, 
-          1.2544057860249358}, {.18504302299354883, .050955577710764095, \
-.53212950099994316, 
-          0.0, .1252454768917354}, {-.054244504965837076, \
--.13793337853515031, .12001122987380612, -.12340192019153921, \
-.10783386912241975}}], 
-        " ", {.83379545598412119, .83379545598412119, .35929344027584781, \
-.22887698394380579, .22887698394380579}, " ", {
-        2.3699466486601128, .52311343920832365, .52311343920832365, \
-.38017632399381862, .35927832559581263}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    \("T, TP and TM matrices: "\)], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"T1 = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {\(-0.6982410945715567`\), "0.1810231319631559`", 
-                  "0.2526133996563542`", 
-                  "0.31748485949054994`", \(-0.18013587020902988`\)},
-                {\(-0.18439369650509618`\), "0.41925617681600147`", 
-                  "0.1176169214391154`", "0.7190928631785936`", 
-                  "0.11865274489813271`"},
-                {\(-0.10584461343969753`\), 
-                  "0.28267877542066744`", \(-0.3933558040695396`\), \
-\(-0.30240691379193785`\), "0.44502791769328254`"},
-                {"0.24113062547572262`", \(-0.9967761137141504`\), 
-                  "0.4632708819019924`", \(-0.49380761360554437`\), \
-\(-0.6405262587341558`\)},
-                {\(-0.24363086140881507`\), \(-0.06064784249700372`\), 
-                  "0.6895582164055096`", \(-0.19234560451792537`\), \
-\(-0.5453897668372583`\)}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({0.8946034385961844`, 0.5809897427279276`, 
-          0.5809897427279276`, 0.5664766398210068`, 0.19180790586931515`}\)}],
-      
-      SequenceForm[ "T1 = ", 
-        MatrixForm[ {{-.6982410945715567, .18102313196315589, \
-.25261339965635421, .31748485949054994, -.18013587020902988}, \
-{-.18439369650509618, .41925617681600147, .1176169214391154, \
-.71909286317859356, .11865274489813271}, {-.10584461343969753, \
-.28267877542066744, -.39335580406953963, -.30240691379193785, \
-.44502791769328254}, {.24113062547572262, -.99677611371415042, \
-.46327088190199239, -.49380761360554437, -.64052625873415581}, \
-{-.24363086140881507, -.060647842497003723, .68955821640550963, \
--.19234560451792537, -.54538976683725826}}], 
-        " ", {.89460343859618441, .58098974272792758, .58098974272792758, \
-.56647663982100682, .19180790586931515}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TP = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0", "0.1810231319631559`", "0.2526133996563542`", 
-                  "0.31748485949054994`", "0"},
-                {"0", "0.41925617681600147`", "0.1176169214391154`", 
-                  "0.7190928631785936`", "0.11865274489813271`"},
-                {"0", "0.28267877542066744`", "0", "0", 
-                  "0.44502791769328254`"},
-                {"0.24113062547572262`", "0", "0.4632708819019924`", "0", 
-                  "0"},
-                {"0", "0", "0.6895582164055096`", "0", "0"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({0.8621834882227162`, 0.45162072294381517`, 
-          0.22485937069470596`, 0.13319869923672892`, 
-          0.13319869923672892`}\)}],
-      SequenceForm[ "TP = ", 
-        MatrixForm[ {{
-          0, .18102313196315589, .25261339965635421, .31748485949054994, 0}, {
-          0, .41925617681600147, .1176169214391154, .71909286317859356, \
-.11865274489813271}, {0, .28267877542066744, 0, 
-          0, .44502791769328254}, {.24113062547572262, 0, .46327088190199239, 
-          0, 0}, {0, 0, .68955821640550963, 0, 0}}], 
-        " ", {.86218348822271618, .45162072294381517, .22485937069470596, \
-.13319869923672892, .13319869923672892}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TM = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0.6982410945715567`", "0", "0", "0", 
-                  "0.18013587020902988`"},
-                {"0.18439369650509618`", "0", "0", "0", "0"},
-                {"0.10584461343969753`", "0", "0.3933558040695396`", 
-                  "0.30240691379193785`", "0"},
-                {"0", "0.9967761137141504`", "0", "0.49380761360554437`", 
-                  "0.6405262587341558`"},
-                {"0.24363086140881507`", "0.06064784249700372`", "0", 
-                  "0.19234560451792537`", "0.5453897668372583`"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({0.9923732176856274`, 0.5747792830591024`, 
-          0.3933558040695396`, 0.21425579555231078`, 
-          0.04396982128268062`}\)}],
-      SequenceForm[ "TM = ", 
-        MatrixForm[ {{.6982410945715567, 0, 0, 
-          0, .18013587020902988}, {.18439369650509618, 0, 0, 0, 
-          0}, {.10584461343969753, 0, .39335580406953963, .30240691379193785, 
-          0}, {0, .99677611371415042, 
-          0, .49380761360554437, .64052625873415581}, {.24363086140881507, \
-.060647842497003723, 0, .19234560451792537, .54538976683725826}}], 
-        " ", {.99237321768562736, .57477928305910242, .39335580406953963, \
-.21425579555231078, .043969821282680621}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TE = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0.0022938375938737704`", "0.10651448130826104`", 
-                  "0.10443928555451393`", 
-                  "0.1868900099020257`", \(-0.000593448173760127`\)},
-                {\(-0.00042296919311674014`\), "0.3996155778762482`", 
-                  "0.09835897551536728`", "0.6846315234128849`", 
-                  "0.11876217300057652`"},
-                {\(-0.03728180528721211`\), 
-                  "0.2527280495608542`", \(-0.022121776642476863`\), 
-                  "0.08500434899252829`", "0.3371579163888285`"},
-                {"0.1709750242856017`", \(-0.2669757194819738`\), 
-                  "0.06537274504011832`", \(-0.45707488020202197`\), \
-\(-0.08164564888064524`\)},
-                {\(-0.021625283524426577`\), "0.0007542231224431662`", 
-                  "0.417741968618824`", "0.0005582703207754738`", 
-                  "0.005594766189590202`"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({0.4718434068530451`, 0.30054674015114136`, 
-          0.30054674015114136`, 0.10894119237396536`, 0.06592289281045907`}\),
-         "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({1.8802906488213582`, 0.6102316864482563`, 
-          0.5363896869522817`, 0.4200227430492355`, 0.05683882327276276`}\)}],
-      
-      SequenceForm[ "TE = ", 
-        MatrixForm[ {{.0022938375938737704, .10651448130826104, \
-.10443928555451393, .1868900099020257, -.00059344817376012695}, \
-{-.00042296919311674014, .39961557787624818, .098358975515367278, \
-.68463152341288491, .11876217300057652}, {-.037281805287212109, \
-.25272804956085421, -.022121776642476863, .085004348992528289, \
-.33715791638882853}, {.17097502428560171, -.26697571948197379, \
-.065372745040118321, -.45707488020202197, -.081645648880645239}, \
-{-.021625283524426577, .00075422312244316622, .41774196861882401, \
-.00055827032077547382, .0055947661895902022}}], 
-        " ", {.4718434068530451, .30054674015114136, .30054674015114136, \
-.10894119237396536, .065922892810459072}, " ", {
-        1.8802906488213582, .61023168644825632, .53638968695228173, \
-.42002274304923548, .05683882327276276}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    \("T, TP and TM matrices: "\)], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"T1 = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {\(-0.031768696113287254`\), \(-0.34233763887364466`\), \
-\(-0.11929243105609999`\), \(-0.036812390427740205`\), 
-                  "0.48453947605639835`"},
-                {"0.352312711232988`", "0.556124054884015`", 
-                  "0.9908400464432383`", \(-0.18176908135979075`\), 
-                  "0.709081254139877`"},
-                {
-                  "0.5793886981399095`", \(-0.4199320703886398`\), \
-\(-0.9387289951352348`\), "0.33071999113465944`", "0.5867840173361061`"},
-                {"0.7782961617360671`", "0.8491039149517969`", 
-                  "0.8879576527226398`", "0.439403855353925`", 
-                  "0.34518162497952076`"},
-                {\(-0.6262583499261978`\), "0.19314238494783265`", 
-                  "0.13182920143685162`", \(-0.14889281780816954`\), 
-                  "0.4055103461870895`"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({0.8124863366828505`, 0.7149458136744545`, 
-          0.7149458136744545`, 0.6637157048642269`, 0.6637157048642269`}\)}],
-      SequenceForm[ "T1 = ", 
-        MatrixForm[ {{-.031768696113287254, -.34233763887364466, \
--.11929243105609999, -.036812390427740205, .48453947605639835}, \
-{.35231271123298802, .55612405488401495, .99084004644323831, \
--.18176908135979075, .70908125413987699}, {.57938869813990945, \
--.41993207038863978, -.93872899513523478, .33071999113465944, \
-.58678401733610608}, {.77829616173606708, .84910391495179693, \
-.88795765272263982, .43940385535392501, .34518162497952076}, \
-{-.62625834992619778, .19314238494783265, .13182920143685162, \
--.14889281780816954, .40551034618708948}}], 
-        " ", {.81248633668285053, .71494581367445453, .71494581367445453, \
-.66371570486422693, .66371570486422693}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TP = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0", "0", "0", "0", "0.48453947605639835`"},
-                {"0.352312711232988`", "0.556124054884015`", 
-                  "0.9908400464432383`", "0", "0.709081254139877`"},
-                {"0.5793886981399095`", "0", "0", "0.33071999113465944`", 
-                  "0.5867840173361061`"},
-                {"0.7782961617360671`", "0.8491039149517969`", 
-                  "0.8879576527226398`", "0.439403855353925`", 
-                  "0.34518162497952076`"},
-                {"0", "0.19314238494783265`", "0.13182920143685162`", "0", 
-                  "0.4055103461870895`"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({1.357588016995234`, 0.39478882653855585`, 
-          0.39478882653855585`, 0.31492839775154474`, 
-          0.04805215399364216`}\)}],
-      SequenceForm[ "TP = ", 
-        MatrixForm[ {{0, 0, 0, 
-          0, .48453947605639835}, {.35231271123298802, .55612405488401495, \
-.99084004644323831, 0, .70908125413987699}, {.57938869813990945, 0, 
-          0, .33071999113465944, .58678401733610608}, {.77829616173606708, \
-.84910391495179693, .88795765272263982, .43940385535392501, \
-.34518162497952076}, {0, .19314238494783265, .13182920143685162, 
-          0, .40551034618708948}}], " ", {
-        1.3575880169952339, .39478882653855585, .39478882653855585, \
-.31492839775154474, .048052153993642162}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TM = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0.031768696113287254`", "0.34233763887364466`", 
-                  "0.11929243105609999`", "0.036812390427740205`", "0"},
-                {"0", "0", "0", "0.18176908135979075`", "0"},
-                {"0", "0.4199320703886398`", "0.9387289951352348`", "0", 
-                  "0"},
-                {"0", "0", "0", "0", "0"},
-                {"0.6262583499261978`", "0", "0", "0.14889281780816954`", 
-                  "0"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({0.9387289951352348`, 0.031768696113287254`, 
-          0.`, 0.`, 0.`}\)}],
-      SequenceForm[ "TM = ", 
-        MatrixForm[ {{.031768696113287254, .34233763887364466, \
-.11929243105609999, .036812390427740205, 0}, {0, 0, 0, .18176908135979075, 
-          0}, {0, .41993207038863978, .93872899513523478, 0, 0}, {0, 0, 0, 0, 
-          0}, {.62625834992619778, 0, 0, .14889281780816954, 0}}], 
-        " ", {.93872899513523478, .031768696113287254, 0.0, 0.0, 0.0}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TE = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {\(-0.12699827288086585`\), \(-0.15354352911162772`\), \
-\(-0.28611403525644746`\), \(-0.010900079984157474`\), 
-                  "0.22404426181047005`"},
-                {"0.210842532888372`", "0.4017832162842249`", 
-                  "0.829436799621448`", \(-0.07987003513363332`\), 
-                  "0.6463379072650697`"},
-                {
-                  "0.2531809025447993`", \(-0.08702694305651117`\), \
-\(-0.17965745258649007`\), "0.18788597130612925`", "0.1626663667583032`"},
-                {"0.7782961617360671`", "0.8491039149517969`", 
-                  "0.8879576527226398`", "0.439403855353925`", 
-                  "0.34518162497952076`"},
-                {\(-0.03634897979231785`\), "0.16287482762200436`", 
-                  "0.17879998803907854`", \(-0.0585978120744772`\), 
-                  "0.21380569167642782`"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({0.670658123174665`, 0.4192303216039668`, 
-          0.3354718505279997`, 0.3354718505279997`, 0.05058909240737773`}\), 
-        "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({2.1797757773013755`, 0.42877889921293233`, 
-          0.27016461331588854`, 0.27016461331588854`, 
-          0.2505416344712755`}\)}],
-      SequenceForm[ "TE = ", 
-        MatrixForm[ {{-.12699827288086585, -.15354352911162772, \
--.28611403525644746, -.010900079984157474, .22404426181047005}, \
-{.21084253288837199, .40178321628422492, .82943679962144801, \
--.079870035133633319, .64633790726506968}, {.2531809025447993, \
--.087026943056511166, -.17965745258649007, .18788597130612925, \
-.1626663667583032}, {.77829616173606708, .84910391495179693, \
-.88795765272263982, .43940385535392501, .34518162497952076}, \
-{-.036348979792317847, .16287482762200436, .17879998803907854, \
--.058597812074477201, .21380569167642782}}], 
-        " ", {.670658123174665, .41923032160396678, .33547185052799972, \
-.33547185052799972, .050589092407377731}, " ", {
-        2.1797757773013755, .42877889921293233, .27016461331588854, \
-.27016461331588854, .25054163447127548}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    \("T, TP and TM matrices: "\)], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"T1 = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {\(-0.6678731850288989`\), "0.5543823786475737`", 
-                  "0.668479664766582`", \(-0.6663081511343569`\), 
-                  "0.9986120508803298`"},
-                {\(-0.35355201126587743`\), "0.08823432642838913`", 
-                  "0.20483832590304796`", \(-0.2671628333085617`\), \
-\(-0.5055422301631923`\)},
-                {\(-0.17183126774399893`\), "0.655193948820862`", 
-                  "0.5490813715210872`", \(-0.5048285619541174`\), 
-                  "0.7681244634883515`"},
-                {\(-0.6182823266045808`\), 
-                  "0.5006462659517639`", \(-0.34115468094504986`\), \
-\(-0.3298011990222979`\), \(-0.03158489276629273`\)},
-                {\(-0.8972001687767079`\), \(-0.5532347129356785`\), 
-                  "0.4658297395486837`", "0.6727723249169326`", 
-                  "0.7706730162521909`"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({0.9875642789962692`, 0.9875642789962692`, 
-          0.8325825245498507`, 0.8325825245498507`, 0.34632294004156594`}\)}],
-      
-      SequenceForm[ "T1 = ", 
-        MatrixForm[ {{-.66787318502889892, .55438237864757367, \
-.66847966476658205, -.66630815113435693, .99861205088032978}, \
-{-.35355201126587743, .088234326428389132, .20483832590304796, \
--.26716283330856172, -.50554223016319233}, {-.17183126774399893, \
-.65519394882086202, .54908137152108716, -.50482856195411741, \
-.76812446348835151}, {-.61828232660458082, .50064626595176387, \
--.34115468094504986, -.32980119902229788, -.031584892766292727}, \
-{-.89720016877670794, -.5532347129356785, .46582973954868367, \
-.67277232491693262, .77067301625219087}}], 
-        " ", {.9875642789962692, .9875642789962692, .83258252454985071, \
-.83258252454985071, .34632294004156594}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TP = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0", "0.5543823786475737`", "0.668479664766582`", "0", 
-                  "0.9986120508803298`"},
-                {"0", "0.08823432642838913`", "0.20483832590304796`", "0", 
-                  "0"},
-                {"0", "0.655193948820862`", "0.5490813715210872`", "0", 
-                  "0.7681244634883515`"},
-                {"0", "0.5006462659517639`", "0", "0", "0"},
-                {"0", "0", "0.4658297395486837`", "0.6727723249169326`", 
-                  "0.7706730162521909`"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({1.340117962345317`, 0.3592539329722167`, 
-          0.33177883452943907`, 0.33177883452943907`, 0.`}\)}],
-      SequenceForm[ "TP = ", 
-        MatrixForm[ {{0, .55438237864757367, .66847966476658205, 
-          0, .99861205088032978}, {0, .088234326428389132, .20483832590304796,
-           0, 0}, {0, .65519394882086202, .54908137152108716, 
-          0, .76812446348835151}, {0, .50064626595176387, 0, 0, 0}, {0, 
-          0, .46582973954868367, .67277232491693262, .77067301625219087}}], 
-        " ", {1.340117962345317, .35925393297221669, .33177883452943907, \
-.33177883452943907, 0.0}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TM = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0.6678731850288989`", "0", "0", "0.6663081511343569`", 
-                  "0"},
-                {"0.35355201126587743`", "0", "0", "0.2671628333085617`", 
-                  "0.5055422301631923`"},
-                {"0.17183126774399893`", "0", "0", "0.5048285619541174`", 
-                  "0"},
-                {"0.6182823266045808`", "0", "0.34115468094504986`", 
-                  "0.3298011990222979`", "0.03158489276629273`"},
-                {"0.8972001687767079`", "0.5532347129356785`", "0", "0", "0"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({1.257703717395252`, 0.5018985696185668`, 
-          0.46044180577448013`, 0.46044180577448013`, 
-          0.15875738335107492`}\)}],
-      SequenceForm[ "TM = ", 
-        MatrixForm[ {{.66787318502889892, 0, 0, .66630815113435693, 
-          0}, {.35355201126587743, 0, 
-          0, .26716283330856172, .50554223016319233}, {.17183126774399893, 0, 
-          0, .50482856195411741, 0}, {.61828232660458082, 
-          0, .34115468094504986, .32980119902229788, .031584892766292727}, \
-{.89720016877670794, .5532347129356785, 0, 0, 0}}], " ", {
-        1.2577037173952521, .50189856961856683, .46044180577448013, \
-.46044180577448013, .15875738335107492}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TE = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0.`", "0.2890058979447319`", "0.5747066952619311`", 
-                  "0.012369445770155505`", "0.8555602523589365`"},
-                {"0.`", "0.12234695440224537`", 
-                  "0.19869865285017194`", \(-0.4589726291441075`\), \
-\(-0.18364342880075088`\)},
-                {"0.`", "0.5507122523481273`", "0.6700914862798928`", 
-                  "0.013505373160716542`", "0.9456549555311283`"},
-                {"0.`", 
-                  "0.10859418577901551`", \(-0.43532143652086186`\), \
-\(-0.0309626512576633`\), \(-0.642876650205234`\)},
-                {"0.`", \(-0.3269827226107583`\), \(-0.1597241966076959`\), 
-                  "0.9155940468141488`", "0.10466213305221732`"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({0.87016268062156`, 0.87016268062156`, 
-          0.4352383504281421`, 0.26214360164105843`, 0.`}\), 
-        "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({2.634892906590697`, 0.1611678606102131`, 
-          0.1611678606102131`, 0.11274234524677373`, 
-          0.11274234524677373`}\)}],
-      SequenceForm[ "TE = ", 
-        MatrixForm[ {{
-          0.0, .28900589794473192, .57470669526193108, .012369445770155505, \
-.85556025235893651}, {
-          0.0, .12234695440224537, .19869865285017194, -.45897262914410752, \
--.18364342880075088}, {
-          0.0, .55071225234812726, .67009148627989279, .013505373160716542, \
-.94565495553112833}, {
-          0.0, .10859418577901551, -.43532143652086186, -.030962651257663301, \
--.64287665020523399}, {
-          0.0, -.32698272261075828, -.15972419660769591, .9155940468141488, \
-.10466213305221732}}], 
-        " ", {.87016268062155999, .87016268062155999, .43523835042814207, \
-.26214360164105843, 0.0}, " ", {
-        2.634892906590697, .1611678606102131, .1611678606102131, \
-.11274234524677373, .11274234524677373}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    \("T, TP and TM matrices: "\)], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"T1 = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0.4110762697305812`", \(-0.3922461258776905`\), 
-                  "0.4903864590823279`", "0.6503182632911806`", 
-                  "0.6699826029430218`"},
-                {\(-0.5256889621174425`\), 
-                  "0.0770050556796098`", \(-0.9904593451431488`\), 
-                  "0.7939975433328814`", \(-0.4201188609607872`\)},
-                {\(-0.6449389362580533`\), \(-0.8271440293936627`\), 
-                  "0.7725905639291129`", "0.8532382217426167`", 
-                  "0.9616684080286522`"},
-                {\(-0.7743326511442821`\), 
-                  "0.6714191679436954`", \(-0.8569332547056809`\), \
-\(-0.18747516319595692`\), "0.9013620689609385`"},
-                {"0.6444832515194037`", 
-                  "0.5322365235969795`", \(-0.7009336153422414`\), \
-\(-0.03253843457904382`\), \(-0.7665930182111775`\)}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({0.8516805357875519`, 0.8516805357875519`, 
-          0.8383225578756436`, 0.8383225578756436`, 0.38406270954249144`}\)}],
-      
-      SequenceForm[ "T1 = ", 
-        MatrixForm[ {{.4110762697305812, -.39224612587769048, \
-.49038645908232792, .65031826329118059, .66998260294302181}, \
-{-.52568896211744254, .077005055679609802, -.99045934514314882, \
-.79399754333288142, -.42011886096078721}, {-.64493893625805332, \
--.82714402939366272, .77259056392911285, .85323822174261665, \
-.96166840802865217}, {-.77433265114428207, .67141916794369538, \
--.85693325470568094, -.18747516319595692, .90136206896093851}, \
-{.64448325151940367, .53223652359697948, -.70093361534224141, \
--.032538434579043818, -.76659301821117753}}], 
-        " ", {.85168053578755187, .85168053578755187, .83832255787564358, \
-.83832255787564358, .38406270954249144}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TP = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0.4110762697305812`", "0", "0.4903864590823279`", 
-                  "0.6503182632911806`", "0.6699826029430218`"},
-                {"0", "0.0770050556796098`", "0", "0.7939975433328814`", 
-                  "0"},
-                {"0", "0", "0.7725905639291129`", "0.8532382217426167`", 
-                  "0.9616684080286522`"},
-                {"0", "0.6714191679436954`", "0", "0", 
-                  "0.9013620689609385`"},
-                {"0.6444832515194037`", "0.5322365235969795`", "0", "0", "0"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({1.524123706457769`, 0.7719527639584478`, 
-          0.7719527639584478`, 0.5447295503151611`, 0.2840827511336778`}\)}],
-      SequenceForm[ "TP = ", 
-        MatrixForm[ {{.4110762697305812, 
-          0, .49038645908232792, .65031826329118059, .66998260294302181}, {
-          0, .077005055679609802, 0, .79399754333288142, 0}, {0, 
-          0, .77259056392911285, .85323822174261665, .96166840802865217}, {
-          0, .67141916794369538, 0, 
-          0, .90136206896093851}, {.64448325151940367, .53223652359697948, 0, 
-          0, 0}}], " ", {
-        1.5241237064577691, .77195276395844781, .77195276395844781, \
-.54472955031516113, .28408275113367781}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TM = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0", "0.3922461258776905`", "0", "0", "0"},
-                {"0.5256889621174425`", "0", "0.9904593451431488`", "0", 
-                  "0.4201188609607872`"},
-                {"0.6449389362580533`", "0.8271440293936627`", "0", "0", 
-                  "0"},
-                {"0.7743326511442821`", "0", "0.8569332547056809`", 
-                  "0.18747516319595692`", "0"},
-                {"0", "0", "0.7009336153422414`", "0.03253843457904382`", 
-                  "0.7665930182111775`"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({1.3304232305559291`, 0.7857494121365018`, 
-          0.412748633795391`, 0.24242659650660284`, 0.23907232569891823`}\)}],
-      
-      SequenceForm[ "TM = ", 
-        MatrixForm[ {{0, .39224612587769048, 0, 0, 0}, {.52568896211744254, 
-          0, .99045934514314882, 
-          0, .42011886096078721}, {.64493893625805332, .82714402939366272, 0, 
-          0, 0}, {.77433265114428207, 
-          0, .85693325470568094, .18747516319595692, 0}, {0, 
-          0, .70093361534224141, .032538434579043818, .76659301821117753}}], 
-        " ", {1.3304232305559291, .78574941213650185, .41274863379539101, \
-.24242659650660284, .23907232569891823}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TE = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0.5994266949286815`", "0.05616204728992926`", 
-                  "1.2841379896848202`", "0.5396417980812163`", 
-                  "1.6503843588634122`"},
-                {\(-0.4801842842339031`\), \(-0.1431806296729152`\), \
-\(-2.0236057878873694`\), "0.2821607605742811`", \(-2.4994555490551806`\)},
-                {"0.010587948720757842`", "0.08220991192153541`", 
-                  "1.6182134201507263`", "0.2718146260895425`", 
-                  "1.9646810093422056`"},
-                {\(-0.3985168211308726`\), 
-                  "0.4694688957363982`", \(-2.0051374047416504`\), \
-\(-0.5480445204735803`\), \(-1.7349288496225255`\)},
-                {"0.36795623505561476`", 
-                  "0.2600129430666225`", \(-0.6051287080245964`\), \
-\(-0.09775397955940866`\), \(-0.7475740481172143`\)}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({1.186993228881749`, 1.186993228881749`, 
-          0.6634937459254667`, 0.6634937459254667`, 0.34222696511372835`}\), 
-        "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({3.1320173337640735`, 0.5180128563807794`, 
-          0.5180128563807794`, 0.07822618097739453`, 
-          0.029896322222563606`}\)}],
-      SequenceForm[ "TE = ", 
-        MatrixForm[ {{.5994266949286815, .056162047289929261, 
-          1.2841379896848202, .53964179808121626, 
-          1.6503843588634122}, {-.48018428423390308, -.1431806296729152, \
--2.0236057878873694, .28216076057428108, -2.4994555490551806}, \
-{.010587948720757842, .082209911921535414, 
-          1.6182134201507263, .27181462608954249, 
-          1.9646810093422056}, {-.39851682113087261, .46946889573639822, \
--2.0051374047416504, -.54804452047358032, -1.7349288496225255}, \
-{.36795623505561476, .26001294306662248, -.6051287080245964, \
--.097753979559408663, -.74757404811721428}}], " ", {1.1869932288817491, 
-        1.1869932288817491, .66349374592546673, .66349374592546673, \
-.34222696511372835}, " ", {
-        3.1320173337640735, .51801285638077943, .51801285638077943, \
-.078226180977394533, .029896322222563606}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    \("T, TP and TM matrices: "\)], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"T1 = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {\(-0.7986004433286489`\), \(-0.22126102716693163`\), \
-\(-0.10624566867691476`\), "0.3227950478192523`", "0.2394796618104189`"},
-                {\(-0.2805910098041777`\), 
-                  "0.1536654843089884`", \(-0.09612072075684686`\), 
-                  "0.24648205717029215`", \(-0.9006803695132701`\)},
-                {\(-0.7990510944183921`\), \(-0.9939955137803607`\), 
-                  "0.794131379476571`", "0.984270475272232`", 
-                  "0.28904621435638966`"},
-                {\(-0.6272823932771208`\), 
-                  "0.2967551887263815`", \(-0.6028514807617824`\), 
-                  "0.30473937289831876`", \(-0.18865370400305081`\)},
-                {\(-0.3536624798846343`\), \(-0.45054857511323176`\), 
-                  "0.12246345801758385`", 
-                  "0.09311246071852675`", \(-0.5550620365559854`\)}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({0.8509336058257682`, 0.7434254665332656`, 
-          0.5703619876539631`, 0.5119720826874443`, 0.5119720826874443`}\)}],
-      SequenceForm[ "T1 = ", 
-        MatrixForm[ {{-.79860044332864888, -.22126102716693163, \
--.10624566867691476, .32279504781925228, .23947966181041891}, \
-{-.28059100980417773, .15366548430898841, -.096120720756846856, \
-.24648205717029215, -.90068036951327013}, {-.79905109441839206, \
--.99399551378036066, .79413137947657098, .98427047527223199, \
-.28904621435638966}, {-.62728239327712076, .29675518872638151, \
--.60285148076178241, .30473937289831876, -.18865370400305081}, \
-{-.35366247988463428, -.45054857511323176, .12246345801758385, \
-.093112460718526746, -.55506203655598541}}], 
-        " ", {.85093360582576816, .74342546653326558, .57036198765396307, \
-.51197208268744432, .51197208268744432}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TP = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0", "0", "0", "0.3227950478192523`", 
-                  "0.2394796618104189`"},
-                {"0", "0.1536654843089884`", "0", "0.24648205717029215`", 
-                  "0"},
-                {"0", "0", "0.794131379476571`", "0.984270475272232`", 
-                  "0.28904621435638966`"},
-                {"0", "0.2967551887263815`", "0", "0.30473937289831876`", 
-                  "0"},
-                {"0", "0", "0.12246345801758385`", "0.09311246071852675`", 
-                  "0"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({0.8364502148462093`, 0.5100060242832891`, 
-          0.05160116707598182`, 0.04231883536963824`, 0.`}\)}],
-      SequenceForm[ "TP = ", 
-        MatrixForm[ {{0, 0, 0, .32279504781925228, .23947966181041891}, {
-          0, .15366548430898841, 0, .24648205717029215, 0}, {0, 
-          0, .79413137947657098, .98427047527223199, .28904621435638966}, {
-          0, .29675518872638151, 0, .30473937289831876, 0}, {0, 
-          0, .12246345801758385, .093112460718526746, 0}}], 
-        " ", {.83645021484620929, .51000602428328912, .051601167075981821, \
-.042318835369638243, 0.0}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TM = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0.7986004433286489`", "0.22126102716693163`", 
-                  "0.10624566867691476`", "0", "0"},
-                {"0.2805910098041777`", "0", "0.09612072075684686`", "0", 
-                  "0.9006803695132701`"},
-                {"0.7990510944183921`", "0.9939955137803607`", "0", "0", 
-                  "0"},
-                {"0.6272823932771208`", "0", "0.6028514807617824`", "0", 
-                  "0.18865370400305081`"},
-                {"0.3536624798846343`", "0.45054857511323176`", "0", "0", 
-                  "0.5550620365559854`"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({1.2613872578620156`, 0.5963703274383138`, 
-          0.542471383967092`, 0.03837627855139688`, 0.`}\)}],
-      SequenceForm[ "TM = ", 
-        MatrixForm[ {{.79860044332864888, .22126102716693163, \
-.10624566867691476, 0, 0}, {.28059100980417773, 0, .096120720756846856, 
-          0, .90068036951327013}, {.79905109441839206, .99399551378036066, 0, 
-          0, 0}, {.62728239327712076, 0, .60285148076178241, 
-          0, .18865370400305081}, {.35366247988463428, .45054857511323176, 0, 
-          0, .55506203655598541}}], " ", {
-        1.2613872578620156, .59637032743831375, .54247138396709205, \
-.038376278551396879, 0.0}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TE = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0.`", \(-0.01611389405725899`\), \(-0.03378639895640978`\), 
-                  "0.11705376397839733`", "0.1247236471963739`"},
-                {"0.`", "0.23876927168416223`", \(-0.22890056563709568`\), 
-                  "0.15239498704157314`", \(-0.042971101567498386`\)},
-                {"0.`", \(-0.22445976020086653`\), "1.0486545738842068`", 
-                  "0.7392586036175616`", "0.2320987297445673`"},
-                {"0.`", 
-                  "0.4545385011878434`", \(-0.6398071171524887`\), \
-\(-0.21229366793802099`\), \(-0.21515550299246544`\)},
-                {"0.`", \(-0.06551396215090298`\), 
-                  "0.15275484692261893`", \(-0.010897576815273266`\), \
-\(-0.01591544594597427`\)}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({0.7004711597460931`, 0.7004711597460931`, 
-          0.15822229537424956`, 0.021272388730209615`, 0.`}\), 
-        "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({2.0329352125698996`, 0.6781928595243909`, 
-          0.5158109520094301`, 0.34728339746198933`, 
-          0.34728339746198933`}\)}],
-      SequenceForm[ "TE = ", 
-        MatrixForm[ {{
-          0.0, -.016113894057258989, -.03378639895640978, .11705376397839733, \
-.1247236471963739}, {
-          0.0, .23876927168416223, -.22890056563709568, .15239498704157314, \
--.042971101567498386}, {0.0, -.22445976020086653, 
-          1.0486545738842068, .73925860361756157, .2320987297445673}, {
-          0.0, .45453850118784339, -.63980711715248872, -.21229366793802099, \
--.21515550299246544}, {
-          0.0, -.06551396215090298, .15275484692261893, -.010897576815273266, \
--.015915445945974271}}], 
-        " ", {.70047115974609309, .70047115974609309, .15822229537424956, \
-.021272388730209615, 0.0}, " ", {
-        2.0329352125698996, .6781928595243909, .51581095200943006, \
-.34728339746198933, .34728339746198933}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    \("T, TP and TM matrices: "\)], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"T1 = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {\(-0.15246183860351825`\), \(-0.21269179208000422`\), 
-                  "0.0758991902713193`", "0.4271779766719601`", 
-                  "0.27709044951565853`"},
-                {\(-0.4751461949754886`\), 
-                  "0.7052919747931448`", \(-0.20328699340687517`\), 
-                  "0.4388088016251064`", \(-0.22944863963264372`\)},
-                {"0.4407695997338983`", "0.608513593068212`", 
-                  "0.9841586923223042`", "0.32531084087535955`", 
-                  "0.6055469203551085`"},
-                {\(-0.018903830284360712`\), \(-0.16796004453429525`\), \
-\(-0.05578409155043684`\), "0.5155397658998946`", \(-0.7038055663911797`\)},
-                {"0.430454774475745`", "0.6411055514509167`", 
-                  "0.05263397437282924`", 
-                  "0.5304762065813908`", \(-0.41708338692073677`\)}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({0.8693117954652405`, 0.8693117954652405`, 
-          0.7492535818846995`, 0.6810330981110633`, 0.6810330981110633`}\)}],
-      SequenceForm[ "T1 = ", 
-        MatrixForm[ {{-.15246183860351825, -.21269179208000422, \
-.075899190271319306, .42717797667196011, .27709044951565853}, \
-{-.4751461949754886, .70529197479314476, -.20328699340687517, \
-.43880880162510638, -.22944863963264372}, {.44076959973389829, \
-.60851359306821196, .98415869232230424, .32531084087535955, \
-.60554692035510849}, {-.018903830284360712, -.16796004453429525, \
--.055784091550436843, .51553976589989459, -.70380556639117975}, \
-{.43045477447574498, .64110555145091674, .05263397437282924, \
-.53047620658139083, -.41708338692073677}}], 
-        " ", {.86931179546524051, .86931179546524051, .74925358188469948, \
-.68103309811106327, .68103309811106327}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TP = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0", "0", "0.0758991902713193`", "0.4271779766719601`", 
-                  "0.27709044951565853`"},
-                {"0", "0.7052919747931448`", "0", "0.4388088016251064`", 
-                  "0"},
-                {"0.4407695997338983`", "0.608513593068212`", 
-                  "0.9841586923223042`", "0.32531084087535955`", 
-                  "0.6055469203551085`"},
-                {"0", "0", "0", "0.5155397658998946`", "0"},
-                {"0.430454774475745`", "0.6411055514509167`", 
-                  "0.05263397437282924`", "0.5304762065813908`", "0"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({1.0769601059883562`, 0.7052919747931448`, 
-          0.5155397658998946`, 0.3410376173790779`, 0.2482362037130259`}\)}],
-      SequenceForm[ "TP = ", 
-        MatrixForm[ {{0, 
-          0, .075899190271319306, .42717797667196011, .27709044951565853}, {
-          0, .70529197479314476, 0, .43880880162510638, 
-          0}, {.44076959973389829, .60851359306821196, .98415869232230424, \
-.32531084087535955, .60554692035510849}, {0, 0, 0, .51553976589989459, 
-          0}, {.43045477447574498, .64110555145091674, .05263397437282924, \
-.53047620658139083, 0}}], " ", {
-        1.0769601059883562, .70529197479314476, .51553976589989459, \
-.3410376173790779, .2482362037130259}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TM = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0.15246183860351825`", "0.21269179208000422`", "0", "0", 
-                  "0"},
-                {"0.4751461949754886`", "0", "0.20328699340687517`", "0", 
-                  "0.22944863963264372`"},
-                {"0", "0", "0", "0", "0"},
-                {"0.018903830284360712`", "0.16796004453429525`", 
-                  "0.05578409155043684`", "0", "0.7038055663911797`"},
-                {"0", "0", "0", "0", "0.41708338692073677`"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({0.41708338692073677`, 0.403141990951104`, 
-          0.2506801523475857`, 0.`, 0.`}\)}],
-      SequenceForm[ "TM = ", 
-        MatrixForm[ {{.15246183860351825, .21269179208000422, 0, 0, 
-          0}, {.4751461949754886, 0, .20328699340687517, 
-          0, .22944863963264372}, {0, 0, 0, 0, 
-          0}, {.018903830284360712, .16796004453429525, .055784091550436843, 
-          0, .70380556639117975}, {0, 0, 0, 0, .41708338692073677}}], 
-        " ", {.41708338692073677, .40314199095110398, .25068015234758573, 0.0,
-         0.0}],
-      Editable->False]], "Print"],
-
-Cell[BoxData[
-    InterpretationBox[
-      RowBox[{"\<\"TE = \"\>", "\[InvisibleSpace]", 
-        TagBox[
-          RowBox[{"(", "\[NoBreak]", GridBox[{
-                {"0.03222540956026569`", \(-0.0966525355212616`\), 
-                  "0.11438472780697893`", "0.3482789427614565`", 
-                  "0.28844602548670567`"},
-                {\(-0.17461207312412647`\), 
-                  "0.5237078389495453`", \(-0.26293841853680205`\), 
-                  "0.12130127682829361`", \(-0.2601538442715935`\)},
-                {"0.4407695997338983`", "0.608513593068212`", 
-                  "0.9841586923223042`", "0.32531084087535955`", 
-                  "0.6055469203551085`"},
-                {\(-0.20965799998220827`\), \(-0.43849036174189254`\), \
-\(-0.03904063532526696`\), "0.20696985822057914`", "0.004462831714451425`"},
-                {"0.30376107605855523`", "0.4524120156711543`", 
-                  "0.03714246801467391`", "0.3743436776392486`", "0.`"}
-                },
-              RowSpacings->1,
-              ColumnSpacings->1,
-              ColumnAlignments->{Left}], "\[NoBreak]", ")"}],
-          Function[ BoxForm`e$, 
-            MatrixForm[ BoxForm`e$]]], "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({0.6589919967094233`, 0.542255549763759`, 
-          0.542255549763759`, 0.5037745766800739`, 0.22793418900056556`}\), 
-        "\[InvisibleSpace]", "\<\" \"\>", 
-        "\[InvisibleSpace]", \({1.8580526274206113`, 0.7921225921329652`, 
-          0.22308573765328002`, 0.22308573765328002`, 
-          0.047068692122987435`}\)}],
-      SequenceForm[ "TE = ", 
-        MatrixForm[ {{.032225409560265691, -.096652535521261601, \
-.11438472780697893, .34827894276145649, .28844602548670567}, \
-{-.17461207312412647, .52370783894954531, -.26293841853680205, \
-.12130127682829361, -.26015384427159349}, {.44076959973389829, \
-.60851359306821196, .98415869232230424, .32531084087535955, \
-.60554692035510849}, {-.20965799998220827, -.43849036174189254, \
--.039040635325266963, .20696985822057914, .0044628317144514247}, \
-{.30376107605855523, .4524120156711543, .037142468014673913, \
-.37434367763924858, 0.0}}], 
-        " ", {.65899199670942332, .542255549763759, .542255549763759, \
-.50377457668007386, .22793418900056556}, " ", {
-        1.8580526274206113, .79212259213296521, .22308573765328002, \
-.22308573765328002, .047068692122987435}],
-      Editable->False]], "Print"]
-}, Open  ]]
+                  RowBox[{
+                   RowBox[{"A2", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"i", ",", "j"}], "]"}], "]"}], "=", 
+                   RowBox[{"A", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"i", ",", "j"}], "]"}], "]"}]}], ";", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{
+                   RowBox[{"A2", "[", 
+                    RowBox[{"[", 
+                    RowBox[{
+                    RowBox[{"NC", "+", "i"}], ",", 
+                    RowBox[{"NC", "+", "j"}]}], "]"}], "]"}], "=", 
+                   RowBox[{"A", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"i", ",", "j"}], "]"}], "]"}]}]}], ",", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"AM", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"i", ",", "j"}], "]"}], "]"}], "=", 
+                   RowBox[{"-", 
+                    RowBox[{"A", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"i", ",", "j"}], "]"}], "]"}]}]}], ";", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{
+                   RowBox[{"A2", "[", 
+                    RowBox[{"[", 
+                    RowBox[{
+                    RowBox[{"i", "+", "NC"}], ",", "j"}], "]"}], "]"}], "=", 
+                   RowBox[{"-", 
+                    RowBox[{"A", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"i", ",", "j"}], "]"}], "]"}]}]}], ";", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{
+                   RowBox[{"A2", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"i", ",", 
+                    RowBox[{"NC", "+", "j"}]}], "]"}], "]"}], "=", 
+                   RowBox[{"-", 
+                    RowBox[{"A", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"i", ",", "j"}], "]"}], "]"}]}]}], ";"}]}], 
+                "\[IndentingNewLine]", "]"}], ";"}]}], "\[IndentingNewLine]", 
+             "]"}], ";"}]}], "\[IndentingNewLine]", "]"}],
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox[";",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox["\[IndentingNewLine]",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        RowBox[{
+         StyleBox[
+          RowBox[{
+           StyleBox["(",
+            FontFamily->"Courier New",
+            FontSize->16], 
+           StyleBox["*",
+            FontFamily->"Courier New",
+            FontSize->16]}]], 
+         StyleBox[" ",
+          FontFamily->"Courier New",
+          FontSize->16], 
+         StyleBox[
+          RowBox[{"Now", " ", "add", " ", "the", " ", "shift", " ", "part"}],
+          FontFamily->"Courier New",
+          FontSize->16], 
+         StyleBox[" ",
+          FontFamily->"Courier New",
+          FontSize->16], 
+         StyleBox[
+          StyleBox[
+           RowBox[{"*", ")"}]],
+          FontFamily->"Courier New",
+          FontSize->16]}], 
+        StyleBox["\[IndentingNewLine]",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox[
+         RowBox[{"For", "[", 
+          RowBox[{
+           RowBox[{"i", "=", "1"}], ",", 
+           RowBox[{"i", "\[LessEqual]", "NC"}], ",", 
+           RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"For", "[", 
+             RowBox[{
+              RowBox[{"j", "=", "1"}], ",", 
+              RowBox[{"j", "\[LessEqual]", "NC"}], ",", 
+              RowBox[{"j", "++"}], ",", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"A2B", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"i", ",", "j"}], "]"}], "]"}], "=", 
+                RowBox[{
+                 RowBox[{"A2", "[", 
+                  RowBox[{"[", 
+                   RowBox[{"i", ",", "j"}], "]"}], "]"}], " ", "+", " ", 
+                 RowBox[{"B", "[", 
+                  RowBox[{"[", 
+                   RowBox[{"i", ",", "j"}], "]"}], "]"}]}]}], ";", 
+               "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"A2B", "[", 
+                 RowBox[{"[", 
+                  RowBox[{
+                   RowBox[{"NC", "+", "i"}], ",", 
+                   RowBox[{"NC", "+", "j"}]}], "]"}], "]"}], "=", 
+                RowBox[{
+                 RowBox[{"A2", "[", 
+                  RowBox[{"[", 
+                   RowBox[{
+                    RowBox[{"NC", "+", "i"}], ",", 
+                    RowBox[{"NC", "+", "j"}]}], "]"}], "]"}], "+", 
+                 RowBox[{"B", "[", 
+                  RowBox[{"[", 
+                   RowBox[{"i", ",", "j"}], "]"}], "]"}]}]}], ";", 
+               "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"A2B", "[", 
+                 RowBox[{"[", 
+                  RowBox[{
+                   RowBox[{"i", "+", "NC"}], ",", "j"}], "]"}], "]"}], "=", 
+                RowBox[{
+                 RowBox[{"A2", "[", 
+                  RowBox[{"[", 
+                   RowBox[{
+                    RowBox[{"i", "+", "NC"}], ",", "j"}], "]"}], "]"}], "+", 
+                 RowBox[{"B", "[", 
+                  RowBox[{"[", 
+                   RowBox[{"i", ",", "j"}], "]"}], "]"}]}]}], ";", 
+               "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"A2B", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"i", ",", 
+                   RowBox[{"NC", "+", "j"}]}], "]"}], "]"}], "=", 
+                RowBox[{
+                 RowBox[{"A2", "[", 
+                  RowBox[{"[", 
+                   RowBox[{"i", ",", 
+                    RowBox[{"NC", "+", "j"}]}], "]"}], "]"}], "+", 
+                 RowBox[{"B", "[", 
+                  RowBox[{"[", 
+                   RowBox[{"i", ",", "j"}], "]"}], "]"}]}]}], ";"}]}], 
+             "\[IndentingNewLine]", "]"}], ";"}]}], "\[IndentingNewLine]", 
+          "]"}],
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox[";",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox["\[IndentingNewLine]",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        RowBox[{
+         StyleBox[
+          RowBox[{
+           StyleBox["(",
+            FontFamily->"Courier New",
+            FontSize->16], 
+           StyleBox["*",
+            FontFamily->"Courier New",
+            FontSize->16]}]], 
+         StyleBox[" ",
+          FontFamily->"Courier New",
+          FontSize->16], 
+         StyleBox[
+          RowBox[{
+           RowBox[{"#", "@", "##"}], "##", "##", "##", "##", "##", "##", 
+           "##"}],
+          FontFamily->"Courier New",
+          FontSize->16], 
+         StyleBox[" ",
+          FontFamily->"Courier New",
+          FontSize->16], 
+         StyleBox[
+          StyleBox[
+           RowBox[{"*", ")"}]],
+          FontFamily->"Courier New",
+          FontSize->16]}], 
+        StyleBox["\[IndentingNewLine]",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        RowBox[{
+         StyleBox[
+          RowBox[{
+           StyleBox["(",
+            FontFamily->"Courier New",
+            FontSize->16], 
+           StyleBox["*",
+            FontFamily->"Courier New",
+            FontSize->16]}]], 
+         StyleBox[" ",
+          FontFamily->"Courier New",
+          FontSize->16], 
+         StyleBox[
+          RowBox[{
+           RowBox[{"Print", "[", "\"\<A, AAbs and AM matrices: \>\"", "]"}], 
+           ";", "\[IndentingNewLine]", 
+           RowBox[{"AAbs", "=", 
+            RowBox[{"AP", "+", "AM"}]}], ";", "\[IndentingNewLine]", 
+           RowBox[{"Print", "[", 
+            RowBox[{"\"\<A     = \>\"", ",", 
+             RowBox[{"MatrixForm", "[", "A", "]"}], ",", "  ", "  ", "  ", 
+             "  ", "  ", "\"\< \>\"", ",", 
+             RowBox[{"Abs", "[", 
+              RowBox[{"Eigenvalues", "[", "A", "]"}], "]"}]}], "]"}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Print", "[", 
+            RowBox[{"\"\<AAbs  = \>\"", ",", 
+             RowBox[{"MatrixForm", "[", "AAbs", "]"}], ",", "  ", " ", 
+             "\"\< \>\"", ",", 
+             RowBox[{"Abs", "[", 
+              RowBox[{"Eigenvalues", "[", "AAbs", "]"}], "]"}]}], "]"}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Print", "[", 
+            RowBox[{"\"\<A2    = \>\"", ",", 
+             RowBox[{"MatrixForm", "[", "A2", "]"}], ",", "  ", "  ", "  ", 
+             "  ", "\"\< \>\"", ",", 
+             RowBox[{"Abs", "[", 
+              RowBox[{"Eigenvalues", "[", "A2", "]"}], "]"}]}], "]"}], ";"}],
+          FontFamily->"Courier New",
+          FontSize->16], 
+         StyleBox[
+          StyleBox[
+           RowBox[{"*", ")"}]],
+          FontFamily->"Courier New",
+          FontSize->16]}], 
+        StyleBox["\[IndentingNewLine]",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox[
+         RowBox[{"A2ES", "=", 
+          RowBox[{"Eigensystem", "[", "A2", "]"}]}],
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox[";",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox["\[IndentingNewLine]",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        RowBox[{
+         StyleBox[
+          RowBox[{
+           StyleBox["(",
+            FontFamily->"Courier New",
+            FontSize->16], 
+           StyleBox["*",
+            FontFamily->"Courier New",
+            FontSize->16]}]], 
+         RowBox[{
+          RowBox[{
+           StyleBox["For",
+            FontFamily->"Courier New",
+            FontSize->16], 
+           StyleBox["[",
+            FontFamily->"Courier New",
+            FontSize->16], 
+           RowBox[{
+            StyleBox[
+             RowBox[{"i", "=", "1"}],
+             FontFamily->"Courier New",
+             FontSize->16], 
+            StyleBox[",",
+             FontFamily->"Courier New",
+             FontSize->16], 
+            RowBox[{
+             StyleBox["i",
+              FontFamily->"Courier New",
+              FontSize->16], 
+             StyleBox["\[LessEqual]",
+              FontFamily->"Courier New",
+              FontSize->16], 
+             RowBox[{"2", " ", "NC"}]}], ",", 
+            RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"Print", "[", 
+              RowBox[{"\"\<Eigenvalue \>\"", ",", 
+               RowBox[{"Abs", "[", 
+                RowBox[{"A2ES", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"1", ",", "i"}], "]"}], "]"}], "]"}], ",", 
+               "\"\< => \>\"", ",", 
+               RowBox[{"Take", "[", 
+                RowBox[{
+                 RowBox[{"A2ES", "[", 
+                  RowBox[{"[", 
+                   RowBox[{"2", ",", "i"}], "]"}], "]"}], ",", "NC"}], "]"}], 
+               ",", "\"\< \>\"", ",", 
+               RowBox[{"Take", "[", 
+                RowBox[{
+                 RowBox[{"A2ES", "[", 
+                  RowBox[{"[", 
+                   RowBox[{"2", ",", "i"}], "]"}], "]"}], ",", 
+                 RowBox[{"-", "NC"}]}], "]"}]}], "]"}], ";"}]}], 
+           "\[IndentingNewLine]", "]"}], ";"}], "*)"}], "\[IndentingNewLine]", 
+        StyleBox[
+         RowBox[{"A2BES", "=", 
+          RowBox[{"Eigensystem", "[", "A2B", "]"}]}],
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox[";",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox["\[IndentingNewLine]",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        RowBox[{
+         StyleBox[
+          RowBox[{
+           StyleBox["(",
+            FontFamily->"Courier New",
+            FontSize->16], 
+           StyleBox["*",
+            FontFamily->"Courier New",
+            FontSize->16]}]], 
+         StyleBox[
+          RowBox[{
+           RowBox[{"Print", "[", 
+            RowBox[{"\"\<Without B: \>\"", ",", 
+             RowBox[{"Abs", "[", 
+              RowBox[{"A2ES", "[", 
+               RowBox[{"[", "1", "]"}], "]"}], "]"}]}], "]"}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Print", "[", 
+            RowBox[{"\"\< with B: \>\"", ",", 
+             RowBox[{"Abs", "[", 
+              RowBox[{"A2BES", "[", 
+               RowBox[{"[", "1", "]"}], "]"}], "]"}]}], "]"}], ";"}],
+          FontFamily->"Courier New",
+          FontSize->16], 
+         StyleBox[
+          StyleBox[
+           RowBox[{"*", ")"}]],
+          FontFamily->"Courier New",
+          FontSize->16]}], 
+        StyleBox["\[IndentingNewLine]",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox[
+         RowBox[{"M1", "=", 
+          RowBox[{"Max", "[", 
+           RowBox[{"Abs", "[", 
+            RowBox[{"A2ES", "[", 
+             RowBox[{"[", "1", "]"}], "]"}], "]"}], "]"}]}],
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox[";",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox["\[IndentingNewLine]",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox[
+         RowBox[{"M2", "=", 
+          RowBox[{"Max", "[", 
+           RowBox[{"Abs", "[", 
+            RowBox[{"A2BES", "[", 
+             RowBox[{"[", "1", "]"}], "]"}], "]"}], "]"}]}],
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox[";",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox["\[IndentingNewLine]",
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox[
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{"M2", "<", "M1"}], ",", 
+           RowBox[{"Print", "[", 
+            RowBox[{
+            "\"\<M1 vs M2:\>\"", ",", "M1", ",", "\"\< \>\"", ",", "M2"}], 
+            "]"}]}], "]"}],
+         FontFamily->"Courier New",
+         FontSize->16], 
+        StyleBox[";",
+         FontFamily->"Courier New",
+         FontSize->16]}]}], 
+      StyleBox["\[IndentingNewLine]",
+       FontFamily->"Courier New",
+       FontSize->16], 
+      RowBox[{
+       StyleBox[
+        RowBox[{
+         StyleBox["(",
+          FontFamily->"Courier New",
+          FontSize->16], 
+         StyleBox["*",
+          FontFamily->"Courier New",
+          FontSize->16]}]], 
+       StyleBox[" ",
+        FontFamily->"Courier New",
+        FontSize->16], 
+       RowBox[{
+        RowBox[{
+         StyleBox["For",
+          FontFamily->"Courier New",
+          FontSize->16], 
+         StyleBox["[",
+          FontFamily->"Courier New",
+          FontSize->16], 
+         RowBox[{
+          StyleBox[
+           RowBox[{"i", "=", "1"}],
+           FontFamily->"Courier New",
+           FontSize->16], 
+          StyleBox[",",
+           FontFamily->"Courier New",
+           FontSize->16], 
+          RowBox[{
+           StyleBox["i",
+            FontFamily->"Courier New",
+            FontSize->16], 
+           StyleBox["\[LessEqual]",
+            FontFamily->"Courier New",
+            FontSize->16], 
+           RowBox[{"2", " ", "NC"}]}], ",", 
+          RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"Print", "[", 
+            RowBox[{"\"\<Eigenvalue \>\"", ",", 
+             RowBox[{"Abs", "[", 
+              RowBox[{"A2BES", "[", 
+               RowBox[{"[", 
+                RowBox[{"1", ",", "i"}], "]"}], "]"}], "]"}], ",", 
+             "\"\< => \>\"", ",", 
+             RowBox[{"Take", "[", 
+              RowBox[{
+               RowBox[{"A2BES", "[", 
+                RowBox[{"[", 
+                 RowBox[{"2", ",", "i"}], "]"}], "]"}], ",", "NC"}], "]"}], 
+             ",", "\"\< \>\"", ",", 
+             RowBox[{"Take", "[", 
+              RowBox[{
+               RowBox[{"A2BES", "[", 
+                RowBox[{"[", 
+                 RowBox[{"2", ",", "i"}], "]"}], "]"}], ",", 
+               RowBox[{"-", "NC"}]}], "]"}]}], "]"}], ";"}]}], 
+         "\[IndentingNewLine]", "]"}], ";"}], "*)"}], 
+      StyleBox["\[IndentingNewLine]",
+       FontFamily->"Courier New",
+       FontSize->16], 
+      StyleBox["]",
+       FontFamily->"Courier New",
+       FontSize->16]}], 
+     StyleBox[";",
+      FontFamily->"Courier New",
+      FontSize->16]}]}], 
+   StyleBox["\[IndentingNewLine]",
+    FontFamily->"Courier New",
+    FontSize->16], 
+   StyleBox["]",
+    FontFamily->"Courier New",
+    FontSize->16]}], 
+  StyleBox[";",
+   FontFamily->"Courier New",
+   FontSize->16]}]}], "Input",
+ CellChangeTimes->{{3.6545858577258744`*^9, 3.6545858655953245`*^9}, {
+  3.6545858996772738`*^9, 3.654585907916745*^9}, {3.6545859391495314`*^9, 
+  3.6545863253516207`*^9}, {3.654586367832051*^9, 3.6545864250143213`*^9}, {
+  3.654586688327382*^9, 3.654586688742406*^9}, {3.6545867638146996`*^9, 
+  3.654586843235242*^9}, {3.6545868950422053`*^9, 3.6545868981943855`*^9}, {
+  3.654589613022665*^9, 3.6545896133256826`*^9}, {3.654592563642431*^9, 
+  3.654592650223383*^9}, {3.654592722939542*^9, 3.6545927531952724`*^9}, {
+  3.65544466966879*^9, 3.655444690965008*^9}, {3.655444722612818*^9, 
+  3.6554447615820465`*^9}, {3.655444859076623*^9, 3.6554449887250385`*^9}, {
+  3.6554450790422044`*^9, 3.655445123218731*^9}, {3.655445153248449*^9, 
+  3.6554454482743235`*^9}}]
 },
-FrontEndVersion->"5.1 for Microsoft Windows",
-ScreenRectangle->{{0, 1600}, {0, 793}},
-WindowSize->{1592, 761},
-WindowMargins->{{0, Automatic}, {Automatic, 0}}
+WindowSize->{1272, 761},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"8.0 for Microsoft Windows (64-bit) (February 23, 2011)",
+StyleDefinitions->"Default.nb"
 ]
+(* End of Notebook Content *)
 
-(*******************************************************************
-Cached data follows.  If you edit this Notebook file directly, not
-using Mathematica, you must remove the line containing CacheID at
-the top of  the file.  The cache data will then be recreated when
-you save this file from within Mathematica.
-*******************************************************************)
-
+(* Internal cache information *)
 (*CellTagsOutline
 CellTagsIndex->{}
 *)
-
 (*CellTagsIndex
 CellTagsIndex->{}
 *)
-
 (*NotebookFileOutline
 Notebook[{
-
-Cell[CellGroupData[{
-Cell[1776, 53, 3953, 72, 745, "Input"],
-Cell[5732, 127, 58, 1, 28, "Print"],
-Cell[5793, 130, 2142, 39, 103, "Print"],
-Cell[7938, 171, 1616, 32, 103, "Print"],
-Cell[9557, 205, 1576, 30, 103, "Print"],
-Cell[11136, 237, 2459, 45, 135, "Print"],
-Cell[13598, 284, 58, 1, 28, "Print"],
-Cell[13659, 287, 2178, 40, 103, "Print"],
-Cell[15840, 329, 1675, 33, 103, "Print"],
-Cell[17518, 364, 1625, 32, 103, "Print"],
-Cell[19146, 398, 2489, 46, 135, "Print"],
-Cell[21638, 446, 58, 1, 28, "Print"],
-Cell[21699, 449, 2164, 41, 103, "Print"],
-Cell[23866, 492, 1623, 32, 103, "Print"],
-Cell[25492, 526, 1660, 32, 103, "Print"],
-Cell[27155, 560, 2533, 46, 135, "Print"],
-Cell[29691, 608, 58, 1, 28, "Print"],
-Cell[29752, 611, 2155, 40, 103, "Print"],
-Cell[31910, 653, 1771, 34, 103, "Print"],
-Cell[33684, 689, 1375, 27, 103, "Print"],
-Cell[35062, 718, 2485, 46, 135, "Print"],
-Cell[37550, 766, 58, 1, 28, "Print"],
-Cell[37611, 769, 2171, 41, 103, "Print"],
-Cell[39785, 812, 1571, 30, 103, "Print"],
-Cell[41359, 844, 1655, 32, 103, "Print"],
-Cell[43017, 878, 2272, 45, 103, "Print"],
-Cell[45292, 925, 58, 1, 28, "Print"],
-Cell[45353, 928, 2167, 41, 103, "Print"],
-Cell[47523, 971, 1657, 32, 103, "Print"],
-Cell[49183, 1005, 1623, 32, 103, "Print"],
-Cell[50809, 1039, 2489, 46, 135, "Print"],
-Cell[53301, 1087, 58, 1, 28, "Print"],
-Cell[53362, 1090, 2172, 39, 103, "Print"],
-Cell[55537, 1131, 1562, 31, 103, "Print"],
-Cell[57102, 1164, 1668, 32, 103, "Print"],
-Cell[58773, 1198, 2303, 44, 135, "Print"],
-Cell[61079, 1244, 58, 1, 28, "Print"],
-Cell[61140, 1247, 2158, 39, 103, "Print"],
-Cell[63301, 1288, 1729, 33, 103, "Print"],
-Cell[65033, 1323, 1467, 29, 103, "Print"],
-Cell[66503, 1354, 2427, 44, 135, "Print"]
-}, Open  ]]
+Cell[557, 20, 25899, 751, 1138, "Input"]
 }
 ]
 *)
 
-
-
-(*******************************************************************
-End of Mathematica Notebook file.
-*******************************************************************)
-
+(* End of internal cache information *)

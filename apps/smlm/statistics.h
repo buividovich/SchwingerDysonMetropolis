@@ -16,7 +16,7 @@
 
 extern double    astop;
 extern int*      G2_hist[2];
-extern int       max_G2_order;
+extern int       actual_max_alpha_order;
 extern int*      G_hist[2];
 
 void init_observable_stat();

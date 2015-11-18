@@ -72,9 +72,9 @@ void  free_metropolis()
 void call_state_initializer()
 {
  ns = 0;
- action_history[ns].action_id = action_collection_size;
+ action_history[ns].action_id = action_collection_size; //This is the additional action code for state initializer
  action_history[ns].action_data_in = -1;
- asign[ns] = state_initializer(&(action_history[ns].action_data_in));
+ asign[ns] = state_initializer(&(action_history[ns].action_data_in)); //TODO: Was this necessary for sign-alternating source vectors?
 }
 
 int   metropolis_step()
@@ -146,7 +146,7 @@ int   metropolis_step()
     if(abs(res)==ACTION_SUCCESS)
     {
      //Write to the log
-     logs_Write((step_number%mc_reporting_interval==0? 1 : 2), "Step %08i:\t Performed action %s [id = %i], action_data_in = %i, ns = %i, nA[ns] = %2.4lf", step_number, action_collection_name[action_list[todo].action_id], action_list[todo].action_id, action_list[todo].action_data_in, ns, nA[ns]);
+     logs_Write((step_number%mc_reporting_interval==0? 1 : 2), "Step %08i:\t%s Performed action % 10s [id = % 2i], action_data_in = % 3i, ns = % 5i, nA[ns] = %2.4lf", step_number, (ansi_colors? "\x1b[5;40m" : ""), action_collection_name[action_list[todo].action_id], action_list[todo].action_id, action_list[todo].action_data_in, ns, nA[ns]);
      //Increase the order counter 
      ns++;
      //...save it to the history
@@ -183,7 +183,7 @@ int   metropolis_step()
    {
     accepted = 1;
     //Undo the last action!!!
-    logs_Write((step_number%mc_reporting_interval==0? 1 : 2), "Step %08i:\t Undoing the action %s [id = %i], action_data_in = %i, ns = %i, nA[ns-1] = %2.4lf", step_number, action_collection_name[action_history[ns].action_id], action_history[ns].action_id, action_history[ns].action_data_in, ns, nA[ns-1]);
+    logs_Write((step_number%mc_reporting_interval==0? 1 : 2), "Step %08i:\t%s Undoing the action %s [id = %i], action_data_in = %i, ns = %i, nA[ns-1] = %2.4lf", step_number, (ansi_colors? "\x1b[5;40m" : ""), action_collection_name[action_history[ns].action_id], action_history[ns].action_id, action_history[ns].action_data_in, ns, nA[ns-1]);
     if(action_history[ns].action_id<action_collection_size)
     {
      res = (action_collection_undo[action_history[ns].action_id])(&(action_history[ns].action_data_in));
@@ -211,7 +211,7 @@ int   metropolis_step()
    accepted = 1;
    call_state_initializer();
    //Write to the log
-   logs_Write((step_number%mc_reporting_interval==0? 1 : 2), "Step %08i:\t state_initializer has been just called", step_number);
+   logs_Write((step_number%mc_reporting_interval==0? 1 : 2), "Step %08i:\t%s state_initializer has been just called", step_number, (ansi_colors? "\x1b[5;40m" : ""));
   };
  };
  

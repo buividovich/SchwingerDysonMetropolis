@@ -16,6 +16,11 @@ else
  SUFF       :=
 endif
 
+ifeq ($(PROFILE), 1)
+ CCFLAGS	+=	 -pg
+ SUFF       :=   prf
+endif
+
 #choice of remote hosts - rrcmpi at itep or idatacool in Regensburg
 ifeq ($(IDC), 1)
  RHOST_CODE = bup58975@pcph00111.uni-regensburg.de:/temp_local/bup58975/

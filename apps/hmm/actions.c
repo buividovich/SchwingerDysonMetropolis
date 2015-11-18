@@ -3,6 +3,8 @@
 t_lat_stack X; //This stack is the current state of the system
 t_lat_stack H; //This stack will contain the data related to the sequence of actions
 
+int lambda_order = 0;
+
 double* A_choice_probs = NULL;
 int     max_A_choices  = 0; 
 double* a_choice_probs = NULL;

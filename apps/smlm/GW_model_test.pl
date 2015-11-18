@@ -16,35 +16,37 @@ system("$OutputCleanupCmd");
 
 $DIM        =  1;
 $LS         =  2;
+$lambda     =  0.6;
+$alpha      =  0.2;
+$cc         =  3.0;
+$NN         =  1.5;
+$nmc        =  1500000000;
 
-$lambda_min =  60.0;
-$lambda_max =  60.0;
-$dlambda    =  2.5;
-$nmc        =  30000000;
+$meff_sq    =  0.0;
 $maxn       =  20000;
-$meff_sq    =  -2.0*$DIM;
 
 $mc_reporting_interval = int($nmc/100);
 $pplus_tuning_interval = int($nmc/20);
 
-#$suffix0 = sprintf("gw_d%i_s%i_m%2.2f_nmc%i", $DIM, $LS, $meff_sq, $nmc);
-$suffix0 = sprintf("gw_m%2.2f_nmc%i", $meff_sq, $nmc);
-
-$mc_stat_file = "$DataDir/mc_stat_$suffix0.dat";
-#system("rm -f -v $mc_stat_file");
-
-$action_stat_file = "$DataDir/action_stat_$suffix0.dat";
-#system("rm -f -v $action_stat_file");
-
-$observables_file = "$DataDir/G_$suffix0.dat";
-#system("rm -f -v $observables_file");
-
-for($lambda=$lambda_min; $lambda<=$lambda_max; $lambda += $dlambda)
+for($LS=2; $LS<=2000; $LS *= 10)
 {
- $suffix1 = sprintf("%s_l%2.4f", $suffix0, $lambda);
+ $suffix0 = sprintf("nmc%i_a%2.2lf_l%2.2lf_s%i", $nmc, $alpha, $lambda, $LS);
+
+ $mc_stat_file = "$DataDir/mc_stat_$suffix0.dat";
+ system("rm -f -v $mc_stat_file");
+
+ $action_stat_file = "$DataDir/action_stat_$suffix0.dat";
+ system("rm -f -v $action_stat_file");
+
+ $observables_file = "$DataDir/G2_$suffix0.dat";
+ system("rm -f -v $observables_file");
+
+for($itrial=0; $itrial<10; $itrial ++)
+{
+ $suffix1 = sprintf("%s_trial%i", $suffix0, $itrial);
  $job_id  = $suffix1;
  
- $mean_link = ($lambda<4? 1.0 - $lambda/8 : 2/$lambda);
+ $mean_link = 1.0; #($lambda<4.0? 1.0 - $lambda/8 : 2/$lambda);
  
  $stack_stat_file = "$DataDir/stack_stat_$suffix1.dat";
  
@@ -60,8 +62,9 @@ for($lambda=$lambda_min; $lambda<=$lambda_max; $lambda += $dlambda)
  $cmd = $cmd." --mc-reporting-interval    $mc_reporting_interval ";
  $cmd = $cmd." --p-plus-tuning-interval   $pplus_tuning_interval ";
  
- $cmd = $cmd." --cc 8.0 ";
- $cmd = $cmd." --NN 2.5  ";
+ $cmd = $cmd." --cc $cc ";
+ $cmd = $cmd." --NN $NN  ";
+ $cmd = $cmd." --alpha $alpha ";
  $cmd = $cmd." --max-correlator-order 10 ";
  
  
@@ -78,6 +81,7 @@ for($lambda=$lambda_min; $lambda<=$lambda_max; $lambda += $dlambda)
  #$cmd = $cmd." --no-ansi-colors ";
  
  run_command($job_id, $cmd, "short", "$TmpDir"); 
+};
 };
 
 system("$QueueWatchCmd");

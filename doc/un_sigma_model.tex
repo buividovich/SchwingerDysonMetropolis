@@ -83,27 +83,22 @@ for the expectation value of the normalized trace of some matrix-valued observab
 \end{eqnarray}
 where $D_{xy} = 2 D \delta_{x y} - \sum\limits_{\mu} \delta_{x,y+\hat{\mu}} - \sum\limits_{\mu} \delta_{x,y-\hat{\mu}}$ is the lattice discretization of the continuum operator $-\partial_{\mu}^2$. It is important that this operator is positive-semidefinite. Its eigenvalues are $\lambda \sim \sum\limits_{\mu} 4 \sin^2\lr{k_{\mu}/2}$.
 
-Let us now replace integration over unitary matrices $g_x$ by integration over the full $\mathbb{C}^{N \times N}$ and enforce the unitarity condition $g^{\dag}_x g_x$ by an integral over a hermitian-matrix-valued Lagrange multiplier $\xi_x$:
+Let us now replace integration over unitary matrices $g_x$ by integration over the full $\mathbb{C}^{N \times N}$ and enforce the unitarity condition $g^{\dag}_x g_x$ by an integral over a hermitian-matrix-valued Lagrange multiplier $\phi_x$:
 \begin{widetext}
 \begin{eqnarray}
 \label{sm_partition_matrix_lagrange}
- \mathcal{Z} = \int dg_x \int d\xi_x \expa{ - \frac{N}{\lambda} \sum\limits_{x \neq y} D_{xy} \tr\lr{g^{\dag}_x g_y} - \frac{i N}{\lambda} \sum\limits_x \tr\lr{\xi_x  g^{\dag}_x g_x - \xi_x} }
+ \mathcal{Z} = \int dg_x \int d\phi_x \expa{ - \frac{N}{\lambda} \sum\limits_{x \neq y} D_{xy} \tr\lr{g^{\dag}_x g_y} - \frac{N}{\lambda} \sum\limits_x \tr\lr{\phi_x  g^{\dag}_x g_x - \phi_x} }
 \end{eqnarray}
 Performing the Gaussian integral over $g_x$ and $g^{\dag}_x$, we arrive at the following representation:
 \begin{eqnarray}
-\label{sm_partition_matrix_lagrange_only_imaginary}
- \mathcal{Z} = \int d\xi_x
- \expa{N \tr\ln\lr{D_{xy} + i \xi_x \delta_{xy}} + \frac{i N}{\lambda} \sum\limits_x \tr \xi_x } .
-\end{eqnarray}
-In order to make this path integral over Hermitian matrices well-defined, we now analytically continue the integration variable to $\phi_x = i \xi_x$, assuming again that $\phi_x$ is Hermitian. Simultaneously, we change $\lambda \rightarrow -\lambda$. Such a prescription is motivated by a nontrivial structure of Lefshetz thimbles in this theory (see the discussion below). This leads, finally, to the following representation of the partition function:
-\begin{eqnarray}
 \label{sm_partition_matrix_lagrange_only}
  \mathcal{Z} = \int d\phi_x
- \expa{N \tr\ln\lr{D_{xy} + \phi_x \delta_{xy}} - \frac{N}{\lambda} \sum\limits_x \tr \phi_x } .
+ \expa{- N \tr\ln\lr{D_{xy} + \phi_x \delta_{xy}} + \frac{N}{\lambda} \sum\limits_x \tr \phi_x } .
 \end{eqnarray}
+Note that as such, this integral is not well defined over the manifold of Hermitian matrices. However, one can still write the SD equations which will pick up the stable thimble going through the saddle point with positive eigenvalues of $\phi_x$. At the naive saddle point of (\ref{sm_partition_matrix_lagrange_only}), where $\phi_x$ is proportional to the identity, the mean-field value of $\phi$ scales as $e^{-4 \pi/\lambda}$, whereas the relevant mass parameter scales as $m^2 \sim e^{-\frac{16 \pi}{\lambda}}$.
 \end{widetext}
 
- The observables like $\vev{g^{\dag}_x g_y }$ are now expressed in terms of $\vev{G_{xy}}$ where $G_{xy}$ is the inverse of the operator $D_{xy} + \phi_x \delta_{xy}$ (which acts on the space of $N$-component fields $\psi_{x i}$). In particular, $\vev{g^{\dag}_x g_y } = \vev{\lambda \, G_{xy}}$. By definition, $G_{xy}$ satisfy the identities of the form
+ The observables like $\vev{g^{\dag}_x g_y }$ are now expressed in terms of $\vev{G_{xy}}$ where $G_{xy}$ is the inverse of the operator $D_{xy} + \phi_x \delta_{xy}$ (which acts on the space of $N$-component fields $\psi_{x i}$). In particular, $\vev{g^{\dag}_x g_y } = \lambda \, \vev{G_{xy}}$. By definition, $G_{xy}$ satisfy the identities of the form
 \begin{eqnarray}
 \label{G_identities}
  \sum\limits_z D_{xz} G_{zy} + \phi_x G_{xy} = \delta_{x y} ,
@@ -126,123 +121,224 @@ Differentiating by parts and taking into account the last identity in (\ref{G_id
 \begin{eqnarray}
 \label{sd_derivation2_lowest}
  \vev{G_{x y}} - \vev{\phi_x G_{x x}} \vev{G_{x y}}
- + \vev{G_{x x} \phi_x G_{x y} } - \lambda^{-1} \vev{\phi_x G_{x y}} = 0\\ 
+ - \vev{G_{x x} \phi_x G_{x y} } + \lambda^{-1} \vev{\phi_x G_{x y}} = 0\\{}\nonumber\\
 \label{sd_derivation2}
  \vev{G_{x_1 y_1} \ldots G_{x_n y_n}} - \vev{\phi_{x_1} G_{x_1 x_1}} \vev{G_{x_1 y_1} \ldots G_{x_n y_n}}
  - \nonumber \\ -
  \sum\limits_{A=2}^{n} \vev{\phi_{x_1} G_{x_1 y_1} \ldots G_{x_{A-1}y_{A-1}} G_{x_A x_1}} \vev{G_{x_1 y_A} G_{x_{A+1}y_{A+1}} \ldots G_{x_n y_n}}
- + \nonumber \\ +
+ - \nonumber \\ -
  \vev{G_{x_1 x_1} \phi_{x_1} G_{x_1 y_1} \ldots G_{x_n y_n}}
- - \lambda^{-1} \vev{\phi_{x_1} G_{x_1 y_1} \ldots G_{x_n y_n} } = 0
+ + \lambda^{-1} \vev{\phi_{x_1} G_{x_1 y_1} \ldots G_{x_n y_n} } = 0
 \end{eqnarray}
-In order to get the equations which involve only correlators of $G_{x y}$, we should now use the first two identities in (\ref{G_identities}) to get rid of $\phi_x$. However, there are several ways to do that which leads to different equations. Here we choose the way which does not produce the terms which can be further transformed by using the unitarity conditions. That is, in the third summand in (\ref{sd_derivation2}) we apply the second identity in (\ref{G_identities}) to $G_{x_A x_1}$, and in the fourth summand - to $G_{x_1 x_1} \phi_{x_1}$. As a result, we obtain the following generic set of equations:
+In order to get the equations which involve only correlators of $G_{x y}$, we should now use the first two identities in (\ref{G_identities}) to get rid of $\phi_x$. However, there are several ways to do that which leads to different equations. Here we choose the way which does not produce the terms which can be further transformed by using the unitarity conditions. That is, the summands of the form $\vev{\phi_{x_1} G_{x_1 y_1} \ldots G_{x_{A-1}y_{A-1}} G_{x_A x_1}}$ are replaced by
 \begin{eqnarray}
-\label{sd_G_general}
- \vev{ G_{x_1 y_1} \ldots G_{x_n y_n} } \lr{1 + D_{x_1 z} \vev{G_{z x_1}}}
- +
- \lambda^{-1} D_{x_1 z} \vev{G_{z y_1} \ldots G_{x_n y_n}}
- -
- \lambda^{-1} \delta_{x_1 y_1} \vev{G_{x_2 y_2} \ldots G_{x_n y_n}}
+\label{phix_replacement1}
+ \vev{ G_{x_1 y_1} \ldots G_{x_{A-1}y_{A-1}} G_{x_A x_1} \phi_{x_1}} =
+ \delta_{x_A x_1} \, \vev{ G_{x_1 y_1} \ldots G_{x_{A-1}y_{A-1}}} - D_{z x_1} \vev{ G_{x_1 y_1} \ldots G_{x_{A-1}y_{A-1}} G_{x_A z} } ,
+\end{eqnarray}
+and the summands of the form $\vev{G_{x_1 x_1} \phi_{x_1} G_{x_1 y_1} \ldots G_{x_n y_n}}$ - by
+\begin{eqnarray}
+\label{phix_replacement2}
+ \vev{G_{x_1 x_1} \phi_{x_1} G_{x_1 y_1} \ldots G_{x_n y_n}} = \vev{G_{x_1 y_1} \ldots G_{x_n y_n}} - D_{z x_1} \vev{G_{x_1 z} G_{x_1 y_1} \ldots G_{x_n y_n}} ,
+\end{eqnarray}
+where we assume summation over the index $z$. As a result, we obtain the following set of equations:
+\begin{eqnarray}
+\label{sd_G_general_lowest}
+ \lr{\lambda \vev{\phi_t G_{tt}} \delta_{x z} + D_{x z}} \vev{G_{z y}}
+ = \delta_{x y} + \lambda D_{z x} \vev{G_{x z} G_{x y}}
+ \\{}\nonumber\\
+ \label{sd_G_general}
+ \lr{\lambda \vev{\phi_t G_{tt}} \delta_{x_1 z} + D_{x_1 z}} \vev{G_{z y_1} G_{x_2 y_2} \ldots G_{x_n y_n}}
+ = \delta_{x_1 y_1} \vev{G_{x_2 y_2} \ldots G_{x_n y_n}}
  - \nonumber \\ -
- \sum\limits_{A=2}^{n} \delta_{x_1 x_A} \vev{G_{x_1 y_1} \ldots G_{x_{A-1} y_{A-1}}} \vev{G_{x_1 y_A} \ldots G_{x_n y_n}}
+ \lambda \sum\limits_{A=2}^{n} \delta_{x_1 x_A} \vev{G_{x_1 y_1} \ldots G_{x_{A-1} y_{A-1}}} \vev{G_{x_1 y_A} \ldots G_{x_n y_n}}
  + \nonumber \\ +
- \sum\limits_{A=2}^{n} \vev{G_{x_1 y_1} \ldots G_{x_{A-1} y_{A-1}} G_{x_A z}} D_{z x_1} \vev{G_{x_1 y_A} \ldots G_{x_n y_n}}
- - \nonumber \\ -
- D_{z x_1} \vev{G_{x_1 z} G_{x_1 y_1} \ldots G_{x_n y_n}} = 0 .
-\end{eqnarray}
-Let us first consider these equations in the coordinate space. It is then convenient to subtract the term proportional to the identity from $D_{xy}$ and write it as $D_{xy} = - \sum\limits_{\mu} \delta_{x, y \pm \hat{\mu}}$. The above equations can be then rewritten as
-\begin{eqnarray}
-\label{sd_G_coordinate_space}
- \vev{ G_{x_1 y_1} \ldots G_{x_n y_n} } \lr{1 + D_{x_1 z} \vev{G_{z x_1}}}
- +
- \lambda^{-1} D_{x_1 z} \vev{G_{z y_1} \ldots G_{x_n y_n}}
- -
- \lambda^{-1} \delta_{x_1 y_1} \vev{G_{x_2 y_2} \ldots G_{x_n y_n}}
- - \nonumber \\ -
- \sum\limits_{A=2}^{n} \delta_{x_1 x_A} \vev{G_{x_1 y_1} \ldots G_{x_{A-1} y_{A-1}}} \vev{G_{x_1 y_A} \ldots G_{x_n y_n}}
+ \lambda \sum\limits_{A=2}^{n} D_{x_1 z} \vev{G_{x_1 y_1} \ldots G_{x_{A-1} y_{A-1}} G_{x_A z}} \vev{G_{x_1 y_A} \ldots G_{x_n y_n}}
  + \nonumber \\ +
- \sum\limits_{A=2}^{n} \vev{G_{x_1 y_1} \ldots G_{x_{A-1} y_{A-1}} G_{x_A z}} D_{z x_1} \vev{G_{x_1 y_A} \ldots G_{x_n y_n}}
- - \nonumber \\ -
- D_{z x_1} \vev{G_{x_1 z} G_{x_1 y_1} \ldots G_{x_n y_n}} = 0 .
+ \lambda D_{z x_1} \vev{G_{x_1 z} G_{x_1 y_1} \ldots G_{x_n y_n}} = 0 ,
 \end{eqnarray}
-
- Let us now simplify the ``effective mass'' term $\lr{1 + D_{x_1 z} \vev{G_{z x_1}}}$ for the standard kinetic operator $D_{x y} = \lr{2 D + m_0^2} \delta_{xy} + \sum\limits_{\pm \mu} \delta_{x\pm\hat{\mu}, y}$ on the isotropic lattice. A direct substitution yields
+where we have also used the translational invariance to denote $\vev{\phi_{x_1} G_{x_1 x_1}} = \vev{\phi_t G_{tt}}$, where $t$ is an arbitrary point on the lattice. From the structure of these equations we see that the bare propagators acquire the effective mass term
 \begin{eqnarray}
-\label{eff_mass_term}
- 1 + \sum \limits_z D_{x_1 z} \vev{G_{z x_1}} = 
- 1 + \lr{2 D + m_0^2} \vev{G_{x_1 x_1}} - \sum\limits_{\pm \mu} \vev{G_{x_1 x_1 \pm \hat{\mu}}}
- = \nonumber \\ = 
- 1 + \frac{2 D + m_0^2}{\lambda} - \frac{2 D \vev{g^{\dag}_0 g_{0 + \hat{0}}} }{\lambda}
- = \lambda^{-1} \lr{\lambda + m_0^2 + 2 D \lr{1 - \vev{g^{\dag}_0 g_{0 + \hat{0}}}}}
+\label{eff_mass_lm}
+ m^2 = \lambda \vev{\phi_t G_{tt}} = \lambda - \lambda G_{t z} D_{z t}
+ = \lambda - 2 D \lr{1 - \vev{g^{\dag}_t g_{t + \hat{0}}} }
 \end{eqnarray}
+which self-consistently depends on the mean link expectation value $\vev{g^{\dag}_t g_{t + \hat{0}}}$ (the above formula is ONLY valid for isotropic lattice - at finite temperature there will be the average over different directions).
 
 Let us now go to the momentum space and define the new observables
 \begin{eqnarray}
 \label{momentum_space_observables}
  G_{p q} = \frac{1}{V^2} \sum\limits_{x, y} \expa{i p x + i q y} G_{x y},
 \end{eqnarray}
-where the momenta $p, q$ take discrete values $\vec{p} = 2 \pi \vec{m}/L$ and $L$ is the lattice size.
+where the momenta $p, q$ take discrete values $\vec{p} = 2 \pi \vec{m}/L$, $L$ is the lattice size and $V = L^D$ is the lattice volume. In terms of the new observables the equations (\ref{sd_G_general_lowest}) and (\ref{sd_G_general}) take the following form:
 \begin{eqnarray}
-\label{sd_G_general_kappa_momentum_preliminary}
- \vev{ G_{p_1 q_1} \ldots G_{p_n q_n} } \lr{m^2 + K^2\lr{p_1}}
- =
-  \frac{1}{V} \delta\lr{p_1 + q_1} \vev{G_{p_2 q_2} \ldots G_{p_n q_n}}
- + \nonumber \\ +
- \frac{\lambda}{V} \sum\limits_{A=2}^{n} \delta\lr{p_1 + p_A - \tilde{p}_1 - \tilde{p}_A} \vev{G_{\tilde{p}_1 q_1} \ldots G_{p_{A-1} q_{A-1}}} \vev{G_{\tilde{p}_A q_A} \ldots G_{p_n q_n}}
- - \nonumber \\ -
- \lambda \sum\limits_{A=2}^{n}
- \sum\limits_{\tilde{p}_1 \tilde{q}_A \tilde{p}_A} K^2\lr{\tilde{q}_A}
- \delta\lr{p_1 - \tilde{p}_1 - \tilde{q}_A - \tilde{p}_A}
- \vev{G_{\tilde{p}_1 q_1} \ldots G_{p_{A} \tilde{q}_A}} \vev{G_{\tilde{p}_A q_A} \ldots G_{p_n q_n}}
- + \nonumber \\ +
- \lambda \sum\limits_{\tilde{p}_1, \tilde{p}_2, \tilde{q}_1}
- \delta\lr{p_1 - \tilde{p}_1 - \tilde{p}_2 - \tilde{q}_1} K^2\lr{\tilde{q}_1} \vev{G_{\tilde{p}_1 \tilde{q}_1} G_{\tilde{p}_2 q_1} G_{p_2 q_2} \ldots G_{p_n q_n}} ,
-\end{eqnarray}
-where $K^2\lr{p} = m_0^2 + \sum\limits_{\mu} 4 \sin^2\lr{k_{\mu}/2}$ and $m^2 \equiv m_0^2 + \lambda + 2 D\lr{1 - \vev{g^{\dag}_x g_{x + \hat{0}}}}$. Introducing now the ``propagator''
-\begin{eqnarray}
-\label{propagator_def}
- \mathcal{G}\lr{p} = \frac{1}{m^2 + K^2\lr{p}}
-\end{eqnarray}
-we can rewrite the above equations as
-\begin{eqnarray}
-\label{sd_G_general_kappa_momentum}
+\label{sd_G_general_fourier_lowest}
+ \vev{G_{p q}} = \frac{\mathcal{G}\lr{p} \delta_{p+q}}{V} +
+ \lambda \mathcal{G}\lr{p} \sum\limits_{\tilde{p}_1, \tilde{p}_2, \tilde{q}_1}
+ \delta\lr{p - \tilde{p}_1 - \tilde{p}_2 - \tilde{q}_1} D\lr{\tilde{q}_1} \vev{G_{\tilde{p}_1 \tilde{q}_1} G_{\tilde{p}_2 q}}
+ \\{}\nonumber\\
+\label{sd_G_general_fourier}
  \vev{ G_{p_1 q_1} \ldots G_{p_n q_n} }
  =
-  \frac{1}{V} \mathcal{G}\lr{p_1} \delta\lr{p_1 + q_1} \vev{G_{p_2 q_2} \ldots G_{p_n q_n}}
- + \nonumber \\ +
- \frac{\lambda}{V} \mathcal{G}\lr{p_1} \sum\limits_{A=2}^{n} \sum\limits_{\tilde{p}_1, \tilde{p}_A} \delta\lr{p_1 + p_A - \tilde{p}_1 - \tilde{p}_A} \vev{G_{\tilde{p}_1 q_1} \ldots G_{p_{A-1} q_{A-1}}} \vev{G_{\tilde{p}_A q_A} \ldots G_{p_n q_n}}
+  \frac{\mathcal{G}\lr{p_1} \delta_{p_1 + q_1}}{V} \, \vev{G_{p_2 q_2} \ldots G_{p_n q_n}}
  - \nonumber \\ -
+ \frac{\lambda}{V} \mathcal{G}\lr{p_1} \sum\limits_{A=2}^{n} \sum\limits_{\tilde{p}_1, \tilde{p}_A} \delta\lr{p_1 + p_A - \tilde{p}_1 - \tilde{p}_A} \vev{G_{\tilde{p}_1 q_1} \ldots G_{p_{A-1} q_{A-1}}} \vev{G_{\tilde{p}_A q_A} \ldots G_{p_n q_n}}
+ + \nonumber \\ +
  \lambda \mathcal{G}\lr{p_1} \sum\limits_{A=2}^{n}
  \sum\limits_{\tilde{p}_1 \tilde{q}_A \tilde{p}_A}
  \delta\lr{p_1 - \tilde{p}_1 - \tilde{q}_A - \tilde{p}_A}
- K^2\lr{\tilde{q}_A}
+ D\lr{\tilde{q}_A}
  \vev{G_{\tilde{p}_1 q_1} \ldots G_{p_{A} \tilde{q}_A}} \vev{G_{\tilde{p}_A q_A} \ldots G_{p_n q_n}}
  + \nonumber \\ +
  \lambda \mathcal{G}\lr{p_1} \sum\limits_{\tilde{p}_1, \tilde{p}_2, \tilde{q}_1}
- \delta\lr{p_1 - \tilde{p}_1 - \tilde{p}_2 - \tilde{q}_1} K^2\lr{\tilde{q}_1} \vev{G_{\tilde{p}_1 \tilde{q}_1} G_{\tilde{p}_2 q_1} G_{p_2 q_2} \ldots G_{p_n q_n}}
+ \delta\lr{p_1 - \tilde{p}_1 - \tilde{p}_2 - \tilde{q}_1} D\lr{\tilde{q}_1} \vev{G_{\tilde{p}_1 \tilde{q}_1} G_{\tilde{p}_2 q_1} G_{p_2 q_2} \ldots G_{p_n q_n}} ,
 \end{eqnarray}
-Finally, it is also convenient to restore the normalization by defining $G_{pq} = \frac{1}{\lambda} \CG_{p,q}$. Now $\CG$ is normalized as $\sum\limits_{p,q} \CG_{pq} = 1$:
-
+where we have introduced the propagator
 \begin{eqnarray}
-\label{sd_G_general_rescaled}
- \vev{ \CG_{p_1 q_1} \ldots \CG_{p_n q_n} }
- =
-  \frac{\lambda}{V} \mathcal{G}\lr{p_1} \delta\lr{p_1 + q_1} \vev{\CG_{p_2 q_2} \ldots \CG_{p_n q_n}}
- + \nonumber \\ +
- \frac{\lambda}{V} \mathcal{G}\lr{p_1} \sum\limits_{A=2}^{n} \sum\limits_{\tilde{p}_1, \tilde{p}_A} \delta\lr{p_1 + p_A - \tilde{p}_1 - \tilde{p}_A} \vev{\CG_{\tilde{p}_1 q_1} \ldots \CG_{p_{A-1} q_{A-1}}} \vev{\CG_{\tilde{p}_A q_A} \ldots \CG_{p_n q_n}}
- - \nonumber \\ -
- \mathcal{G}\lr{p_1} \sum\limits_{A=2}^{n}
- \sum\limits_{\tilde{p}_1 \tilde{q}_A \tilde{p}_A}
- \delta\lr{p_1 - \tilde{p}_1 - \tilde{q}_A - \tilde{p}_A}
- K^2\lr{\tilde{q}_A}
- \vev{\CG_{\tilde{p}_1 q_1} \ldots \CG_{p_{A} \tilde{q}_A}} \vev{\CG_{\tilde{p}_A q_A} \ldots \CG_{p_n q_n}}
- + \nonumber \\ +
- \mathcal{G}\lr{p_1} \sum\limits_{\tilde{p}_1, \tilde{p}_2, \tilde{q}_1}
- \delta\lr{p_1 - \tilde{p}_1 - \tilde{p}_2 - \tilde{q}_1} K^2\lr{\tilde{q}_1} \vev{\CG_{\tilde{p}_1 \tilde{q}_1} \CG_{\tilde{p}_2 q_1} \CG_{p_2 q_2} \ldots \CG_{p_n q_n}}
+ \mathcal{G}\lr{p} = \frac{1}{m^2 + D\lr{p}},
+ \quad
+ D\lr{p} = \sum\limits_{\mu} 4 \sin^2\lr{\frac{k_{\mu}}{2}} .
 \end{eqnarray}
-
 \end{widetext}
 
+\section*{Lowest-order perturbative expansion}
+
+\begin{widetext}
+\begin{eqnarray}
+\label{G2_1}
+ G^{\lr{1}}_{pq} = \frac{\mathcal{G}\lr{p} \mathcal{G}\lr{q} \delta_{p+q}}{V} \, I_0 ,
+ \quad
+ I_0 = \frac{1}{V} \sum\limits_p D\lr{p} \mathcal{G}\lr{p}
+\end{eqnarray}
+\begin{eqnarray}
+\label{G4_1}
+ G^{\lr{1}}_{p_1 q_1 p_2 q_2}
+ =
+ I_0 \,
+ \frac{\delta_{p_1 + q_1}}{V}
+ \frac{\delta_{p_2 + q_2}}{V} \,
+ \lr{
+  \mathcal{G}\lr{p_1} \mathcal{G}\lr{p_2} \mathcal{G}\lr{q_2}
+  +
+  \mathcal{G}\lr{p_1} \mathcal{G}\lr{q_1} \mathcal{G}\lr{p_2}
+ }
+ - \nonumber \\ -
+ m^2 \,
+ \frac{\delta_{p_1 + q_1 + p_2 + q_2}}{V^3} \,
+ \mathcal{G}\lr{p_1} \mathcal{G}\lr{q_1} \mathcal{G}\lr{p_2} \mathcal{G}\lr{q_2}
+\end{eqnarray}
+Note that the last term which is completely symmetric w.r.t. permutations of all momenta appears
+due to the cancellation of the terms $-\mathcal{G}\lr{p_1} \mathcal{G}\lr{q_1} \mathcal{G}\lr{q_2}$ and $\mathcal{G}\lr{p_1} \mathcal{G}\lr{q_1} \mathcal{G}\lr{p_2} \mathcal{G}\lr{q_2} D\lr{p_2}$.
+
+\begin{eqnarray}
+\label{G2_2}
+ G^{\lr{2}}_{pq}
+ =
+ \mathcal{G}\lr{p}
+ \sum\limits_{\tilde{p}_1, \tilde{q}_1, \tilde{p}_2 }
+ \delta_{p - \tilde{p}_1 - \tilde{q}_1 - \tilde{p}_2}
+ D\lr{\tilde{q}_1}
+ G^{\lr{1}}_{\tilde{p}_1 \tilde{q}_1 \tilde{p}_2 q}
+ = \nonumber \\ =
+ \frac{\delta_{p+q}}{V} I_0^2 \mathcal{G}^3\lr{p}
+ +
+ \frac{\delta_{p+q}}{V} \mathcal{G}^2\lr{p} \lr{I_0 I_1 - m^2 S_0^2}
+ +
+ \frac{m^4}{V^3} \mathcal{G}^2\lr{p} \delta_{p+q}
+ \sum\limits_{\tilde{p}, \tilde{q}}
+ \mathcal{G}\lr{p - \tilde{p} - \tilde{q}}
+ \mathcal{G}\lr{\tilde{p}}
+ \mathcal{G}\lr{\tilde{q}} ,
+\end{eqnarray}
+where we have defined
+\begin{eqnarray}
+\label{scalar_ints_def}
+ I_1 = \frac{1}{V} \sum\limits_q D\lr{q} \mathcal{G}^2\lr{q},
+ \quad
+ S_0 = \frac{1}{V} \sum\limits_q \mathcal{G}\lr{q} .
+\end{eqnarray}
+
+The first, the second and the third summands clearly correspond to the two tadpoles, tadpole on tadpole diagram and the sunset diagram, respectively.
+\end{widetext}
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=6cm,angle=-90]{../plots/smlm/G2_total_vs_ao_l0.60_morestat.eps}
+  \includegraphics[width=6cm,angle=-90]{../plots/smlm/G2_total_vs_ao_l0.60.eps}\\
+  \includegraphics[width=6cm,angle=-90]{../plots/smlm/G2_total_vs_ao_l1.20.eps}
+  \includegraphics[width=6cm,angle=-90]{../plots/smlm/G2_total_vs_ao_l2.30.eps}\\
+  \caption{Contributions from the resummed expansion: $\lambda = 1.2$ (left) and $\lambda = 2.3$ (right)}
+  \label{fig:contribs}
+\end{figure*}
+
+
+\subsection{Lowest-order results for the GW model}
+
+Let us start with some basic definitions. In the GW model, the operator $D$ is the two by two matrix of the form
+\begin{eqnarray}
+\label{GW_D_operator}
+ D_{xy} = \left(
+   \begin{array}{cc}
+     2 & -2 \\
+     -2 & 2 \\
+   \end{array}
+ \right)
+\end{eqnarray}
+Correspondingly, our coupling $\lambda$ is related to the Gross-Witten coupling in \cite{Gross:80:1} as $\lambda_{GW} = \frac{\lambda}{2}$. There are two values of momenta, $p_0 = 0$ and $p_0 = 1$, with the corresponding eigenvalues being $D\lr{0} = 0$, $D\lr{1} = 4$. The Fourier transform of the correlator $\lambda^{-1} \vev{g^{\dag}_x g_y} \equiv G_{x y}$ reads in the weak-coupling phase ($\lambda < 4$)
+\begin{eqnarray}
+\label{fouriers_wc}
+ \vev{g^{\dag} g}\lr{p = 0} = 1 - \frac{\lambda}{16},
+ \quad
+ \vev{g^{\dag} g}\lr{p = 1} = \frac{\lambda}{16},
+ \nonumber \\
+ G_{p=0, q=0} = \frac{1}{\lambda} - \frac{1}{16}
+ \quad
+ G_{p=1, q=1} = \frac{1}{16}
+\end{eqnarray}
+In the strong-coupling phase, the results are
+\begin{eqnarray}
+\label{fouriers_sc}
+ \vev{g^{\dag} g}\lr{p = 0} = \frac{1}{2} + \frac{1}{\lambda},
+ \quad
+ \vev{g^{\dag} g}\lr{p = 1} = \frac{1}{2} - \frac{1}{\lambda},
+ \nonumber \\
+ G_{p=0, q=0} = \frac{1}{2 \lambda} + \frac{1}{\lambda^2}
+ \quad
+ G_{p=1, q=1} = \frac{1}{2 \lambda} - \frac{1}{\lambda^2} .
+\end{eqnarray}
+The bare mass term in the propagator is
+\begin{eqnarray}
+\label{bare_mass}
+ m^2 = \left\{
+         \begin{array}{ll}
+           \lambda - 2 \frac{\lambda}{8} = \frac{3 \lambda}{4}, & \lambda < 4; \\
+           \lambda + \frac{4}{\lambda} - 2, & \lambda > 4.
+         \end{array}
+       \right.
+\end{eqnarray}
+Correspondingly, in the weak-coupling regime
+\begin{eqnarray}
+\label{modified_propagator}
+ \mathcal{G}\lr{0} = \frac{4}{3 \lambda}, \quad
+ \mathcal{G}\lr{1} = \frac{4}{16 + 3 \lambda} .
+\end{eqnarray}
+For the scalar integrals involving $\mathcal{G}\lr{p}$ we have
+\begin{eqnarray}
+\label{scalar_ints_GW}
+ I_0 = \frac{16}{16 + 3 \lambda},
+ \quad
+ I_1 = \frac{64}{\lr{16 + 3 \lambda}^2},
+ \quad
+ S_0 = \frac{64 + 24 \lambda}{3 \lambda \lr{16 + 3 \lambda}}
+\end{eqnarray}
+
+Correspondingly, we get for the lowest nontrivial orders of $G_{pq}$:
+\begin{eqnarray}
+\label{G2_GW_perturb}
+ G^{\lr{1}}_{00} = \frac{128}{9 \lambda^2 \lr{16 + 3 \lambda}}
+ \quad,
+ G^{\lr{1}}_{11} = \frac{128}{\lr{16 + 3 \lambda}^3}
+\end{eqnarray}
 
 \section*{$SU\lr{N}$ sigma-model: strong-coupling expansion in momentum space}
 \label{sec:introduction}
@@ -263,7 +359,7 @@ The single-trace observables which factorize in the large-$N$ limit are:
 \frac{1}{N}\, \vev{ \tr\lr{
 g_{x_1} g^{\dag}_{y_1} \ldots g_{x_n} g^{\dag}_{y_n}} }
 \end{eqnarray}
-Let us now obtain the full set of Schwinger-Dyson equations for this theory, for example, by a variation over $g_{x_1}$:
+Let us now obtain the full set of Schwinger-Dyson equations for this theory, for example, by a variation over $g_{x_1}$ (these equations were first derived in \cite{GonzalezArroyo:84:1}):
 \begin{widetext}
 \begin{eqnarray}
 \label{SD_derivation1}

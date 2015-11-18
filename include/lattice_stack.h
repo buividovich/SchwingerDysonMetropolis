@@ -11,7 +11,7 @@ typedef struct
 {
  int    dim;         //Dimensionality of stack elements
  int    max_nel;     //Max number of elements in stack
- int**  stack;       //sint[i] contains the pointer to the array of DIM sint's
+ int**  stack;       //stack[i] contains the pointer to the array of DIM int's
  int*   start;       //seq_start[i]  is the first index of i'th sequence in the stack
  int*   len;         //seq_length[i] is the length of i'th sequence in the stack
  int    top;         //Number of sequences in the stack

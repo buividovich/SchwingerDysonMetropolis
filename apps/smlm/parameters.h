@@ -15,6 +15,8 @@
 #include "actions.h"
 
 extern double mean_link;
+extern double alpha;
+extern int    max_alpha_order;
 
 int  parse_command_line_options(int argc, char **argv);
 void init_parameters();
