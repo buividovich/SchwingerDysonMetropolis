@@ -24,13 +24,15 @@ double G(uint P, int n, int m)
  static uint mP;
  //static uint mP1;
  //static uint mP2;
- static double res0 = 0.0; //The very first contact term which is there for all the equations
- static double res1 = 0.0;
+ static double res0; //The very first contact term which is there for all the equations
+ static double res1;
  static int i;
  //static int A;
 
  mP   = P;
  res0 = ils*G0[mP%LS2];
+ res1 = 0.0;
+ 
  if(m<=0)
  {
   for(i=1; i<n; i++)
@@ -44,17 +46,17 @@ double G(uint P, int n, int m)
  {
   mP  /= LS2;
   res0 *= G(mP, n-1, m);
-  
+    
   //Second term in SD equations - flip momenta
   //for(int A=2; A<=n; A++)
   // for(int p1t=0; p1t<2; p1t++)
     
   
   //Finally, multiply by G0(P0) 
-  res1 *= G0[P%LS2];    
+  res1 *= G0[P%LS2];
  };
  
- return res0 + res1;
+ return (res0 + res1);
 }
 
 void init_recursion()
@@ -115,24 +117,3 @@ void free_recursion()
    SAFE_FREE(prcF[n][m]);
   };    
 }
-
-//Some obsolete stuff
-/*static inline int check_p0_p1(uint P)
-{
- uint p0 = P%LS;
- uint p1 = (P/LS)%LS;
- return ((p0 + p1)%LS==0? 1 : 0);    
-}
-
-static inline int check_p2n_p2n1(uint P, int n)
-{
- uint mP = P;
- int  res = 1;
- for(int i=0; i<n; i++)
- {
-  uint p2n    = mP%LS; mP /= LS;
-  uint p2n1   = mP%LS; mP /= LS;
-  res = res && ((p2n + p2n1)%LS==0);
- };
- return res;
-}*/

@@ -1,6 +1,6 @@
 #include "parameters.h"
 
-int    mmax        =  1;
+int    mmax        =  0;
 int    s1          = +1;          //sigma parameters controlling the thimble structure
 int    s2s3        = -1;          //ratio of s2 to s3
 double mean_link   = -1.0;
@@ -70,7 +70,7 @@ int parse_command_line_options(int argc, char **argv)
 
 void print_parameters()
 {
- print_largeN_QFT_parameters();
+ print_largeN_QFT_parameters(1, 0);
  logs_Write(0, "\t\tPARAMETERS OF SERIES GENERATOR: ");
  logs_WriteParameter(0,   "Max. order",                 "%i", mmax);
  logs_WriteParameter(0,  "[s1, s2/s3]",       "[%+1i, %+1i]", s1, s2s3);
