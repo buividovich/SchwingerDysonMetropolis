@@ -23,7 +23,8 @@ extern int      exit_upon_overflow;     //Whether to stop the MC process once th
 
 //TODO-not so urgent: cleanup for file names
 
-#define METROPOLIS_LONG_OPTIONS                                                            \
+//0-9, X - Z  
+#define METROPOLIS_LONG_OPTIONS                                                          \
  {      "max-recursion-depth",  required_argument,                      NULL,  '0'},       \
  {                   "p-plus",  required_argument,                      NULL,  '1'},       \
  {            "prod-mc-steps",  required_argument,                      NULL,  '2'},       \
