@@ -37,40 +37,48 @@ double*   f_genus                 = NULL;
 int         genus                 = 0;
 
 
-void print_largeN_QFT_parameters()
+void print_largeN_QFT_parameters(int print_physical, int print_algorithmic)
 {
- logs_Write(0, "\tPARAMETERS OF A GENERIC SIMULATION OF A LARGE-N QFT");
- logs_WriteParameter(0,                                   "DIM",       "%i",      DIM);
- logs_WriteParameter(0,                                    "LT",       "%i",      LT);
- logs_WriteParameter(0,                                    "LS",       "%i",      LS);
- logs_WriteParameter(0,                                "lambda",    "%2.4E",      lambda);
- logs_WriteParameter(0,          "Square of the effective mass",    "%2.4E",      meff_sq);
- logs_WriteParameter(0,                                    "cc", "%2.4E %s",      cc, (param_auto_tuning? "(Automatically tuned)" : ""));
- logs_WriteParameter(0,                                    "NN", "%2.4E %s",      NN, (param_auto_tuning? "(Automatically tuned)" : ""));
- if(max_genus>0)
+ if(print_physical)
  {
-  logs_WriteParameter(0,               "Max. observables genus",       "%i",      max_genus);
-  logs_WriteParameter(0,      "Constant A in genus reweighting",    "%2.4E",      genus_A);
-  logs_WriteParameter(0,     "Constant nu in genus reweighting",   "%2.2lf",      genus_nu);
-  logs_WriteParameter(0,      "Constant B in genus reweighting",    "%2.4E",      genus_B);
-  logs_WriteParameter(0,     "Constant mu in genus reweighting",   "%2.2lf",      genus_mu);
-  logs_WriteParameter(0,      "f exponent in genus reweighting",    "%2.4E",      genus_f_exponent);
+  logs_Write(0, "\tPHYSICAL PARAMETERS OF A GENERIC LARGE-N QFT");
+  logs_WriteParameter(0,                                   "DIM",       "%i",      DIM);
+  logs_WriteParameter(0,                                    "LT",       "%i",      LT);
+  logs_WriteParameter(0,                                    "LS",       "%i",      LS);
+  logs_WriteParameter(0,                                "lambda",    "%2.4E",      lambda);
+  logs_WriteParameter(0,          "Square of the effective mass",    "%2.4E",      meff_sq);
  };
- if(param_auto_tuning)
+ 
+ if(print_algorithmic)
  {
- logs_WriteParameter(0,     "Accuracy of parameter auto-tuning",    "%2.4E",      param_tuning_accuracy);
- logs_WriteParameter(0,        "Max. iterations of auto-tuning",       "%i",      param_tuning_max_iter);
- };
- logs_WriteParameter(0,               "Max.correlator to trace",       "%i",      max_correlator_order);
- logs_WriteParameter(0,                 "Min.observables order",       "%i",      min_observables_order);
- logs_WriteParameter(0,                 "Max.observables order",       "%i",      max_observables_order);
- logs_WriteParameter(0,                         "max_stack_nel",       "%i",      max_stack_nel);
- logs_WriteParameter(0,                       "max_history_nel",       "%i",      max_history_nel);
- logs_WriteParameter(0, "Check stack consistency at every step",       "%s",      (check_stack? "YES" : "NO"));
- if(observables_file!=NULL)
- logs_WriteParameter(0,                      "Observables file",       "%s",      observables_file);
- if(stack_stat_file!=NULL)
- logs_WriteParameter(0,                 "Stack statistics file",       "%s",      stack_stat_file);
+  logs_Write(0, "\tALGORITHMIC PARAMETERS OF A GENERIC SIMULATION OF LARGE-N QFT");
+  logs_WriteParameter(0,                                    "cc", "%2.4E %s",      cc, (param_auto_tuning? "(Automatically tuned)" : ""));
+  logs_WriteParameter(0,                                    "NN", "%2.4E %s",      NN, (param_auto_tuning? "(Automatically tuned)" : ""));
+  if(max_genus>0)
+  {
+   logs_WriteParameter(0,               "Max. observables genus",       "%i",      max_genus);
+   logs_WriteParameter(0,      "Constant A in genus reweighting",    "%2.4E",      genus_A);
+   logs_WriteParameter(0,     "Constant nu in genus reweighting",   "%2.2lf",      genus_nu);
+   logs_WriteParameter(0,      "Constant B in genus reweighting",    "%2.4E",      genus_B);
+   logs_WriteParameter(0,     "Constant mu in genus reweighting",   "%2.2lf",      genus_mu);
+   logs_WriteParameter(0,      "f exponent in genus reweighting",    "%2.4E",      genus_f_exponent);
+  };
+  if(param_auto_tuning)
+  {
+  logs_WriteParameter(0,     "Accuracy of parameter auto-tuning",    "%2.4E",      param_tuning_accuracy);
+  logs_WriteParameter(0,        "Max. iterations of auto-tuning",       "%i",      param_tuning_max_iter);
+  };
+  logs_WriteParameter(0,               "Max.correlator to trace",       "%i",      max_correlator_order);
+  logs_WriteParameter(0,                 "Min.observables order",       "%i",      min_observables_order);
+  logs_WriteParameter(0,                 "Max.observables order",       "%i",      max_observables_order);
+  logs_WriteParameter(0,                         "max_stack_nel",       "%i",      max_stack_nel);
+  logs_WriteParameter(0,                       "max_history_nel",       "%i",      max_history_nel);
+  logs_WriteParameter(0, "Check stack consistency at every step",       "%s",      (check_stack? "YES" : "NO"));
+  if(observables_file!=NULL)
+   logs_WriteParameter(0,                     "Observables file",       "%s",      observables_file);
+  if(stack_stat_file!=NULL)
+   logs_WriteParameter(0,                "Stack statistics file",       "%s",      stack_stat_file);
+ };   
 }
 
 void largeN_QFT_prefix(char* prefix) //Prints lambda, cc, NN, LT, LS to prefix

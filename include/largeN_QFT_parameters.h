@@ -46,7 +46,7 @@ extern double*  f_genus;
 //Variable for genus counting
 extern int        genus;
 
-void print_largeN_QFT_parameters();
+void print_largeN_QFT_parameters(int print_physical, int print_algorithmic);
 void largeN_QFT_prefix(char* prefix); //Prints lambda, meff_sq, cc, NN, LT, LS to prefix
 
 double n2an_sup(double a); //Supremum of (n+1)(n+2)/2 a^n

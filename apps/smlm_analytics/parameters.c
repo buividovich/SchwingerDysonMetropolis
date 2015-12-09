@@ -1,22 +1,32 @@
 #include "parameters.h"
 
-int    mmax        =  0;
-int    s1          = +1;          //sigma parameters controlling the thimble structure
-int    s2s3        = -1;          //ratio of s2 to s3
-double mean_link   = -1.0;
-double m2          =  0.1;         //Mass squared 
+int    mmin_prc      =  0;          //Minimal m for which we do pre-calculations
+int    mmax          =  0;
+int    s1            = -1;          //sigma parameters controlling the thimble structure
+int    s2s3          = +1;          //ratio of s2 to s3
+double mean_link     = -1.0;
+double m2            =  0.1;         //Mass squared 
+
+char*  out_file    = NULL;
+int    append_mode = 0;
+int    auto_naming = 1;
 
 static struct option long_options[] =
 {
  LARGEN_QFT_LONG_OPTIONS, //A-P
- {        "mmax",  required_argument,    NULL,   'a'},
- {          "s1",  required_argument,    NULL,   'b'},
- {        "s2s3",  required_argument,    NULL,   'c'},
- {   "mean-link",  required_argument,    NULL,   'd'},
- {             0,                  0,    NULL,     0}
+ METROPOLIS_LONG_OPTIONS, //0-9, X - Z  
+ {          "mmax",   required_argument,          NULL,   'a'},
+ {            "s1",   required_argument,          NULL,   'b'},
+ {          "s2s3",   required_argument,          NULL,   'c'},
+ {      "mean-link",  required_argument,          NULL,   'd'},
+ {       "mmin-prc",  required_argument,          NULL,   'e'},
+ {       "out-file",  required_argument,          NULL,   'f'},
+ { "no-auto-naming",        no_argument,  &auto_naming,     0},
+ {    "append-mode",        no_argument,  &append_mode,     1},
+ {             0,                  0,          NULL,     0}
 };
 
-static char my_short_option_list[] = "a:b:c:d:";
+static char my_short_option_list[] = "a:b:c:d:e:f:";
 
 int parse_command_line_options(int argc, char **argv)
 {
@@ -53,6 +63,12 @@ int parse_command_line_options(int argc, char **argv)
    case 'd':
     SAFE_SSCANF(optarg, "%lf", mean_link);    
    break;
+   case 'e':
+    SAFE_SSCANF(optarg,  "%i", mmin_prc);
+   break;
+   case 'f':
+    COPY_FILE_NAME(optarg, out_file);
+   break;
    case   0:
    break;
    case '?':
@@ -72,10 +88,17 @@ void print_parameters()
 {
  print_largeN_QFT_parameters(1, 0);
  logs_Write(0, "\t\tPARAMETERS OF SERIES GENERATOR: ");
- logs_WriteParameter(0,   "Max. order",                 "%i", mmax);
- logs_WriteParameter(0,  "[s1, s2/s3]",       "[%+1i, %+1i]", s1, s2s3);
- logs_WriteParameter(0,    "Mean link",             "%2.4lf", mean_link);
- logs_WriteParameter(0, "Mass squared",             "%2.4lf", m2);
+ logs_WriteParameter(0,                       "Max. order",                 "%i", mmax);
+ logs_WriteParameter(0,  "Min. order for pre-calculations",                 "%i", mmin_prc);
+ logs_WriteParameter(0,                      "[s1, s2/s3]",       "[%+1i, %+1i]", s1, s2s3);
+ logs_WriteParameter(0,                        "Mean link",             "%2.4lf", mean_link);
+ logs_WriteParameter(0,                     "Mass squared",             "%2.4lf", m2);
+ if(out_file!=NULL)
+ logs_WriteParameter(0,                      "Output file",                 "%s %s %s", out_file, (auto_naming? "[Auto naming]" : ""), (append_mode? "[Append mode]" : ""));
+ 
+ logs_WriteParameter(0,                   "sizeof(double)",                 "%i", sizeof(double));
+ logs_WriteParameter(0,                   "sizeof(double*)",                "%i", sizeof(double*));
+ logs_WriteParameter(0,                     "Buffer memory",         "%2.2lf Gb", (double)(sizeof(double)*MAX_BUFFER)/(double)(1024*1024*1024));
 }
 
 void init_parameters()
@@ -89,5 +112,10 @@ void init_parameters()
  };
  
  m2 = s2s3*(2*DIM*(1.0 - mean_link) - s1*lambda);
+ 
+ if(out_file==NULL && auto_naming)
+ {
+  sprintf_append(&out_file, "./data/smlm_analytics/lu_s%i_%s%s_l%2.2lf.dat", LS, (s1==+1?"p":"m"), (s2s3==+1?"p":"m"), lambda);
+ };
 }
 
