@@ -10,14 +10,195 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       157,          7]
-NotebookDataLength[       764,         33]
-NotebookOptionsPosition[       560,         21]
-NotebookOutlinePosition[       903,         36]
-CellTagsIndexPosition[       860,         33]
+NotebookDataLength[     10323,        218]
+NotebookOptionsPosition[     10007,        202]
+NotebookOutlinePosition[     10350,        217]
+CellTagsIndexPosition[     10307,        214]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
 Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", "Parameters", " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"mmax", "=", "3"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"LS", "=", "2"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "Creating", " ", "the", " ", "table", " ", "of", " ", "the", " ", 
+     "expansion", " ", "coefficients"}], " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"G", "=", 
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{"Table", "[", 
+        RowBox[{
+         RowBox[{"Table", "[", 
+          RowBox[{"NULL", ",", 
+           RowBox[{"{", 
+            RowBox[{"P", ",", "1", ",", 
+             SuperscriptBox["LS", 
+              RowBox[{"2", " ", "n"}]]}], "}"}]}], "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"n", ",", "1", ",", 
+           RowBox[{"mmax", "-", "m", "+", "1"}]}], "}"}]}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"m", ",", "0", ",", "mmax"}], "}"}]}], "]"}]}], ";", " ", 
+    RowBox[{"(*", " ", 
+     RowBox[{"TODO", ":", " ", 
+      RowBox[{
+      "reduce", " ", "space", " ", "by", " ", "momentum", " ", "conservation",
+        " ", "constraint"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", 
+     RowBox[{"Recursive", " ", "calculation", " ", "of", " ", "G"}], " ", 
+     "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"For", "[", 
+     RowBox[{
+      RowBox[{"m", "=", "0"}], ",", 
+      RowBox[{"m", "\[LessEqual]", "mmax"}], ",", 
+      RowBox[{"m", "++"}], ",", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"For", "[", 
+        RowBox[{
+         RowBox[{"n", "=", "1"}], ",", 
+         RowBox[{"n", "\[LessEqual]", 
+          RowBox[{"mmax", "-", "m", "+", "1"}]}], ",", 
+         RowBox[{"n", "++"}], ","}], "\[IndentingNewLine]", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", "]"}], ";"}]}], 
+     "\[IndentingNewLine]", "]"}], ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.660736717681115*^9, 3.6607368050341115`*^9}, {
+  3.6607368392900705`*^9, 3.6607368444903684`*^9}, {3.660736882233527*^9, 
+  3.6607369523615384`*^9}, {3.660737006153615*^9, 3.660737006889657*^9}, {
+  3.660737076296627*^9, 3.6607371695769625`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"NULL", ",", "NULL", ",", "NULL", ",", "NULL"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+      "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL",
+        ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL"}], "}"}], 
+     ",", 
+     RowBox[{"{", 
+      RowBox[{
+      "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL",
+        ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+      "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL",
+        ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL"}], "}"}]}], 
+    "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"NULL", ",", "NULL", ",", "NULL", ",", "NULL"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+      "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL",
+        ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL"}], "}"}], 
+     ",", 
+     RowBox[{"{", 
+      RowBox[{
+      "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL",
+        ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL"}], "}"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"NULL", ",", "NULL", ",", "NULL", ",", "NULL"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+      "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL",
+        ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", 
+       "NULL", ",", "NULL", ",", "NULL", ",", "NULL", ",", "NULL"}], "}"}]}], 
+    "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"{", 
+     RowBox[{"NULL", ",", "NULL", ",", "NULL", ",", "NULL"}], "}"}], "}"}]}], 
+  "}"}]], "Print",
+ CellChangeTimes->{3.6607370804858665`*^9}]
+}, Open  ]]
 },
 WindowSize->{716, 777},
 WindowMargins->{{0, Automatic}, {Automatic, 0}},
@@ -35,9 +216,12 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 2213, 54, 275, "Input"],
+Cell[2795, 78, 7196, 121, 651, "Print"]
+}, Open  ]]
 }
 ]
 *)
 
 (* End of internal cache information *)
-
