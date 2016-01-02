@@ -263,86 +263,15 @@ The first, the second and the third summands clearly correspond to the two tadpo
 
 \begin{figure*}
   \centering
-  \includegraphics[width=6cm,angle=-90]{../plots/smlm/G2_total_vs_ao_l0.60_morestat.eps}
-  \includegraphics[width=6cm,angle=-90]{../plots/smlm/G2_total_vs_ao_l0.60.eps}\\
-  \includegraphics[width=6cm,angle=-90]{../plots/smlm/G2_total_vs_ao_l1.20.eps}
-  \includegraphics[width=6cm,angle=-90]{../plots/smlm/G2_total_vs_ao_l2.30.eps}\\
+  \includegraphics[width=6cm,angle=-90]{{../plots/smlm/G2_total_vs_ao_l0.60_morestat.eps}}
+  \includegraphics[width=6cm,angle=-90]{{../plots/smlm/G2_total_vs_ao_l0.60.eps}}\\
+  \includegraphics[width=6cm,angle=-90]{{../plots/smlm/G2_total_vs_ao_l1.20.eps}}
+  \includegraphics[width=6cm,angle=-90]{{../plots/smlm/G2_total_vs_ao_l2.30.eps}}\\
   \caption{Contributions from the resummed expansion: $\lambda = 1.2$ (left) and $\lambda = 2.3$ (right)}
   \label{fig:contribs}
 \end{figure*}
 
-
-\subsection{Some quick estimates for the PCM}
-
- For the GWW model, we see that the next-to-leading order of the formal iteration of the above equations already gives quite a good estimate. We can check what happens with the PCM using the numerical data from \cite{Rossi:94:1}. Unfortunately, it seems that our expansion leads to a certain "overshooting" - the corrections are too large because of the too strong IR behavior. 
-
-\subsection{Lowest-order results for the GW model}
-
-Let us start with some basic definitions. In the GW model, the operator $D$ is the two by two matrix of the form
-\begin{eqnarray}
-\label{GW_D_operator}
- D_{xy} = \left(
-   \begin{array}{cc}
-     2 & -2 \\
-     -2 & 2 \\
-   \end{array}
- \right)
-\end{eqnarray}
-Correspondingly, our coupling $\lambda$ is related to the Gross-Witten coupling in \cite{Gross:80:1} as $\lambda_{GW} = \frac{\lambda}{2}$. There are two values of momenta, $p_0 = 0$ and $p_0 = 1$, with the corresponding eigenvalues being $D\lr{0} = 0$, $D\lr{1} = 4$. The Fourier transform of the correlator $\lambda^{-1} \vev{g^{\dag}_x g_y} \equiv G_{x y}$ reads in the weak-coupling phase ($\lambda < 4$)
-\begin{eqnarray}
-\label{fouriers_wc}
- \vev{g^{\dag} g}\lr{p = 0} = 1 - \frac{\lambda}{16},
- \quad
- \vev{g^{\dag} g}\lr{p = 1} = \frac{\lambda}{16},
- \nonumber \\
- G_{p=0, q=0} = \frac{1}{\lambda} - \frac{1}{16}
- \quad
- G_{p=1, q=1} = \frac{1}{16}
-\end{eqnarray}
-In the strong-coupling phase, the results are
-\begin{eqnarray}
-\label{fouriers_sc}
- \vev{g^{\dag} g}\lr{p = 0} = \frac{1}{2} + \frac{1}{\lambda},
- \quad
- \vev{g^{\dag} g}\lr{p = 1} = \frac{1}{2} - \frac{1}{\lambda},
- \nonumber \\
- G_{p=0, q=0} = \frac{1}{2 \lambda} + \frac{1}{\lambda^2}
- \quad
- G_{p=1, q=1} = \frac{1}{2 \lambda} - \frac{1}{\lambda^2} .
-\end{eqnarray}
-The bare mass term in the propagator is
-\begin{eqnarray}
-\label{bare_mass}
- m^2 = \left\{
-         \begin{array}{ll}
-           \lambda - 2 \frac{\lambda}{8} = \frac{3 \lambda}{4}, & \lambda < 4; \\
-           \lambda + \frac{4}{\lambda} - 2, & \lambda > 4.
-         \end{array}
-       \right.
-\end{eqnarray}
-Correspondingly, in the weak-coupling regime
-\begin{eqnarray}
-\label{modified_propagator}
- \mathcal{G}\lr{0} = \frac{4}{3 \lambda}, \quad
- \mathcal{G}\lr{1} = \frac{4}{16 + 3 \lambda} .
-\end{eqnarray}
-For the scalar integrals involving $\mathcal{G}\lr{p}$ we have
-\begin{eqnarray}
-\label{scalar_ints_GW}
- I_0 = \frac{16}{16 + 3 \lambda},
- \quad
- I_1 = \frac{64}{\lr{16 + 3 \lambda}^2},
- \quad
- S_0 = \frac{64 + 24 \lambda}{3 \lambda \lr{16 + 3 \lambda}}
-\end{eqnarray}
-
-Correspondingly, we get for the lowest nontrivial orders of $G_{pq}$:
-\begin{eqnarray}
-\label{G2_GW_perturb}
- G^{\lr{1}}_{00} = \frac{128}{9 \lambda^2 \lr{16 + 3 \lambda}}
- \quad,
- G^{\lr{1}}_{11} = \frac{128}{\lr{16 + 3 \lambda}^3}
-\end{eqnarray}
+ For the GWW model, we see that the next-to-leading order of the formal iteration of the above equations already gives quite a good estimate, but then the expansion starts to diverge. We can check what happens with the PCM using the numerical data from \cite{Rossi:94:1}. Unfortunately, it seems that our expansion leads to a certain "overshooting" - the corrections are too large because of the too strong IR behavior.
 
 \section*{$SU\lr{N}$ sigma-model: strong-coupling expansion in momentum space}
 \label{sec:introduction}
