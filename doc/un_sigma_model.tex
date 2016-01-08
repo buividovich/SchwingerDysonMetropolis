@@ -4,6 +4,7 @@
 \usepackage{graphicx}
 
 \newcommand{\CG}{\mathfrak{G}}
+\newcommand{\G}{\mathcal{G}}
 
 \newcommand{\comment}[1]{}
 
@@ -173,29 +174,29 @@ Let us now go to the momentum space and define the new observables
 where the momenta $p, q$ take discrete values $\vec{p} = 2 \pi \vec{m}/L$, $L$ is the lattice size and $V = L^D$ is the lattice volume. In terms of the new observables the equations (\ref{sd_G_general_lowest}) and (\ref{sd_G_general}) take the following form:
 \begin{eqnarray}
 \label{sd_G_general_fourier_lowest}
- \vev{G_{p q}} = \frac{\mathcal{G}\lr{p} \delta_{p+q}}{V} +
- \lambda \mathcal{G}\lr{p} \sum\limits_{\tilde{p}_1, \tilde{p}_2, \tilde{q}_1}
+ \vev{G_{p q}} = \frac{\G\lr{p} \delta_{p+q}}{V} +
+ \lambda \G\lr{p} \sum\limits_{\tilde{p}_1, \tilde{p}_2, \tilde{q}_1}
  \delta\lr{p - \tilde{p}_1 - \tilde{p}_2 - \tilde{q}_1} D\lr{\tilde{q}_1} \vev{G_{\tilde{p}_1 \tilde{q}_1} G_{\tilde{p}_2 q}}
  \\{}\nonumber\\
 \label{sd_G_general_fourier}
  \vev{ G_{p_1 q_1} \ldots G_{p_n q_n} }
  =
-  \frac{\mathcal{G}\lr{p_1} \delta_{p_1 + q_1}}{V} \, \vev{G_{p_2 q_2} \ldots G_{p_n q_n}}
+  \frac{\G\lr{p_1} \delta_{p_1 + q_1}}{V} \, \vev{G_{p_2 q_2} \ldots G_{p_n q_n}}
  - \nonumber \\ -
- \frac{\lambda}{V} \mathcal{G}\lr{p_1} \sum\limits_{A=2}^{n} \sum\limits_{\tilde{p}_1, \tilde{p}_A} \delta\lr{p_1 + p_A - \tilde{p}_1 - \tilde{p}_A} \vev{G_{\tilde{p}_1 q_1} \ldots G_{p_{A-1} q_{A-1}}} \vev{G_{\tilde{p}_A q_A} \ldots G_{p_n q_n}}
+ \frac{\lambda}{V} \G\lr{p_1} \sum\limits_{A=2}^{n} \sum\limits_{\tilde{p}_1, \tilde{p}_A} \delta\lr{p_1 + p_A - \tilde{p}_1 - \tilde{p}_A} \vev{G_{\tilde{p}_1 q_1} \ldots G_{p_{A-1} q_{A-1}}} \vev{G_{\tilde{p}_A q_A} \ldots G_{p_n q_n}}
  + \nonumber \\ +
- \lambda \mathcal{G}\lr{p_1} \sum\limits_{A=2}^{n}
+ \lambda \G\lr{p_1} \sum\limits_{A=2}^{n}
  \sum\limits_{\tilde{p}_1 \tilde{q}_A \tilde{p}_A}
  \delta\lr{p_1 - \tilde{p}_1 - \tilde{q}_A - \tilde{p}_A}
  D\lr{\tilde{q}_A}
  \vev{G_{\tilde{p}_1 q_1} \ldots G_{p_{A} \tilde{q}_A}} \vev{G_{\tilde{p}_A q_A} \ldots G_{p_n q_n}}
  + \nonumber \\ +
- \lambda \mathcal{G}\lr{p_1} \sum\limits_{\tilde{p}_1, \tilde{p}_2, \tilde{q}_1}
+ \lambda \G\lr{p_1} \sum\limits_{\tilde{p}_1, \tilde{p}_2, \tilde{q}_1}
  \delta\lr{p_1 - \tilde{p}_1 - \tilde{p}_2 - \tilde{q}_1} D\lr{\tilde{q}_1} \vev{G_{\tilde{p}_1 \tilde{q}_1} G_{\tilde{p}_2 q_1} G_{p_2 q_2} \ldots G_{p_n q_n}} ,
 \end{eqnarray}
 where we have introduced the propagator
 \begin{eqnarray}
- \mathcal{G}\lr{p} = \frac{1}{m^2 + D\lr{p}},
+ \G\lr{p} = \frac{1}{m^2 + D\lr{p}},
  \quad
  D\lr{p} = \sum\limits_{\mu} 4 \sin^2\lr{\frac{k_{\mu}}{2}} .
 \end{eqnarray}
@@ -206,9 +207,9 @@ where we have introduced the propagator
 \begin{widetext}
 \begin{eqnarray}
 \label{G2_1}
- G^{\lr{1}}_{pq} = \frac{\mathcal{G}\lr{p} \mathcal{G}\lr{q} \delta_{p+q}}{V} \, I_0 ,
+ G^{\lr{1}}_{pq} = \frac{\G\lr{p} \G\lr{q} \delta_{p+q}}{V} \, I_0 ,
  \quad
- I_0 = \frac{1}{V} \sum\limits_p D\lr{p} \mathcal{G}\lr{p}
+ I_0 = \frac{1}{V} \sum\limits_p D\lr{p} \G\lr{p}
 \end{eqnarray}
 \begin{eqnarray}
 \label{G4_1}
@@ -218,44 +219,44 @@ where we have introduced the propagator
  \frac{\delta_{p_1 + q_1}}{V}
  \frac{\delta_{p_2 + q_2}}{V} \,
  \lr{
-  \mathcal{G}\lr{p_1} \mathcal{G}\lr{p_2} \mathcal{G}\lr{q_2}
+  \G\lr{p_1} \G\lr{p_2} \G\lr{q_2}
   +
-  \mathcal{G}\lr{p_1} \mathcal{G}\lr{q_1} \mathcal{G}\lr{p_2}
+  \G\lr{p_1} \G\lr{q_1} \G\lr{p_2}
  }
  - \nonumber \\ -
  m^2 \,
  \frac{\delta_{p_1 + q_1 + p_2 + q_2}}{V^3} \,
- \mathcal{G}\lr{p_1} \mathcal{G}\lr{q_1} \mathcal{G}\lr{p_2} \mathcal{G}\lr{q_2}
+ \G\lr{p_1} \G\lr{q_1} \G\lr{p_2} \G\lr{q_2}
 \end{eqnarray}
 Note that the last term which is completely symmetric w.r.t. permutations of all momenta appears
-due to the cancellation of the terms $-\mathcal{G}\lr{p_1} \mathcal{G}\lr{q_1} \mathcal{G}\lr{q_2}$ and $\mathcal{G}\lr{p_1} \mathcal{G}\lr{q_1} \mathcal{G}\lr{p_2} \mathcal{G}\lr{q_2} D\lr{p_2}$.
+due to the cancellation of the terms $-\G\lr{p_1} \G\lr{q_1} \G\lr{q_2}$ and $\G\lr{p_1} \G\lr{q_1} \G\lr{p_2} \G\lr{q_2} D\lr{p_2}$.
 
 \begin{eqnarray}
 \label{G2_2}
  G^{\lr{2}}_{pq}
  =
- \mathcal{G}\lr{p}
+ \G\lr{p}
  \sum\limits_{\tilde{p}_1, \tilde{q}_1, \tilde{p}_2 }
  \delta_{p - \tilde{p}_1 - \tilde{q}_1 - \tilde{p}_2}
  D\lr{\tilde{q}_1}
  G^{\lr{1}}_{\tilde{p}_1 \tilde{q}_1 \tilde{p}_2 q}
  = \nonumber \\ =
- \frac{\delta_{p+q}}{V} I_0^2 \mathcal{G}^3\lr{p}
+ \frac{\delta_{p+q}}{V} I_0^2 \G^3\lr{p}
  +
- \frac{\delta_{p+q}}{V} \mathcal{G}^2\lr{p} \lr{I_0 I_1 - m^2 S_0^2}
+ \frac{\delta_{p+q}}{V} \G^2\lr{p} \lr{I_0 I_1 - m^2 S_0^2}
  +
- \frac{m^4}{V^3} \mathcal{G}^2\lr{p} \delta_{p+q}
+ \frac{m^4}{V^3} \G^2\lr{p} \delta_{p+q}
  \sum\limits_{\tilde{p}, \tilde{q}}
- \mathcal{G}\lr{p - \tilde{p} - \tilde{q}}
- \mathcal{G}\lr{\tilde{p}}
- \mathcal{G}\lr{\tilde{q}} ,
+ \G\lr{p - \tilde{p} - \tilde{q}}
+ \G\lr{\tilde{p}}
+ \G\lr{\tilde{q}} ,
 \end{eqnarray}
 where we have defined
 \begin{eqnarray}
 \label{scalar_ints_def}
- I_1 = \frac{1}{V} \sum\limits_q D\lr{q} \mathcal{G}^2\lr{q},
+ I_1 = \frac{1}{V} \sum\limits_q D\lr{q} \G^2\lr{q},
  \quad
- S_0 = \frac{1}{V} \sum\limits_q \mathcal{G}\lr{q} .
+ S_0 = \frac{1}{V} \sum\limits_q \G\lr{q} .
 \end{eqnarray}
 
 The first, the second and the third summands clearly correspond to the two tadpoles, tadpole on tadpole diagram and the sunset diagram, respectively.
@@ -287,7 +288,7 @@ where again we assume that $D_{xy}$ is the kinetic operator which grows towards 
 The single-trace observables which factorize in the large-$N$ limit are:
 \begin{eqnarray}
 \label{gf_def}
-\mathcal{G}\lr{x_1, y_1, \ldots, x_n, y_n}
+\G\lr{x_1, y_1, \ldots, x_n, y_n}
 = \nonumber \\ =
 \frac{1}{N}\, \vev{ \tr\lr{
 g_{x_1} g^{\dag}_{y_1} \ldots g_{x_n} g^{\dag}_{y_n}} }
@@ -302,91 +303,91 @@ Let us now obtain the full set of Schwinger-Dyson equations for this theory, for
 From this equation we obtain the following set of Schwinger-Dyson equations:
 \begin{eqnarray}
 \label{SDs_n2}
-\mathcal{G}\lr{x_1, y_1} =
+\G\lr{x_1, y_1} =
 \delta_{x_1, y_1}
  - %\nonumber \\ -
-\frac{1}{\lambda} D_{x_1 x} \, \mathcal{G}\lr{x, y_1}
+\frac{1}{\lambda} D_{x_1 x} \, \G\lr{x, y_1}
  +
-\frac{1}{\lambda} D_{x_1 x} \, \mathcal{G}\lr{x_1, x, x_1, y_1}
+\frac{1}{\lambda} D_{x_1 x} \, \G\lr{x_1, x, x_1, y_1}
 \end{eqnarray}
 
 \begin{eqnarray}
 \label{SDs}
-\mathcal{G}\lr{x_1, y_1, \ldots, x_n, y_n}
+\G\lr{x_1, y_1, \ldots, x_n, y_n}
 = %\nonumber\\ =
 \sum\limits_{A=2}^{n-1} \delta_{x_1, y_A} \,
-\mathcal{G}\lr{x_A, y_1, \ldots, x_{A-1}, y_{A-1}}\,
-\mathcal{G}\lr{x_{A+1}, y_{A+1}, \ldots, x_n, y_n}\,
+\G\lr{x_A, y_1, \ldots, x_{A-1}, y_{A-1}}\,
+\G\lr{x_{A+1}, y_{A+1}, \ldots, x_n, y_n}\,
 + \nonumber \\ +
-\delta_{x_1, y_1} \, \mathcal{G}\lr{x_2, y_2, \ldots, x_n, y_n}\,
+\delta_{x_1, y_1} \, \G\lr{x_2, y_2, \ldots, x_n, y_n}\,
 +
-\delta_{x_1, y_n} \, \mathcal{G}\lr{x_n, y_1, \ldots, x_{n-1}, y_{n-1}}\,
+\delta_{x_1, y_n} \, \G\lr{x_n, y_1, \ldots, x_{n-1}, y_{n-1}}\,
 - \nonumber \\ -
 \sum\limits_{A=2}^{n} \delta_{x_1, x_A} \,
- \mathcal{G}\lr{x_1, y_1, \ldots, x_{A-1}, y_{A-1}}\,
- \mathcal{G}\lr{x_A, y_A, \ldots, x_n, y_n}\,
+ \G\lr{x_1, y_1, \ldots, x_{A-1}, y_{A-1}}\,
+ \G\lr{x_A, y_A, \ldots, x_n, y_n}\,
 - \nonumber \\ -
-\frac{1}{\lambda} D_{x_1 x} \mathcal{G}\lr{x, y_1, \ldots, x_n, y_n}
+\frac{1}{\lambda} D_{x_1 x} \G\lr{x, y_1, \ldots, x_n, y_n}
 +
-\frac{1}{\lambda} D_{x_1 x} \, \mathcal{G}\lr{x_1, x, x_1, y_1, \ldots, x_n, y_n}
+\frac{1}{\lambda} D_{x_1 x} \, \G\lr{x_1, x, x_1, y_1, \ldots, x_n, y_n}
 \end{eqnarray}
 
 Let us now define the correlators in the momentum space:
 \begin{eqnarray}
 \label{momentum_space_def}
-\mathcal{G}\lr{p_1, q_1, \ldots, p_n, q_n} = \frac{1}{V^{2 n}} \,
+\G\lr{p_1, q_1, \ldots, p_n, q_n} = \frac{\lambda^{-n}}{V^{2 n}} \,
 \sum\limits_{x_1, y_1} \ldots \sum\limits_{x_n, y_n} \,
 \nonumber \\
 \expa{i \sum\limits_A p_A x_A + i \sum\limits_A q_A y_A} \,
-\mathcal{G}\lr{x_1, y_1, \ldots, x_n, y_n}  ,
+\G\lr{x_1, y_1, \ldots, x_n, y_n}  ,
 \end{eqnarray}
 where $V$ is the total volume of space. In the momentum space the equations (\ref{SDs_n2}), (\ref{SDs}) read:
 \begin{eqnarray}
 \label{SDs_n2_momentum}
- \mathcal{G}\lr{p_1, q_1} = \lambda \, \frac{\mathcal{G}_0\lr{p_1} \delta\lr{p_1 + q_1}}{V}
+ \G\lr{p_1, q_1} = \frac{\G_0\lr{p_1} \delta\lr{p_1 + q_1}}{V}
  +
- \mathcal{G}_0\lr{p_1} \,
+ \lambda \G_0\lr{p_1} \,
 \sum\limits_{\tilde{p}_1, \tilde{q}_1, \tilde{p}_2}
 \delta\lr{p_1, \tilde{p}_1 + \tilde{q}_1 + \tilde{p}_2} \,
-D\lr{\tilde{q}_1} \mathcal{G}\lr{\tilde{p}_1, \tilde{q}_1, \tilde{p}_2, q_1}
+D\lr{\tilde{q}_1} \G\lr{\tilde{p}_1, \tilde{q}_1, \tilde{p}_2, q_1}
 \end{eqnarray}
 
 \begin{eqnarray}
 \label{SDs_pcm_momentum}
- \mathcal{G}\lr{p_1, q_1, \ldots, p_n, q_n}
+ \G\lr{p_1, q_1, \ldots, p_n, q_n}
  = \nonumber \\ =
  \sum\limits_{A=2}^{n-1}
- \lambda \, \frac{\mathcal{G}_0\lr{p_1} \, \delta\lr{p_1 + q_A}}{V} \,
- \mathcal{G}\lr{    p_A,     q_1, \ldots, p_{A-1}, q_{A-1}}
- \mathcal{G}\lr{p_{A+1}, q_{A+1}, \ldots,     p_n,    q_n }
+ \frac{\G_0\lr{p_1} \, \delta\lr{p_1 + q_A}}{V} \,
+ \G\lr{    p_A,     q_1, \ldots, p_{A-1}, q_{A-1}}
+ \G\lr{p_{A+1}, q_{A+1}, \ldots,     p_n,    q_n }
  + \nonumber \\ +
- \lambda \, \frac{\mathcal{G}_0\lr{p_1} \, \delta\lr{p_1 + q_1}}{V} \,
- \mathcal{G}\lr{p_2, q_2, \ldots, p_n, q_n}
+ \frac{\G_0\lr{p_1} \, \delta\lr{p_1 + q_1}}{V} \,
+ \G\lr{p_2, q_2, \ldots, p_n, q_n}
  + \nonumber \\ +
- \lambda \, \frac{\mathcal{G}_0\lr{p_1} \, \delta\lr{p_1 + q_n}}{V} \,
- \mathcal{G}\lr{p_n, q_1, p_2, q_2, \ldots, p_{n-1}, q_{n-1}}
+ \frac{\G_0\lr{p_1} \, \delta\lr{p_1 + q_n}}{V} \,
+ \G\lr{p_n, q_1, p_2, q_2, \ldots, p_{n-1}, q_{n-1}}
  - \nonumber \\ -
- \lambda \, \frac{\mathcal{G}_0\lr{p_1}}{V} \,
+ \lambda \, \frac{\G_0\lr{p_1}}{V} \,
  \sum\limits_{A=2}^{n}
  \sum\limits_{\tilde{p}_1 \tilde{p}_A} \delta\lr{p_1 + p_A, \tilde{p}_1 + \tilde{p}_A}
- \mathcal{G}\lr{\tilde{p}_1, q_1, p_2, q_2, \ldots, p_{A-1}, q_{A-1}}
- \mathcal{G}\lr{\tilde{p}_A, q_A,           \ldots, p_n, q_n}
+ \G\lr{\tilde{p}_1, q_1, p_2, q_2, \ldots, p_{A-1}, q_{A-1}}
+ \G\lr{\tilde{p}_A, q_A,           \ldots, p_n, q_n}
  + \nonumber \\ +
- \mathcal{G}_0\lr{p_1}
+ \lambda \G_0\lr{p_1}
  \sum\limits_{\tilde{p}_1, \tilde{q}_1, \tilde{p_2}}
  \delta\lr{p_1, \tilde{p}_1 + \tilde{q}_1 + \tilde{p}_2} D\lr{\tilde{q}_1}
- \mathcal{G}\lr{\tilde{p}_1, \tilde{q}_1, \tilde{p}_2, q_1, p_2, q_2, \ldots, p_n, q_n}
+ \G\lr{\tilde{p}_1, \tilde{q}_1, \tilde{p}_2, q_1, p_2, q_2, \ldots, p_n, q_n}
 \end{eqnarray}
 where we have defined the effective propagator
 \begin{eqnarray}
 \label{free_prop_def}
-\mathcal{G}_0\lr{p} = \lr{\lambda + D\lr{p}}^{-1} .
+\G_0\lr{p} = \lr{\lambda + D\lr{p}}^{-1} .
 \end{eqnarray}
 \end{widetext}
 For further convenience let us also define
 \begin{eqnarray}
 \label{prop_norm_def}
-\Sigma = V^{-1} \sum\limits_{p} \mathcal{G}_0\lr{p}
+\Sigma = V^{-1} \sum\limits_{p} \G_0\lr{p}
 \end{eqnarray}
 
 Let us now, as usual, try to solve this equation by stochastic methods. We assume that $G\lr{p_1, q_1, \ldots, p_n, q_n} = \mathcal{N} c^{n} \, w\lr{p_1, q_1, \ldots, p_n, q_n}$, where $w\lr{p_1, q_1, \ldots, p_n, q_n}$ is the probability to encounter the sequence of momenta $\lrc{p_1, q_1, \ldots, p_n, q_n}$ in a certain random process, for which the equations (\ref{SDs_n2_pcm_momentum}) and (\ref{SDs_pcm_momentum}) are the steady-state equations. This random process is then given by the following set of random steps (actions):
@@ -404,32 +405,32 @@ Let us now, as usual, try to solve this equation by stochastic methods. We assum
  If the operator $D_{x y}$ in (\ref{pf_def}) is defined as $D_{x y} = 2 D \delta_{x,y} - \sum\limits_{\mu=1}^{D} \lr{\delta_{x+\hat{\mu},y} + \delta_{x-\hat{\mu},y}}$, then for the lattice of two sites the nontrivial terms in the action are $2/\lambda \tr\lr{g^{\dag}_0 g_1} + c.c.$, therefore $\lambda_{GW}^{-1} = 2/\lambda$ and $\lambda_{GW} = \lambda/2$. The strong-coupling correlator is
 \begin{eqnarray}
 \label{gw_sc_correlator}
- \mathcal{G}_{xy} =
+ \G_{xy} =
  \begin{cases}
                   1, & x = y \\
   \lambda_{GW}^{-1}, & x \neq y \\
  \end{cases}
 \end{eqnarray}
-The Fourier transform yields then $\mathcal{G}_{00} = \frac{1}{2} + \frac{1}{\lambda}$, $\mathcal{G}_{11} = \frac{1}{2} - \frac{1}{\lambda}$.
+The Fourier transform yields then $\G_{00} = \frac{1}{2} + \frac{1}{\lambda}$, $\G_{11} = \frac{1}{2} - \frac{1}{\lambda}$.
 
 In the weak-coupling limit, we have
 \begin{eqnarray}
 \label{gw_sc_correlator}
- \mathcal{G}_{xy} =
+ \G_{xy} =
  \begin{cases}
                    1, & x = y \\
   1 - \lambda_{GW}/4, & x \neq y \\
  \end{cases} ,
 \end{eqnarray}
-which yields after the Fourier transform $\mathcal{G}_{00} = 1 - \lambda_{GW}/8 = 1 - \lambda/16$, $\mathcal{G}_{11} = \lambda_{GW}/8 = \lambda/16$.
+which yields after the Fourier transform $\G_{00} = 1 - \lambda_{GW}/8 = 1 - \lambda/16$, $\G_{11} = \lambda_{GW}/8 = \lambda/16$.
 
 $SU\lr{N=\infty}$ free algebra:
 \begin{eqnarray}
 \label{sun_free_algebra}
- \mathcal{G}^{0}_{x_1 y_1} = \int\mathcal{D}g \frac{1}{N} \tr\lr{g_{x_1} g^{\dag}_{y_1}}
+ \G^{0}_{x_1 y_1} = \int\mathcal{D}g \frac{1}{N} \tr\lr{g_{x_1} g^{\dag}_{y_1}}
  = \delta_{x_1 y_1}
 \nonumber \\
- \mathcal{G}^{0}_{x_1 y_1 x_2 y_2} = \int\mathcal{D}g \frac{1}{N} \tr\lr{g_{x_1} g^{\dag}_{y_1} g_{x_2} g^{\dag}_{y_2}}
+ \G^{0}_{x_1 y_1 x_2 y_2} = \int\mathcal{D}g \frac{1}{N} \tr\lr{g_{x_1} g^{\dag}_{y_1} g_{x_2} g^{\dag}_{y_2}}
  = \nonumber \\ =
  \delta_{x_1 y_1} \delta_{x_2 y_2} + \delta_{x_1 y_2} \delta_{y_1 x_2} - \delta_{x_1 x_2} \delta_{x_1 y_1} \delta_{x_2 y_2}
 \end{eqnarray}
@@ -437,9 +438,9 @@ $SU\lr{N=\infty}$ free algebra:
 In momentum space these free correlators read
 \begin{eqnarray}
 \label{sun_free_algebra_mspace}
- \mathcal{G}^{0}_{p_1 q_1} = \frac{1}{V} \delta\lr{p_1 + q_1}
+ \G^{0}_{p_1 q_1} = \frac{1}{V} \delta\lr{p_1 + q_1}
 \nonumber \\
- \mathcal{G}^{0}_{p_1 q_1 p_2 q_2} =
+ \G^{0}_{p_1 q_1 p_2 q_2} =
  \frac{1}{V^2} \delta\lr{p_1 + q_1} \delta\lr{p_2 + q_2}
  + \nonumber \\ +
  \frac{1}{V^2} \delta\lr{p_1 + q_2} \delta\lr{p_2 + q_1}
