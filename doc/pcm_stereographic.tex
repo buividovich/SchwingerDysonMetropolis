@@ -1,0 +1,247 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\newcommand{\comment}[1]{}
+
+\newcommand{\lr}[1]{ \left( #1 \right) }
+\newcommand{\lrs}[1]{ \left[ #1 \right] }
+\newcommand{\lrc}[1]{ \left\{ #1 \right\} }
+\newcommand{\vev}[1]{ \langle \, #1 \, \rangle }
+
+\newcommand{\Tr}{ {\rm Tr} \, }
+\newcommand{\tr}{ {\rm Tr} \, }
+\newcommand{\re}{ {\rm Re} \, }
+\newcommand{\im}{ {\rm Im} \, }
+\renewcommand{\Re}{ {\rm Re} \, }
+\renewcommand{\Im}{ {\rm Im} \, }
+
+\newcommand{\rvac}{ \, | 0 \rangle }
+\newcommand{\lvac}{ \langle 0 | \, }
+\newcommand{\ket}[1]{ \, | #1 \rangle }
+\newcommand{\bra}[1]{ \langle #1 | \, }
+
+\newcommand{\diag}[1]{ {\rm diag} \, \left( #1 \right) }
+\newcommand{\const}{ {\rm const}}
+\renewcommand{\det}[1]{ {\rm det} \left( #1 \right) }
+
+\newcommand{\sign}{ {\rm sign} \,  }
+\newcommand{\sh}{ {\rm sh} \,  }
+\newcommand{\ch}{ {\rm ch} \,  }
+\renewcommand{\th}{ {\rm th} \,  }
+\newcommand{\hodge}{{}^{*}}
+\newcommand{\expa}[1]{ \exp{\left( #1 \right)} }
+\newcommand{\abs}[1]{| #1 |}
+
+\begin{document}
+
+\section{Action in terms of stereographic variables}
+\label{sec:action_stereo}
+
+ We parameterize the $U\lr{N}$ the field variables as
+\begin{eqnarray}
+\label{stereographic_projection}
+ g_x
+ =
+ \frac{1 + i \alpha \phi_x}{1 - i \alpha \phi_x}
+ =
+ 1 + 2 \sum\limits_{k=1}^{+\infty} \lr{i \alpha}^k \phi_x^k
+,
+\end{eqnarray}
+where $\phi_x$ are the Hermitian matrices. The action of the PCM is now rewritten as
+\begin{eqnarray}
+\label{pcm_action0}
+ S_0\lrs{g_x} = \lambda^{-1} \sum\limits_{x,y} D_{x y} \tr\lr{g^{\dag}_x g_y}
+ =  4 \lambda^{-1} \sum\limits_{k,l=1}^{+\infty} \lr{-i \alpha}^k \lr{i \alpha}^l
+      \sum\limits_{x,y} D_{xy} \tr\lr{\phi_x^k \, \phi_y^l}
+ = \nonumber\\ =
+ 4 \lambda^{-1} \sum\limits_{\substack{k,l=1\\k+l=2 n}}^{+\infty}
+  \lr{-1}^{\frac{k-l}{2}} \alpha^{k+l}
+       \sum\limits_{x,y} D_{xy} \tr\lr{\phi_x^k \, \phi_y^l} .
+\end{eqnarray}
+In addition to the above ``bare'' action, we also have to consider the Jacobian of the transformation $g_x \rightarrow \phi_x$:
+\begin{eqnarray}
+\label{stereo_jacobian}
+ \int\limits_{U\lr{N}} dg_x = \int\limits_{\mathbb{H}^{N\times N}} d\phi_x \expa{-N \tr\ln\lr{1 + \alpha^2 \phi_x^2}} .
+\end{eqnarray}
+We now see that in order to get the canonical form of the free (quadratic) part of the action, we have to use $\alpha^2 = \frac{\lambda}{8}$. Taking (\ref{pcm_action0}) and (\ref{stereo_jacobian}) together, we obtain the following representation of the action:
+\begin{eqnarray}
+\label{pcm_action}
+ S\lrs{\phi_x} =
+ \frac{1}{2} \sum\limits_{x,y} \lr{D_{xy} + \frac{\lambda}{4} \delta_{x y}} \tr\lr{\phi_x \phi_y}
+ + \nonumber \\ +
+ \sum\limits_{k=2}^{+\infty} \lr{-1}^{k-1} \frac{\lambda^{k}}{k \, 8^k} \sum\limits_x \tr \phi_x^{2 k}
+ + \nonumber \\ +
+ \sum\limits_{\substack{k,l=1\\k+l=2 n,k+l>2}}^{+\infty}
+  \lr{-1}^{\frac{k-l}{2}} \frac{4 \, \lambda^{\frac{k+l-2}{2}}}{8^{\frac{k+l}{2}}}
+       \sum\limits_{x,y} D_{xy} \tr\lr{\phi_x^k \, \phi_y^l}
+\end{eqnarray}
+It is instructive to explicitly write out the terms involving interaction vertices with powers of $\phi$ equal to four:
+\begin{eqnarray}
+\label{interaction_action_phi4}
+ S_I^{\lr{4}} = - \frac{\lambda^2}{128} \sum\limits_x \tr \phi_x^4
+ + \nonumber \\ +
+ \frac{\lambda}{16} \sum\limits_{x, y} D_{x y} \lr{\tr\lr{\phi_x^2 \phi_y^2} - D_{x y} \tr\lr{\phi_x^3 \phi_y} - D_{x y} \tr\lr{\phi_x \phi_y^3} }
+\end{eqnarray}
+
+\section{Schwinger-Dyson equations}
+\label{sec:sd_equations}
+
+\subsection{Schwinger-Dyson equations in coordinate space}
+\label{sec:sd_coordinate}
+
+ In order to derive the SD equations, we consider the following full derivative:
+\begin{eqnarray}
+\label{sd_eqs0}
+ \delta_{ik} \delta_{jl} \, \int \mathcal{D}\phi_x \frac{\partial}{\partial \phi_{x_1 \, ij}}
+ \lr{
+ \lrs{\phi_{x_2} \ldots \phi_{x_n}}_{kl} e^{-S\lrs{\phi_x}}
+ } = 0
+\end{eqnarray}
+From this we obtain for correlators with $n = 2$
+\begin{eqnarray}
+\label{sd_eqs_G2_coord}
+ \delta_{x_1 x_2} - \vev{\phi_{x_2} \frac{\partial S}{\partial \phi_{x_1}} } = 0 .
+\end{eqnarray}
+and for higher-order correlators with $n > 2$ (in fact, $n \geq 4$)
+\begin{eqnarray}
+\label{sd_eqs_Gn_coord}
+ \delta_{x_1 x_2} \vev{\phi_{x_3} \ldots \phi_{x_n}}
+ +
+ \delta_{x_1 x_n} \vev{\phi_{x_2} \ldots \phi_{x_{n-1}}}
+ + \nonumber \\ +
+ \sum\limits_{A=3}^{n-1} \delta_{x_1 x_A} \,
+ \vev{\phi_{x_2} \ldots \phi_{x_{A-1}}}
+ \vev{\phi_{x_{A+1}} \ldots \phi_{x_n}}
+ -
+ \vev{\phi_{x_2} \ldots \phi_{x_n} \frac{\partial S}{\partial \phi_{x_1}} } = 0 .
+\end{eqnarray}
+The derivative of the action can be represented as follows:
+\begin{eqnarray}
+\label{dSdphi_coord}
+ \frac{\partial S\lrs{\phi}}{\partial \phi_x}
+ =
+ \sum\limits_{y} \lr{D_{xy} + \frac{\lambda}{4} \delta_{x y}} \phi_y
+ +
+ \sum\limits_{l=1}^{+\infty} \lr{-1}^l \frac{2 \lambda^{l+1}}{8^{l+1}} \phi_x^{2 l + 1}
+ + \nonumber \\ +
+ \sum\limits_{\substack{k,l=1\\k+l=2 n,k+l>2}}^{+\infty}
+ \lr{-1}^{\frac{k-l}{2}} \lr{\frac{\lambda}{8}}^{\frac{k+l-2}{2}}
+ \sum\limits_y D_{x y}
+ \sum\limits_{m=0}^{k-1}
+ \phi_x^m \phi_y^l \phi_x^{k-m-1}
+\end{eqnarray}
+
+\subsection{Schwinger-Dyson equations in momentum space}
+\label{sec:sd_coordinate}
+
+ Let us now define the momentum-space field operators and correlators as
+\begin{eqnarray}
+\label{momentum_space_fields}
+ \phi_p = \frac{1}{V} \sum\limits_x e^{i p x} \phi_x,
+ \quad
+ \phi_x = \sum\limits_p e^{-i p x} \phi_p ,
+ \nonumber \\
+ \vev{p_1 \ldots p_n} \equiv \vev{\phi_{p_1} \ldots \phi_{p_n}} .
+\end{eqnarray}
+In terms of the momentum-space fields $\phi_p$, the SD equations (\ref{sd_eqs_G2_coord}) and (\ref{sd_eqs_Gn_coord}) read
+\begin{eqnarray}
+\label{sd_eqs_G2_mom}
+ \vev{\frac{\partial S}{\partial \phi_{p_1}} \phi_{p_2} } = \frac{\delta_{p_1 + p_2}}{V}  .
+\end{eqnarray}
+and for higher-order correlators with $n > 2$ (in fact, $n \geq 4$)
+\begin{eqnarray}
+\label{sd_eqs_Gn_mom}
+ \vev{\frac{\partial S}{\partial \phi_{p_1}} \phi_{p_2} \ldots \phi_{p_n} }
+ =
+ \frac{\delta_{p_1 + p_2}}{V} \vev{\phi_{p_3} \ldots \phi_{p_n}}
+ +
+ \frac{\delta_{p_1 + p_2}}{V} \vev{\phi_{p_2} \ldots \phi_{p_{n-1}}}
+ + \nonumber \\ +
+ \sum\limits_{A=3}^{n-1} \frac{\delta_{p_1 + p_A}}{V} \,
+ \vev{\phi_{p_2} \ldots \phi_{p_{A-1}}}
+ \vev{\phi_{p_{A+1}} \ldots \phi_{p_n}} .
+\end{eqnarray}
+The Fourier transform of the derivative of the action $\frac{\partial S}{\partial \phi_p}$ reads:
+\begin{eqnarray}
+\label{dSdphi_mom}
+ \frac{\partial S\lrs{\phi}}{\partial \phi_p}
+ \equiv
+ \frac{1}{V} \sum\limits_p e^{i p x} \frac{\partial S\lrs{\phi}}{\partial \phi_x}
+ =
+ \lr{D\lr{p} + \frac{\lambda}{4}} \phi_p
+ - \nonumber \\ -
+ \sum\limits_{l=1}^{+\infty} \lr{-1}^{l-1} \frac{2 \lambda^{l+1}}{8^{l+1}}
+ \sum\limits_{q_1 \ldots q_{2 l + 1}}
+ \delta\lr{p - q_1 - \ldots - q_{2 l + 1}}
+ \phi_{q_1} \ldots \phi_{q_{2 l + 1}}
+ - \nonumber \\ -
+ \sum\limits_{\substack{k,l=1\\k+l=2 n,k+l>2}}^{+\infty}
+ \lr{-1}^{\frac{k-l}{2}-1} \lr{\frac{\lambda}{8}}^{\frac{k+l-2}{2}}
+ \sum\limits_{m=0}^{k-1}
+ \nonumber \\
+ \sum\limits_{q_1, \ldots, q_{k-1}}
+ \sum\limits_{k_1, \ldots, k_l}
+ \delta\lr{p - \bar{q} - \bar{k}} \, D\lr{\bar{k}} \,
+ \phi_{q_1} \ldots \phi_{q_m}
+ \phi_{k_1} \ldots \phi_{k_l}
+ \phi_{q_{m+1}} \ldots \phi_{q_{k-1}} ,
+\end{eqnarray}
+where we have denoted $\bar{k} = k_1 + \ldots + k_l$ and similarly for $q$.
+It is also instructive to write out explicitly the interaction terms with exactly three $\phi$ variables (which correspond to the simplest nontrivial interaction vertices in the diagrammatic rules of the theory):
+\begin{eqnarray}
+\label{dsdPhi_phi4}
+ \frac{\partial S_I^{\lr{4}}\lrs{\phi}}{\partial \phi_p}
+ =
+ - \frac{\lambda}{8}
+ \sum\limits_{q_1, q_2, q_3}
+ \delta\lr{p - q_1 - q_2 - q_3} \,
+ V\lr{q_1, q_2, q_3} \,
+ \phi_{q_1} \phi_{q_2} \phi_{q_3} ,
+\end{eqnarray}
+where we have defined the ``vertex function'' for the four-momentum vertex
+\begin{eqnarray}
+\label{vertex_function4}
+ V\lr{q_1, q_2, q_3} = 
+ \left(\frac{\lambda}{4} + D\lr{q_1 + q_2 + q_3} - D\lr{q_1 + q_2} 
+ - \right. \nonumber \\ \left. - 
+ D\lr{q_2 + q_3} + D\lr{q_1} + D\lr{q_2} + D\lr{q_3}\right)
+\end{eqnarray}
+Interestingly, at small momenta, when all the $D\lr{q}$ functions can be approximated by $q^2$, the vertex function reduces to $\frac{\lambda}{4} + \lr{q_1 + q_3}^2$ - which is manifestly positive and \textbf{very good for the sign problem in MC}!!!
+
+\subsection{First-order correction to the renormalized mass}
+
+ Plugging the equation (\ref{dsdPhi_phi4}) into the lowest-order SD equation (\ref{sd_eqs_G2_mom}), we get for the first order nontrivial correction to the Green's function:
+\begin{eqnarray}
+\label{g1}
+ g_1\lr{p} = g_0\lr{p} - g_0^2\lr{p} \Sigma_1\lr{p} ,
+\end{eqnarray}
+where we have introduced the first-order correction to the self-energy:
+\begin{eqnarray}
+\label{self_energy}
+ \Sigma_1\lr{p} = - \frac{\lambda}{8} \frac{1}{V} \sum\limits_q g_0\lr{q} \lr{V\lr{-q, q, -p} + V\lr{-p, q, -q}}
+ = \nonumber \\ =
+ - 2 \frac{\lambda}{8} \int \frac{d^2 q}{\lr{2 \pi}^2} g_0\lr{q} \lr{\frac{\lambda}{4} + 2 D\lr{p} + 2 D\lr{q} - D\lr{q - p}}
+\end{eqnarray}
+Interestingly, we note that $\Sigma^1\lr{0} = -\frac{\lambda}{4}$, thus it exactly cancels the bare mass term!
+
+For the expectation values of the $g_x$ operators, to the lowest orders in $\lambda$ we have
+\begin{eqnarray}
+\label{gx_vev_lowest}
+ \vev{g_x} = 1 - \frac{\lambda}{4} \vev{\phi_x^2} + \frac{\lambda^2}{32} \vev{\phi_x^4}
+\end{eqnarray}
+
+\begin{eqnarray}
+\label{gxgy_vev_lowest}
+ \vev{g^{\dag}_x g_y} =
+ -1 + 2 \vev{g_x} + \frac{\lambda}{2} \vev{\phi_x \phi_y}
+ + \nonumber \\ +
+   \frac{\lambda^2}{16} \vev{\phi_x^2 \phi_y^2}
+ - \frac{\lambda^2}{16} \lr{\vev{\phi_x \phi_y^3} + \vev{\phi_x^3 \phi_y}}
+\end{eqnarray}
+
+
+\subsection{TODO: Systematics of the vertex functions}
+
+\end{document}
