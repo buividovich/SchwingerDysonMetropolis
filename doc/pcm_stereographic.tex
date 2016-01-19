@@ -203,9 +203,9 @@ It is also instructive to write out explicitly the interaction terms with exactl
 where we have defined the ``vertex function'' for the four-momentum vertex
 \begin{eqnarray}
 \label{vertex_function4}
- V\lr{q_1, q_2, q_3} = 
- \left(\frac{\lambda}{4} + D\lr{q_1 + q_2 + q_3} - D\lr{q_1 + q_2} 
- - \right. \nonumber \\ \left. - 
+ V\lr{q_1, q_2, q_3} =
+ \left(\frac{\lambda}{4} + D\lr{q_1 + q_2 + q_3} - D\lr{q_1 + q_2}
+ - \right. \nonumber \\ \left. -
  D\lr{q_2 + q_3} + D\lr{q_1} + D\lr{q_2} + D\lr{q_3}\right)
 \end{eqnarray}
 Interestingly, at small momenta, when all the $D\lr{q}$ functions can be approximated by $q^2$, the vertex function reduces to $\frac{\lambda}{4} + \lr{q_1 + q_3}^2$ - which is manifestly positive and \textbf{very good for the sign problem in MC}!!!
@@ -242,6 +242,65 @@ For the expectation values of the $g_x$ operators, to the lowest orders in $\lam
 \end{eqnarray}
 
 
-\subsection{TODO: Systematics of the vertex functions}
+\subsection{Vertex functions}
+\label{subsec:vertex_func}
+
+ The equation (\ref{dSdphi_mom}) can be also compactly represented in terms of the vertex functions:
+\begin{eqnarray}
+\label{dSdphi_mom_vertex}
+ \frac{\partial S\lrs{\phi}}{\partial \phi_p}
+ =
+ \lr{D\lr{p} + \frac{\lambda}{4}} \phi_p
+ + \nonumber \\ +
+ \sum\limits_{n=1}^{+\infty} \lr{-\frac{\lambda}{8}}^{n}
+ \sum\limits_{q_1 \ldots q_{2 n + 1}} \delta\lr{p - q_1 - \ldots - q_{2 n + 1}}
+ V\lr{q_1, \ldots, q_{2 n + 1}} ,
+\end{eqnarray}
+where the arbitrary-order vertex functions are defined as
+\begin{eqnarray}
+\label{vertex_func_def}
+ V\lr{q_1, \ldots, q_{2 n + 1}}
+ = 
+ \frac{\lambda}{4} + 
+ \sum\limits_{l=1}^{2 n + 1} \lr{-1}^{l-1}
+ \sum\limits_{m=0}^{2 n + 1 - l}
+ D\lr{q_{m+1} + \ldots + q_{m+l}}
+\end{eqnarray}
+
+Correspondingly, the SD equations can be written in the following compact form:
+\begin{eqnarray}
+\label{sd_eqs_G2_mom_vertex}
+ \vev{p_1 p_2} = \frac{\delta\lr{p_1 + p_2}}{V} \, G_0\lr{p_1}
+ - \nonumber \\ -
+ G_0\lr{p_1} \sum\limits_{n=1}^{+\infty}
+ \lr{-\frac{\lambda}{8}}^n
+ \times \nonumber \\ \times
+ \sum\limits_{q_1, \ldots, q_{2 n + 1}}
+ \delta\lr{p_1 - Q}
+ V\lr{q_1, \ldots, q_{2 n + 1}}
+ \vev{q_1 \ldots q_{2 n + 1} \, p_2} .
+\end{eqnarray}
+and for higher-order correlators with $n > 2$ (in fact, $n \geq 4$)
+\begin{eqnarray}
+\label{sd_eqs_Gn_mom}
+ \vev{p_1 p_2 \ldots p_n} 
+ = 
+ \frac{\delta\lr{p_1 + p_2}}{V} \, G_0\lr{p_1} \, \vev{p_3 \ldots p_n}
+ + \nonumber \\ +
+ \frac{\delta\lr{p_1 + p_n}}{V} \, G_0\lr{p_1} \, \vev{p_2 \ldots p_{n-1}}
+ + \nonumber \\ +
+ \sum\limits_{A=4}^{n-2}
+ \frac{\delta\lr{p_1 + p_A}}{V} \, G_0\lr{p_1} \,
+ \vev{p_2 \ldots p_{A-1}} \, \vev{p_{A+1} \ldots p_n}
+ - \nonumber \\ -
+ G_0\lr{p_1} \sum\limits_{n=1}^{+\infty}
+ \lr{-\frac{\lambda}{8}}^n
+ \times \nonumber \\ \times
+ \sum\limits_{q_1, \ldots, q_{2 n + 1}}
+ \delta\lr{p_1 - Q}
+ V\lr{q_1, \ldots, q_{2 n + 1}}
+ \vev{q_1 \ldots q_{2 n + 1} \, p_2  \ldots p_n} ,
+\end{eqnarray}
+where we have denoted $Q = q_1 + \ldots + q_{2 n + 1}$.
 
 \end{document}

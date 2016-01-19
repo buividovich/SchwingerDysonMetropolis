@@ -22,9 +22,9 @@ int main(int argc, char *argv[])
  init_common_parameters();
  print_common_parameters();
  
- init_generalized_sc();
- run_generalized_sc();
- test_generalized_sc();
+ init_generalized_sc_unpacked();
+ run_generalized_sc_unpacked();
+ test_generalized_sc_unpacked();
  
  //Calculating the final answers and saving to the file
  logs_Write(0, "\nExpansion results (increasing order): ");
@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
   for(uint p=0; p<LS; p++)
   {
    uint P = LS*((LS-p)%LS) + p;
-   double Gpq = get_generalized_sc(m, 1, P);
+   double Gpq = get_generalized_sc_unpacked(m, 1, P);
    U += Gpq;
    L += Gpq*cos(2.0*M_PI*(double)p/(double)LS);
   };
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
   // fprintf(f, "%2.4lf % 4i %2.4lf %2.4lf %2.4lf\n", lambda, io, 1.0/(double)(io + 1), sU[io], sL[io]);
  };
  
- free_generalized_sc();
+ free_generalized_sc_unpacked();
  
  /*
  //Opening the output file
