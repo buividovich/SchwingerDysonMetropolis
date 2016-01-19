@@ -70,9 +70,8 @@ void init_kinematics(double bare_mass)
  };
 }
 
-void init_recursion_unpacked()
+void alloc_recursion_unpacked()
 {
- init_lattice_constants();
  //For cleanness, setting all address elements to NULL
  for(int n=0; n<MAX_M; n++)
   for(int m=0; m<MAX_M; m++)
@@ -97,6 +96,17 @@ void init_recursion_unpacked()
  };
  
  logs_WriteParameter(0, "Allocated buffer memory", "%2.4lf Mb", (double)memory_allocated/(double)(1024*1024));
+ logs_Write(0, "");
+}
+
+static inline double get_G(int m, int n, uint P)
+{
+ return G[m][n][P];     
+}
+
+static inline void set_G(int m, int n, uint P, double value)
+{
+ G[m][n][P] = value;      
 }
 
 void test_recursion()
@@ -111,8 +121,9 @@ void test_recursion()
    for(uint P=0; P<LS2n[n]; P++)
     if(total_momentum(P, n)!=0)
     {
-     max_err_momentum = MAX(max_err_momentum, fabs(G[m][n][P]));
-     if(fabs(G[m][n][P])>1.0E-8)
+     double err_momentum = fabs(get_G(m,n,P));
+     max_err_momentum = MAX(max_err_momentum, err_momentum);
+     if(err_momentum>1.0E-8)
      {
       char* mstr = NULL;
       get_momentum_str(P, n, &mstr, ", ");
@@ -126,8 +137,9 @@ void test_recursion()
      for(int i=0; i<2*n; i++)
      {
       sP = sP/LS + LSn[2*n-1]*(sP%LS);
-      max_err_cyclic = MAX(max_err_cyclic, fabs(G[m][n][P]-G[m][n][sP]));
-      if(fabs(G[m][n][P]-G[m][n][sP])>1.0E-8)
+      double err_cyclic = fabs(get_G(m,n,P)-get_G(m,n,sP));
+      max_err_cyclic = MAX(max_err_cyclic, err_cyclic);
+      if(err_cyclic>1.0E-8)
       {
        char* mstr1 = NULL; char* mstr2 = NULL;
        get_momentum_str( P, n, &mstr1, ", ");
@@ -208,7 +220,40 @@ uint pack_momenta(int n, uint* ps)
 
 //TODO: packed/unpacked as a flag, probably at compilation time?
 
-void generalized_sc()
+/***************************************************************************/
+/************ GENERALIZED STRONG-COUPLING EXPANSION  ***********************/
+/***************************************************************************/
+
+void get_Gxy_generalized_sc(double* res)
+{
+ DECLARE_AND_MALLOC(sG, double, mLS);
+ double factor = lambda;
+ for(int m=0; m<=mmax; m++)
+ {
+  for(int x=0; x<mLS; x++)
+   sG[x] = 0;
+  for(uint p=0; p<mLS; p++)
+  {
+   uint P = LS*((LS-p)%LS) + p;
+   double k = 2.0*M_PI*(double)p/(double)LS;
+   for(int x=0; x<mLS; x++)
+    sG[x] += get_G(m,1,P)*cos(k*(double)x);
+  };
+  for(int x=0; x<mLS; x++)  
+   res[m*mLS + x] = factor*sG[x] + (m>0? res[(m-1)*mLS + x] : 0.0); 
+  factor *= lambda;
+ };
+ SAFE_FREE(sG); 
+}
+
+void init_generalized_sc()
+{
+ init_lattice_constants();
+ init_kinematics(lambda);
+ alloc_recursion_unpacked();     
+}
+
+void run_generalized_sc()
 {
  for(int m=0; m<=mmax; m++)
  {
@@ -232,13 +277,13 @@ void generalized_sc()
        uint P1 = mLS*((P/mLS)%LS2n1[A-1]) + (P/LS2n[A-1])%mLS;
        uint P2 = P/LS2n[A];
        for(int m1=0; m1<=m; m1++)
-        c1 += G[m1][A-1][P1]*G[m-m1][n-A][P2];
+        c1 += get_G(m1,A-1,P1)*get_G(m-m1,n-A,P2);
       }; 
      };
      c1 *= ils*G0[p1];
-     c1 += G0pq[P%LS2]*G[m][n-1][P/LS2];
+     c1 += G0pq[P%LS2]*get_G(m,n-1,P/LS2);
      uint P1 = mLS*((P/mLS)%LS2n1[n-1]) + (P/LS2n[n-1])%mLS;
-     c1 += G0pq[(P/LS2n1[n])*mLS + p1]*G[m][n-1][P1];
+     c1 += G0pq[(P/LS2n1[n])*mLS + p1]*get_G(m,n-1,P1);
     }
     else
     {
@@ -258,7 +303,7 @@ void generalized_sc()
       {
        uint pAt = (p1 + pA + (mLS - p1t))%mLS;
        for(int m1=0; m1<m; m1++)
-        c2 += G[m1][A-1][p1t + P1]*G[m-m1-1][n-A+1][pAt + P2];
+        c2 += get_G(m1,A-1,p1t + P1)*get_G(m-m1-1,n-A+1,pAt + P2);
       }; 
      };
      c2 *= ils*G0[p1];
@@ -268,13 +313,110 @@ void generalized_sc()
       for(uint q1t=0; q1t<mLS; q1t++)
       {
        uint p2t = (p1 + (mLS - p1t) + (mLS - q1t))%mLS;
-       c3 += D0[q1t]*G[m-1][n+1][p1t + mLS*q1t + LS2*p2t + P1];
+       c3 += D0[q1t]*get_G(m-1,n+1,p1t + mLS*q1t + LS2*p2t + P1);
       };
      c3 *= G0[p1]; 
     }; //End of if(m>0) 
     //Summing up all the contributions
-    G[m][n][P] = c1 - c2 + c3; //-c2 is important!!! It is the origin of the sign problem!!!
+    set_G(m, n, P, c1 - c2 + c3); //-c2 is important!!! It is the origin of the sign problem!!!
    }; //End of loop over P      
   }; //End of loop over n    
  }; //End of loop over m    
 }
+
+/***************************************************************************/
+/************ STEREOGRAPHIC PROJECTION *************************************/
+/***************************************************************************/
+
+static double qsbuf[MAX_MX2];
+//Vertex function V(q_1, q_2, ..., q_{2 n + 1}), n = 1, 2, ..., Q = q_1 + LS*q_2 + LS^2*q_3 + ... 
+static inline double get_vertex(uint Q, int nq)
+{
+ unpack_momenta(Q, nq, qsbuf);
+ return 0.0;
+}
+
+void get_Gxy_stereographic(double* res)
+{
+ //TODO: this will be quite complicated!!!
+}
+
+void init_stereographic()
+{
+ meff_sq = 0.0;
+ init_lattice_constants();
+ init_kinematics(0.25*lambda);
+ alloc_recursion_unpacked();     
+}
+
+void run_stereographic()
+{
+ for(int m=0; m<=mmax; m++)
+ {
+  for(int n=1; n<=mmax-m+1; n++)
+  {
+   logs_Write(0, "Generating the m = %02i, n = %02i terms...", m, n);
+   for(uint P=0; P<LS2n[n]; P++)
+   {
+    if(P%65536==0) logs_WriteStatus(1, P, LS2n[n], 1024, "");
+    
+    uint p1 = P%mLS;
+    //First contribution - contact terms
+    double c1 = 0.0;
+    if(n>1)
+    {
+     for(int A=2; A<n; A++)
+     {
+      uint qA = (P/LS2n1[A])%mLS;
+      if((p1+qA)%mLS==0)
+      {
+       uint P1 = mLS*((P/mLS)%LS2n1[A-1]) + (P/LS2n[A-1])%mLS;
+       uint P2 = P/LS2n[A];
+       for(int m1=0; m1<=m; m1++)
+        c1 += get_G(m1,A-1,P1)*get_G(m-m1,n-A,P2);
+      }; 
+     };
+     c1 *= ils*G0[p1];
+     c1 += G0pq[P%LS2]*get_G(m,n-1,P/LS2);
+     uint P1 = mLS*((P/mLS)%LS2n1[n-1]) + (P/LS2n[n-1])%mLS;
+     c1 += G0pq[(P/LS2n1[n])*mLS + p1]*get_G(m,n-1,P1);
+    }
+    else
+    {
+     if(m==0)
+      c1 += G0pq[P];   
+    }; //End of if(n>1)
+    double c2 = 0.0; double c3 = 0.0;
+    if(m>0)
+    {
+     //Second contribution - double-trace vertex
+     for(int A=2; A<=n; A++)
+     {
+      uint P1 = mLS*((P/mLS)%LS2n1[A-1]); //This is now the sequence 0, q_1, ..., p_{A-1}, q_{A-1} 
+      uint P2 = mLS*(P/LS2n1[A]);       //This is now the sequence 0, q_A, ..., p_n, q_n
+      uint pA = (P/LS2n[A-1])%mLS;
+      for(uint p1t=0; p1t<mLS; p1t++)
+      {
+       uint pAt = (p1 + pA + (mLS - p1t))%mLS;
+       for(int m1=0; m1<m; m1++)
+        c2 += get_G(m1,A-1,p1t + P1)*get_G(m-m1-1,n-A+1,pAt + P2);
+      }; 
+     };
+     c2 *= ils*G0[p1];
+     //Third contribution - scalar vertex
+     uint P1 = (P/mLS)*LS2n1[2];
+     for(uint p1t=0; p1t<mLS; p1t++)
+      for(uint q1t=0; q1t<mLS; q1t++)
+      {
+       uint p2t = (p1 + (mLS - p1t) + (mLS - q1t))%mLS;
+       c3 += D0[q1t]*get_G(m-1,n+1,p1t + mLS*q1t + LS2*p2t + P1);
+      };
+     c3 *= G0[p1]; 
+    }; //End of if(m>0) 
+    //Summing up all the contributions
+    set_G(m, n, P, c1 - c2 + c3); //-c2 is important!!! It is the origin of the sign problem!!!
+   }; //End of loop over P      
+  }; //End of loop over n    
+ }; //End of loop over m    
+}
+

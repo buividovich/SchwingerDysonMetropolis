@@ -260,11 +260,22 @@ where the arbitrary-order vertex functions are defined as
 \begin{eqnarray}
 \label{vertex_func_def}
  V\lr{q_1, \ldots, q_{2 n + 1}}
- = 
- \frac{\lambda}{4} + 
+ =
+ \frac{\lambda}{4} +
  \sum\limits_{l=1}^{2 n + 1} \lr{-1}^{l-1}
  \sum\limits_{m=0}^{2 n + 1 - l}
  D\lr{q_{m+1} + \ldots + q_{m+l}}
+\end{eqnarray}
+For algorithmic purposes, it is more convenient to use the following representation:
+\begin{eqnarray}
+\label{vertex_func_def_algorithmic}
+ V\lr{q_0, \ldots, q_{2 n}}
+ =
+ \frac{\lambda}{4} +
+ \sum\limits_{m=0}^{2 n}
+ \sum\limits_{l=0}^{2 n - m} 
+ \lr{-1}^{l}
+ D\lr{q_{m} + \ldots + q_{m+l}}
 \end{eqnarray}
 
 Correspondingly, the SD equations can be written in the following compact form:
@@ -283,8 +294,8 @@ Correspondingly, the SD equations can be written in the following compact form:
 and for higher-order correlators with $n > 2$ (in fact, $n \geq 4$)
 \begin{eqnarray}
 \label{sd_eqs_Gn_mom}
- \vev{p_1 p_2 \ldots p_n} 
- = 
+ \vev{p_1 p_2 \ldots p_n}
+ =
  \frac{\delta\lr{p_1 + p_2}}{V} \, G_0\lr{p_1} \, \vev{p_3 \ldots p_n}
  + \nonumber \\ +
  \frac{\delta\lr{p_1 + p_n}}{V} \, G_0\lr{p_1} \, \vev{p_2 \ldots p_{n-1}}

@@ -70,7 +70,12 @@ int parse_common_command_line_options(int argc, char **argv)
 
 void print_common_parameters()
 {
+ logs_Write(0, "");
  print_largeN_QFT_parameters(1, 0);
+ #ifdef FIX2
+ ASSERT(LS!=2);
+ logs_Write(0, "\nThe value LS=2 is hard-coded in this binary! To make it variable, #undef FIX2\n");
+ #endif
  logs_Write(0, "\tGENERIC PARAMETERS OF SERIES GENERATOR: ");
  logs_WriteParameter(0,                    "Max. order",                 "%i", mmax);
  logs_WriteParameter(0,                "sizeof(double)",           "%i bytes", sizeof(double));
@@ -82,7 +87,7 @@ void init_common_parameters()
 {
  if(out_file==NULL && auto_naming)
  {
-  sprintf_append(&out_file, "./data/smlm_analytics/lu_s%i_l%2.2lf.dat", LS, lambda);
+  sprintf_append(&out_file, "./data/rcan/gsc_s%i_l%2.2lf_m%2.2lf.dat", LS, lambda, meff_sq);
  };
 }
 
