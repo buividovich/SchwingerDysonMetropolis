@@ -24,6 +24,7 @@
 
 extern int    mmax;          //Max. order
 extern int    mmin_prc;
+extern int    consistency_check;
 
 extern char*  out_file;
 extern int    append_mode;

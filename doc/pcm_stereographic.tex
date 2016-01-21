@@ -273,7 +273,7 @@ For algorithmic purposes, it is more convenient to use the following representat
  =
  \frac{\lambda}{4} +
  \sum\limits_{m=0}^{2 n}
- \sum\limits_{l=0}^{2 n - m} 
+ \sum\limits_{l=0}^{2 n - m}
  \lr{-1}^{l}
  D\lr{q_{m} + \ldots + q_{m+l}}
 \end{eqnarray}
@@ -313,5 +313,47 @@ and for higher-order correlators with $n > 2$ (in fact, $n \geq 4$)
  \vev{q_1 \ldots q_{2 n + 1} \, p_2  \ldots p_n} ,
 \end{eqnarray}
 where we have denoted $Q = q_1 + \ldots + q_{2 n + 1}$.
+
+\subsection{Correlators of $g_x$ variables}
+\label{subsec:gx_correlators}
+
+ An important criterion of whether the $SU\lr{N} \times SU\lr{N}$ symmetry of the action is restored dynamically is the expectation value of a single field variable $\vev{g_x}$, which should tend to zero as the approximation becomes more and more exact. Expressing $\vev{g_x}$ in terms of the variables $\phi_x$, we get:
+\begin{eqnarray}
+\label{gx_vev_momentum}
+ \vev{g_x} \equiv \frac{1}{V} \sum\limits_x \vev{g_x}
+ = 
+ 1 + 2 \sum\limits_{k=1}^{+\infty} \lr{-\frac{\lambda}{8}}^k \frac{1}{V} \sum\limits_x \vev{\phi_x^{2 k}}
+ = \nonumber \\ = 
+ 1 + 2 \sum\limits_{k=1}^{+\infty} \lr{-\frac{\lambda}{8}}^k
+ \sum\limits_{q_1 \ldots q_{2 k}}
+ \delta\lr{q_1 + \ldots + q_{2 k}}
+ \vev{\phi_{q_1} \ldots \phi_{q_{2k}}} .
+\end{eqnarray}
+In the same way, we can express the correlator $\vev{g^{\dag}_x g_y}$ in coordinate space as:
+\begin{eqnarray}
+\label{gx_vev_space}
+ \vev{g^{\dag}_x g_y} 
+ =
+ 2 \vev{g_x} - 1
+ +
+ 4 \sum\limits_{k,l=1}^{+\infty}
+ \lr{-1}^{\frac{k-l}{2}} \, \lr{\frac{\lambda}{8}}^{\frac{k+l}{2}}
+ \vev{\phi_x^k \phi_y^l} .
+\end{eqnarray}
+Performing the Fourier transform and assuming translational invariance, we get
+\begin{eqnarray}
+\label{gx_vev_momentum}
+ \vev{g^{\dag}_x g_0} 
+ =
+ 2 \vev{g_x} - 1
+ + \nonumber \\ +
+ 4 \sum\limits_{n=1}^{+\infty} \lr{-\lambda/8}^n
+ \sum\limits_{q_1 \ldots q_{2 n}}
+ \Gamma\lr{x; \, q_1, \ldots, q_{2 n}}
+ \vev{\phi_{q_1} \ldots \phi_{q_{2 n}}} ,
+ \nonumber \\
+ \Gamma\lr{x; \, q_1, \ldots, q_{2 n}} = 
+ \sum\limits_{k=1}^{2 n - 1} \lr{-1}^k \cos\lr{\lr{q_1 + \ldots + q_k} x}
+\end{eqnarray}
 
 \end{document}

@@ -328,17 +328,60 @@ void run_generalized_sc()
 /************ STEREOGRAPHIC PROJECTION *************************************/
 /***************************************************************************/
 
-static double qsbuf[MAX_MX2];
-//Vertex function V(q_1, q_2, ..., q_{2 n + 1}), n = 1, 2, ..., Q = q_1 + LS*q_2 + LS^2*q_3 + ... 
+static uint qsbuf[MAX_MX2];
+//Vertex function V(q_0, q_1, ..., q_{2 n_q}), nq = 1, 2, ..., Q = q_1 + LS*q_2 + LS^2*q_3 + ... 
 static inline double get_vertex(uint Q, int nq)
 {
- unpack_momenta(Q, nq, qsbuf);
- return 0.0;
+ double res = 0.0;
+ unpack_momenta(Q, 2*nq+1, qsbuf);
+ for(int m=0; m<=2*nq; m++)
+ {
+  uint Q = qsbuf[m]; res += D0[Q%mLS];
+  for(int l=1; l<=2*nq-m; l++)
+  {
+   Q += qsbuf[m+l];
+   res += (l%2? -1 : 1)*D0[Q%mLS];
+  };
+ };
+ return (0.25*lambda + res);
+}
+
+static inline void GammaXQ(uint Q, int nq, double* Gamma)
+{
+ unpack_momenta(Q, 2*nq, qsbuf);
+ uint q = 0;
+ for(int k=0; k<2*nq-1; k++)
+ {
+  q += qsbuf[k];
+  int s = (k%2? 1 : -1);
+  double qphys = 2.0*M_PI*(double)q/(double)mLS;
+  for(int x=0; x<mLS; x++)
+   Gamma[x] += s*cos(qphys*(double)x);
+ }; 
 }
 
 void get_Gxy_stereographic(double* res)
 {
  //TODO: this will be quite complicated!!!
+ DECLARE_AND_MALLOC(tmpres, double, LS);
+ DECLARE_AND_MALLOC( gamma, double, LS);
+ double factor = -1.0*alpha;
+ for(n=1; n<=mmax; n++)
+ {
+  for(int x=0; x<mLS; x++)
+   tmpres[x] = 0;
+  for(uint Q=0; Q<LS2n[n]; Q++)
+  {
+   GammaXQ(Q, n, gamma);
+   for(int x=0; x<mLS; x++)
+    tmpres[x] += gamma[x]*get_G(mmax-n, n, Q);
+  };
+  for()
+  res[mmax*LS + x] += factor*tmpres[x]; 
+  factor *= -1.0*alpha;          
+ };
+ SAFE_FREE(tmpres);
+ SAFE_FREE(gamma);
 }
 
 void init_stereographic()

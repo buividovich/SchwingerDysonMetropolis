@@ -1,7 +1,7 @@
 [Project]
 FileName=recursive_analytics.dev
 Name=recursive_analytics
-UnitCount=38
+UnitCount=35
 Type=1
 Ver=1
 ObjFiles=
@@ -337,16 +337,6 @@ ProductName=
 ProductVersion=
 AutoIncBuildNr=0
 
-[Unit35]
-FileName=recursion_commons.h
-CompileCpp=0
-Folder=recursive_analytics
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit37]
 FileName=generalized_sc.h
 CompileCpp=0
@@ -387,16 +377,6 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit36]
-FileName=generalized_sc.c
-CompileCpp=0
-Folder=
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit38]
 FileName=recursion_core.h
 CompileCpp=0
@@ -417,10 +397,32 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
+[Unit39]
+FileName=stereographic.c
+
+[Unit40]
+FileName=stereographic.h
+
+[Unit41]
+FileName=recursion.c
+
+[Unit42]
+FileName=recursion.h
+
 [Unit34]
-FileName=recursion_commons.c
+FileName=recursion.c
 CompileCpp=0
-Folder=recursive_analytics
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit35]
+FileName=recursion.h
+CompileCpp=0
+Folder=
 Compile=1
 Link=1
 Priority=1000
