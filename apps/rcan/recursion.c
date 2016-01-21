@@ -327,6 +327,7 @@ void run_generalized_sc()
 /***************************************************************************/
 /************ STEREOGRAPHIC PROJECTION *************************************/
 /***************************************************************************/
+static double alpha_stereographic = 0.0;
 
 static uint qsbuf[MAX_MX2];
 //Vertex function V(q_0, q_1, ..., q_{2 n_q}), nq = 1, 2, ..., Q = q_1 + LS*q_2 + LS^2*q_3 + ... 
@@ -336,7 +337,7 @@ static inline double get_vertex(uint Q, int nq)
  unpack_momenta(Q, 2*nq+1, qsbuf);
  for(int m=0; m<=2*nq; m++)
  {
-  uint Q = qsbuf[m]; res += D0[Q%mLS];
+  uint Q = qsbuf[m]; res += D0[Q];
   for(int l=1; l<=2*nq-m; l++)
   {
    Q += qsbuf[m+l];
@@ -348,12 +349,14 @@ static inline double get_vertex(uint Q, int nq)
 
 static inline void GammaXQ(uint Q, int nq, double* Gamma)
 {
+ for(int x=0; x<mLS; x++)
+  Gamma[x] = 0.0;
  unpack_momenta(Q, 2*nq, qsbuf);
  uint q = 0;
  for(int k=0; k<2*nq-1; k++)
  {
   q += qsbuf[k];
-  int s = (k%2? 1 : -1);
+  int s = (k%2==0? 1 : -1);
   double qphys = 2.0*M_PI*(double)q/(double)mLS;
   for(int x=0; x<mLS; x++)
    Gamma[x] += s*cos(qphys*(double)x);
@@ -362,31 +365,31 @@ static inline void GammaXQ(uint Q, int nq, double* Gamma)
 
 void get_Gxy_stereographic(double* res)
 {
- //TODO: this will be quite complicated!!!
- DECLARE_AND_MALLOC(tmpres, double, LS);
  DECLARE_AND_MALLOC( gamma, double, LS);
- double factor = -1.0*alpha;
- for(n=1; n<=mmax; n++)
- {
-  for(int x=0; x<mLS; x++)
-   tmpres[x] = 0;
-  for(uint Q=0; Q<LS2n[n]; Q++)
+ 
+ for(n=1; n<=mmax+1; n++)
+  for(uint P=0; P<LS2n[n]; P++)
   {
-   GammaXQ(Q, n, gamma);
-   for(int x=0; x<mLS; x++)
-    tmpres[x] += gamma[x]*get_G(mmax-n, n, Q);
-  };
-  for()
-  res[mmax*LS + x] += factor*tmpres[x]; 
-  factor *= -1.0*alpha;          
- };
- SAFE_FREE(tmpres);
+   GammaXQ(P, n, gamma);
+    for(int m=0; m<=(mmax-n+1); m++)
+    {
+     double fc1 = (n%2==0? 1 : -1)*pow(alpha_stereographic, (double)(n+m))*get_G(m, n, P);
+     for(int x=0; x<mLS; x++)
+     {
+      double fc = fc1*gamma[x];
+      for(int mmax1=(n-1); mmax1<=mmax; mmax1++)
+       res[mmax1*LS + x] += fc;
+     };  
+    };
+  };  
+
  SAFE_FREE(gamma);
 }
 
 void init_stereographic()
 {
  meff_sq = 0.0;
+ alpha_stereographic = 0.125*lambda;
  init_lattice_constants();
  init_kinematics(0.25*lambda);
  alloc_recursion_unpacked();     
@@ -408,12 +411,12 @@ void run_stereographic()
     double c1 = 0.0;
     if(n>1)
     {
-     for(int A=2; A<n; A++)
+     for(int A=4; A<=n-2; A+=2)
      {
-      uint qA = (P/LS2n1[A])%mLS;
-      if((p1+qA)%mLS==0)
+      uint pA = (P/LSn[A-1])%mLS;
+      if((p1+pA)%mLS==0)
       {
-       uint P1 = mLS*((P/mLS)%LS2n1[A-1]) + (P/LS2n[A-1])%mLS;
+       uint P1 = mLS*((P/mLS)%LS2n1[A-1]) + (P/LS2n[A-1])%mLS; //TODO from here
        uint P2 = P/LS2n[A];
        for(int m1=0; m1<=m; m1++)
         c1 += get_G(m1,A-1,P1)*get_G(m-m1,n-A,P2);

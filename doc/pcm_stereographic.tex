@@ -293,7 +293,7 @@ Correspondingly, the SD equations can be written in the following compact form:
 \end{eqnarray}
 and for higher-order correlators with $n > 2$ (in fact, $n \geq 4$)
 \begin{eqnarray}
-\label{sd_eqs_Gn_mom}
+\label{sd_eqs_Gn_mom_vertex}
  \vev{p_1 p_2 \ldots p_n}
  =
  \frac{\delta\lr{p_1 + p_2}}{V} \, G_0\lr{p_1} \, \vev{p_3 \ldots p_n}
@@ -314,6 +314,47 @@ and for higher-order correlators with $n > 2$ (in fact, $n \geq 4$)
 \end{eqnarray}
 where we have denoted $Q = q_1 + \ldots + q_{2 n + 1}$.
 
+\subsection{SD equations in ``Algorithmic'' form}
+\label{subsec:sds_algorithmic}
+
+ For the purpose of algorithm development, let us write the SD equations (\ref{sd_eqs_G2_mom_vertex}) and (\ref{sd_eqs_Gn_mom_vertex}) as
+
+\begin{eqnarray}
+\label{sd_eqs_G2_mom_vertex_alg}
+ \vev{p_0 p_1} = \frac{\delta\lr{p_0 + p_1}}{V} \, G_0\lr{p_0}
+ - \nonumber \\ -
+ G_0\lr{p_0} \sum\limits_{m=1}^{+\infty}
+ \lr{-\frac{\lambda}{8}}^m
+ \times \nonumber \\ \times
+ \sum\limits_{q_0, \ldots, q_{2 m}}
+ \delta\lr{p_0 - Q}
+ V\lr{q_0, \ldots, q_{2 n}}
+ \vev{q_0 \ldots q_{2 n} \, p_1} .
+\end{eqnarray}
+and for higher-order correlators with $n > 2$ (in fact, $n \geq 4$)
+\begin{eqnarray}
+\label{sd_eqs_Gn_mom_vertex_alg}
+ \vev{p_0 p_1 \ldots p_{2n-1}}
+ =
+ \frac{\delta\lr{p_0 + p_1}}{V} \, G_0\lr{p_0} \, \vev{p_2 \ldots p_{2n-1}}
+ + \nonumber \\ +
+ \frac{\delta\lr{p_0 + p_{2n-1}}}{V} \, G_0\lr{p_0} \, \vev{p_1 \ldots p_{2n-2}}
+ + \nonumber \\ +
+ \sum\limits_{A=1}^{n-2}
+ \frac{\delta\lr{p_0 + p_{2A+1}}}{V} \, G_0\lr{p_0} \,
+ \vev{p_1 \ldots p_{2A}} \, \vev{p_{2 A+2} \ldots p_{2n-1}}
+ - \nonumber \\ -
+ G_0\lr{p_0} \sum\limits_{m=1}^{+\infty}
+ \lr{-\frac{\lambda}{8}}^m
+ \times \nonumber \\ \times
+ \sum\limits_{q_0, \ldots, q_{2 m}}
+ \delta\lr{p_0 - Q}
+ V\lr{q_0, \ldots, q_{2 m}}
+ \vev{q_0 \ldots q_{2 m} \, p_1  \ldots p_{2n-1}} ,
+\end{eqnarray}
+where we have denoted $Q = q_0 + \ldots + q_{2 n}$.
+
+
 \subsection{Correlators of $g_x$ variables}
 \label{subsec:gx_correlators}
 
@@ -321,9 +362,9 @@ where we have denoted $Q = q_1 + \ldots + q_{2 n + 1}$.
 \begin{eqnarray}
 \label{gx_vev_momentum}
  \vev{g_x} \equiv \frac{1}{V} \sum\limits_x \vev{g_x}
- = 
+ =
  1 + 2 \sum\limits_{k=1}^{+\infty} \lr{-\frac{\lambda}{8}}^k \frac{1}{V} \sum\limits_x \vev{\phi_x^{2 k}}
- = \nonumber \\ = 
+ = \nonumber \\ =
  1 + 2 \sum\limits_{k=1}^{+\infty} \lr{-\frac{\lambda}{8}}^k
  \sum\limits_{q_1 \ldots q_{2 k}}
  \delta\lr{q_1 + \ldots + q_{2 k}}
@@ -332,7 +373,7 @@ where we have denoted $Q = q_1 + \ldots + q_{2 n + 1}$.
 In the same way, we can express the correlator $\vev{g^{\dag}_x g_y}$ in coordinate space as:
 \begin{eqnarray}
 \label{gx_vev_space}
- \vev{g^{\dag}_x g_y} 
+ \vev{g^{\dag}_x g_y}
  =
  2 \vev{g_x} - 1
  +
@@ -343,7 +384,7 @@ In the same way, we can express the correlator $\vev{g^{\dag}_x g_y}$ in coordin
 Performing the Fourier transform and assuming translational invariance, we get
 \begin{eqnarray}
 \label{gx_vev_momentum}
- \vev{g^{\dag}_x g_0} 
+ \vev{g^{\dag}_x g_0}
  =
  2 \vev{g_x} - 1
  + \nonumber \\ +
@@ -352,7 +393,7 @@ Performing the Fourier transform and assuming translational invariance, we get
  \Gamma\lr{x; \, q_1, \ldots, q_{2 n}}
  \vev{\phi_{q_1} \ldots \phi_{q_{2 n}}} ,
  \nonumber \\
- \Gamma\lr{x; \, q_1, \ldots, q_{2 n}} = 
+ \Gamma\lr{x; \, q_1, \ldots, q_{2 n}} =
  \sum\limits_{k=1}^{2 n - 1} \lr{-1}^k \cos\lr{\lr{q_1 + \ldots + q_k} x}
 \end{eqnarray}
 
