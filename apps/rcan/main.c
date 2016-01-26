@@ -20,14 +20,16 @@ int main(int argc, char *argv[])
  init_common_parameters();
  print_common_parameters();
   
- init_generalized_sc();
- run_generalized_sc();
+ //init_generalized_sc();
+ //run_generalized_sc();
+ init_stereographic();
+  run_stereographic();
  if(consistency_check)
   test_recursion();
  
  //Calculating the final answers and saving to the file
  char* out_file1 = NULL;
- sprintf_append(&out_file1, "G:\\LAT\\sd_metropolis\\data\\rcan\\mscan_l%2.4lf.dat", lambda);
+ sprintf_append(&out_file1, "G:\\LAT\\sd_metropolis\\data\\rcan\\stereo_conv_l%2.4lf.dat", lambda);
  FILE* f = NULL;
  if(out_file1!=NULL)
   f = (append_mode? fopen(out_file1, "a") : fopen(out_file1, "w"));
@@ -35,33 +37,65 @@ int main(int argc, char *argv[])
   logs_WriteErrorAndTerminate("Could not open the file %s for %s", out_file1, (append_mode? "appending" : "writing"));
  
   
- logs_Write(0, "\nExpansion results (increasing order), saving to file %s", out_file1);
  DECLARE_AND_MALLOC(Gxy, double, (mmax+1)*LS);
- get_Gxy_generalized_sc(Gxy);
+ DECLARE_AND_MALLOC( Gx, double, (mmax+1)   );
+ get_Gxy_stereographic(Gxy, Gx);
+ 
+ double G01_exact = (lambda<4.0? 1.0 - 0.125*lambda : 2.0/lambda);
+ char G01exstr[64];
+ if(LS==2)
+  sprintf(G01exstr, "%2.6lf", G01_exact);
+ else
+  sprintf(G01exstr, "not known for LS=%i", LS);
+ 
+ logs_Write(0, "\nExpansion results (increasing order), exact result for G01 is %s, saving to file %s", G01exstr, out_file1);
+
+ for(int mmax1=0; mmax1<=mmax; mmax1++)
+ {
+  char* rstr = NULL;
+  for(int x=0; x<LS; x++)
+   sprintf_append(&rstr, "G%i%i = %+2.6lf,\t", 0, x, Gxy[mmax1*LS + x]); 
+  if(LS==2)
+  { 
+   double err = (Gxy[mmax1*LS + 1]/Gxy[mmax1*LS + 0] - G01_exact)/G01_exact;
+   sprintf_append(&rstr, " err = %+2.4E,\t", err);
+   fprintf(f, "%02i %2.4E %2.4E %2.4E %2.4E\n", mmax1, 1.0/(double)(mmax1+1), Gxy[mmax1*LS + 1], err, Gx[mmax1]);
+  }; 
+  sprintf_append(&rstr, " Gx = %+2.4E", Gx[mmax1]);
+  logs_Write(0, "\t Order %02i: %s ", mmax1, rstr);
+ };
+
+ fclose(f);
+ 
+ free_recursion();
+  
+ SAFE_FREE(Gxy);
+ SAFE_FREE(Gx);
+ return EXIT_SUCCESS;
+}
+
+/*
+  
+ logs_Write(0, "\nExpansion results (increasing order), exact result for G01 is %s, saving to file %s", G01exstr, out_file1);
  fprintf(f, "%2.6E ", meff_sq);
- for(int m=0; m<=mmax; m++)
+ for(int mmax1=0; mmax1<=mmax; mmax1++)
  {
   //fprintf(f, "%02i %2.4E ", m, 1.0/(double)(m+1));
   //for(int x=0; x<LS; x++)
   // fprintf(f, "%+2.4E ", Gxy[m*LS + x]);
   char* rstr = NULL;
   for(int x=0; x<LS; x++)
-   sprintf_append(&rstr, "G%i%i = %+2.4E,\t", 0, x, Gxy[m*LS + x]); 
+   sprintf_append(&rstr, "G%i%i = %+2.6lf,\t", 0, x, Gxy[mmax1*LS + x]); 
   if(LS==2)
   { 
-   double G01_exact = (lambda<4.0? 1.0 - 0.125*lambda : 2.0/lambda);
-   double err = (Gxy[m*LS + 1]/Gxy[m*LS + 0] - G01_exact)/G01_exact;
-   sprintf_append(&rstr, " err = %+2.4E", err);
+   double err = (Gxy[mmax1*LS + 1]/Gxy[mmax1*LS + 0] - G01_exact)/G01_exact;
+   sprintf_append(&rstr, " err = %+2.4E,\t", err);
    fprintf(f, "%+2.4E ", err);
   }; 
-  logs_Write(0, "\t Order %02i: %s ", m, rstr);
+  sprintf_append(&rstr, " Gx = %+2.4E", Gx[mmax1]);
+  logs_Write(0, "\t Order %02i: %s ", mmax1, rstr);
   //fprintf(f, "\n");
  };
  fprintf(f, "\n");
  
- fclose(f);
- free_recursion();
-  
- SAFE_FREE(Gxy);
- return EXIT_SUCCESS;
-}
+fclose(f);*/

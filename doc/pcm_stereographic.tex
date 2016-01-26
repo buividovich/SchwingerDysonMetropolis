@@ -283,13 +283,13 @@ Correspondingly, the SD equations can be written in the following compact form:
 \label{sd_eqs_G2_mom_vertex}
  \vev{p_1 p_2} = \frac{\delta\lr{p_1 + p_2}}{V} \, G_0\lr{p_1}
  - \nonumber \\ -
- G_0\lr{p_1} \sum\limits_{n=1}^{+\infty}
- \lr{-\frac{\lambda}{8}}^n
+ G_0\lr{p_1} \sum\limits_{m=1}^{+\infty}
+ \lr{-\frac{\lambda}{8}}^m
  \times \nonumber \\ \times
- \sum\limits_{q_1, \ldots, q_{2 n + 1}}
+ \sum\limits_{q_1, \ldots, q_{2 m + 1}}
  \delta\lr{p_1 - Q}
- V\lr{q_1, \ldots, q_{2 n + 1}}
- \vev{q_1 \ldots q_{2 n + 1} \, p_2} .
+ V\lr{q_1, \ldots, q_{2 m + 1}}
+ \vev{q_1 \ldots q_{2 m + 1} \, p_2} .
 \end{eqnarray}
 and for higher-order correlators with $n > 2$ (in fact, $n \geq 4$)
 \begin{eqnarray}
@@ -304,55 +304,64 @@ and for higher-order correlators with $n > 2$ (in fact, $n \geq 4$)
  \frac{\delta\lr{p_1 + p_A}}{V} \, G_0\lr{p_1} \,
  \vev{p_2 \ldots p_{A-1}} \, \vev{p_{A+1} \ldots p_n}
  - \nonumber \\ -
- G_0\lr{p_1} \sum\limits_{n=1}^{+\infty}
- \lr{-\frac{\lambda}{8}}^n
+ G_0\lr{p_1} \sum\limits_{m=1}^{+\infty}
+ \lr{-\frac{\lambda}{8}}^m
  \times \nonumber \\ \times
- \sum\limits_{q_1, \ldots, q_{2 n + 1}}
+ \sum\limits_{q_1, \ldots, q_{2 m + 1}}
  \delta\lr{p_1 - Q}
- V\lr{q_1, \ldots, q_{2 n + 1}}
- \vev{q_1 \ldots q_{2 n + 1} \, p_2  \ldots p_n} ,
+ V\lr{q_1, \ldots, q_{2 m + 1}}
+ \vev{q_1 \ldots q_{2 m + 1} \, p_2  \ldots p_n} ,
 \end{eqnarray}
 where we have denoted $Q = q_1 + \ldots + q_{2 n + 1}$.
 
 \subsection{SD equations in ``Algorithmic'' form}
 \label{subsec:sds_algorithmic}
 
- For the purpose of algorithm development, let us write the SD equations (\ref{sd_eqs_G2_mom_vertex}) and (\ref{sd_eqs_Gn_mom_vertex}) as
+ For the purpose of algorithm development, let us define the formal series in powers of $\alpha$ as:
+\begin{eqnarray}
+\label{alpha_series_def}
+ \vev{p_0 \ldots p_{2 n - 1}}
+ =
+ \sum\limits_{m=0}^{+\infty}
+ \vev{p_0 \ldots p_{2 n - 1}}_m \alpha^m
+\end{eqnarray}
 
+The SD equations (\ref{sd_eqs_G2_mom_vertex}) and (\ref{sd_eqs_Gn_mom_vertex}) can be now rewritten as the recursive relations between successive coefficients in the series (\ref{alpha_series_def}):
 \begin{eqnarray}
 \label{sd_eqs_G2_mom_vertex_alg}
- \vev{p_0 p_1} = \frac{\delta\lr{p_0 + p_1}}{V} \, G_0\lr{p_0}
- - \nonumber \\ -
- G_0\lr{p_0} \sum\limits_{m=1}^{+\infty}
- \lr{-\frac{\lambda}{8}}^m
+ \vev{p_0 p_1}_m = \frac{\delta\lr{p_0 + p_1}}{V} \, G_0\lr{p_0} \, \delta_{m,0}
+ + \nonumber \\ +
+ \lr{1 - \delta_{m,0}} \,
+ G_0\lr{p_0} \sum\limits_{k=1}^{m} \lr{-1}^{k-1}
  \times \nonumber \\ \times
- \sum\limits_{q_0, \ldots, q_{2 m}}
+ \sum\limits_{q_0, \ldots, q_{2 k}}
  \delta\lr{p_0 - Q}
- V\lr{q_0, \ldots, q_{2 n}}
- \vev{q_0 \ldots q_{2 n} \, p_1} .
+ V\lr{q_0, \ldots, q_{2 k}}
+ \vev{q_0 \ldots q_{2 k} \, p_1}_{m-k} .
 \end{eqnarray}
-and for higher-order correlators with $n > 2$ (in fact, $n \geq 4$)
+and for higher-order correlators with $n > 1$
 \begin{eqnarray}
 \label{sd_eqs_Gn_mom_vertex_alg}
- \vev{p_0 p_1 \ldots p_{2n-1}}
+ \vev{p_0 p_1 \ldots p_{2n-1}}_m
  =
- \frac{\delta\lr{p_0 + p_1}}{V} \, G_0\lr{p_0} \, \vev{p_2 \ldots p_{2n-1}}
+ \frac{\delta\lr{p_0 + p_1}}{V} \, G_0\lr{p_0} \, \vev{p_2 \ldots p_{2n-1}}_m
  + \nonumber \\ +
- \frac{\delta\lr{p_0 + p_{2n-1}}}{V} \, G_0\lr{p_0} \, \vev{p_1 \ldots p_{2n-2}}
+ \frac{\delta\lr{p_0 + p_{2n-1}}}{V} \, G_0\lr{p_0} \, \vev{p_1 \ldots p_{2n-2}}_m
  + \nonumber \\ +
  \sum\limits_{A=1}^{n-2}
  \frac{\delta\lr{p_0 + p_{2A+1}}}{V} \, G_0\lr{p_0} \,
- \vev{p_1 \ldots p_{2A}} \, \vev{p_{2 A+2} \ldots p_{2n-1}}
- - \nonumber \\ -
- G_0\lr{p_0} \sum\limits_{m=1}^{+\infty}
- \lr{-\frac{\lambda}{8}}^m
+ \sum\limits_{k=0}^m
+ \vev{p_1 \ldots p_{2A}}_k \, \vev{p_{2 A+2} \ldots p_{2n-1}}_{m-k}
+ + \nonumber \\ +
+ \lr{1 - \delta_{m,0}} \,
+ G_0\lr{p_0} \sum\limits_{k=1}^{m} \lr{-1}^{k-1}
  \times \nonumber \\ \times
- \sum\limits_{q_0, \ldots, q_{2 m}}
+ \sum\limits_{q_0, \ldots, q_{2 k}}
  \delta\lr{p_0 - Q}
- V\lr{q_0, \ldots, q_{2 m}}
- \vev{q_0 \ldots q_{2 m} \, p_1  \ldots p_{2n-1}} ,
+ V\lr{q_0, \ldots, q_{2 k}}
+ \vev{q_0 \ldots q_{2 k} \, p_1  \ldots p_{2n-1}}_{m-k} ,
 \end{eqnarray}
-where we have denoted $Q = q_0 + \ldots + q_{2 n}$.
+where we have denoted $Q = q_0 + \ldots + q_{2 k}$.
 
 
 \subsection{Correlators of $g_x$ variables}

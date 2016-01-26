@@ -80,7 +80,8 @@ void print_common_parameters()
  #endif
  logs_Write(0, "\tGENERIC PARAMETERS OF SERIES GENERATOR: ");
  logs_WriteParameter(0,                    "Max. order",                 "%i", mmax);
- logs_WriteParameter(0,                "sizeof(double)",           "%i bytes", sizeof(double));
+ logs_WriteParameter(0,                  "sizeof(uint)",           "%i bytes", sizeof(uint)  );
+ logs_WriteParameter(0,                "sizeof(t_real)",           "%i bytes", sizeof(t_real));
  if(out_file!=NULL)
  logs_WriteParameter(0,                      "Output file",                 "%s %s %s", out_file, (auto_naming? "[Auto naming]" : ""), (append_mode? "[Append mode]" : ""));
 }
