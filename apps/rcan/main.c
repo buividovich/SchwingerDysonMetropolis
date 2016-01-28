@@ -19,6 +19,15 @@ int main(int argc, char *argv[])
  parse_common_command_line_options(argc, argv);
  init_common_parameters();
  print_common_parameters();
+ 
+ //init_lattice_constants();
+ //alloc_recursion_packed();
+ 
+ //return EXIT_SUCCESS;
+ 
+ //TODO: may be the sequences in the address book are always containing the sequences for previous n, 
+ //Is it unnecessary to initialize n times?
+ //TODO: still count multiplicities? For Gamma coefficients... Is it useful at all?
   
  //init_generalized_sc();
  //run_generalized_sc();
@@ -26,6 +35,7 @@ int main(int argc, char *argv[])
   run_stereographic();
  if(consistency_check)
   test_recursion();
+ //print_Gmn(); 
  
  //Calculating the final answers and saving to the file
  char* out_file1 = NULL;

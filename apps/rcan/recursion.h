@@ -12,15 +12,20 @@ typedef long double  t_real;
 typedef unsigned int  uint;
 
 //General functions for working with sequences of momenta 
-void  get_momentum_str(uint P, int n, char** s, char* separator);
-void    unpack_momenta(uint P, int n, uint* ps);
+void  get_momentum_str(uint P, int n, char* s, const char* separator);
+void  get_momentum_str_append(uint P, int n, char** s, char* separator);
 uint      pack_momenta(int n, uint* ps);
 
+void printf_momentum_str(uint P, int n, char* prefix, char* separator, char* suffix);
+
 void alloc_recursion_packed();
+void init_lattice_constants();
 
 //General functions for recursions of any kind
 void    test_recursion();
 void    free_recursion();
+
+void    print_Gmn();
 
 //Generalized strong-coupling expansion
 void    init_generalized_sc();

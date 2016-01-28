@@ -1,6 +1,10 @@
 #include "recursion.h"
 
-static t_real*  G[MAX_M][MAX_M];    //Storage for the expansion coefficients
+static t_real*  G[MAX_MP1][MAX_MP2];    //Storage for the expansion coefficients
+//Storage for the address book
+static uint*    abook[MAX_MP2];
+static uint     abk_cnt[MAX_MP2];
+#define ABK_BLOCK (1024) //Elements for abook are realloc'd in blocks of this size...
 
 static t_real   cosines[MAX_LS];
 static t_real     sines[MAX_LS];
@@ -74,7 +78,37 @@ static inline uint total_momentum(uint P, int n) //TODO: again, n here is UNDIVI
  return (res%mLS);
 }
 
-void unpack_momenta(uint P, int n, uint* ps)
+static inline uint get_mP(uint P, int n)
+{
+ uint sP  = P, mP = P;
+ for(int s=0; s<2*n; s++)
+ {
+  sP = sP/mLS + LS2n1[n]*(sP%mLS); //Cyclic shift by 1 bit if LS=2
+  if(sP<mP) mP = sP;
+ };
+ return mP;      
+}
+
+static inline uint get_mP_index(uint mP, int n)
+{
+ uint ap = abk_cnt[n]-1;
+ if(abook[n][ap]!=mP)
+ {
+  uint r1 = 0, r2 = ap;
+  ap /= 2;
+  while(abook[n][ap]!=mP && r1!=ap && r2!=ap)
+  {
+   if(mP>abook[n][ap]) 
+    r1 = ap;
+   else
+    r2 = ap;
+   ap = r1 + (r2 - r1)/2;
+  };
+ }; 
+ return ap;      
+}
+
+static inline void unpack_momenta(uint P, int n, uint* ps)
 {
  uint mP = P;
  for(int i=0; i<n; i++)
@@ -113,7 +147,7 @@ void alloc_recursion_unpacked()
  //For cleanness, setting all address elements to NULL
  for(int n=1; n<=MAX_MP1; n++)
   for(int m=0; m<=MAX_M; m++)
-   G[n][m] = NULL;
+   G[m][n] = NULL;
 
  //Allocating dynamic memory to contain the pre-calculated propagators    
  uint memory_allocated = 0;
@@ -137,56 +171,147 @@ void alloc_recursion_unpacked()
  logs_Write(0, "");
 }
 
-//TODO: save the results up to m'th order at every iteration step!!!
+//TODO: OpenMP parallelization
+//TODO: split loops for contact terms and the vertex
+//TODO: save the results up to m'th order at every iteration step!!! + each contrib separately, for series analysis
+//TODO: hard-code all LS's!!! + lambda + meff_sq
+//TODO: remove most clue packages => smaller executable!!!
 /***************** PACKED RECURSION START ***********************/
-uint* abook[MAX_MP2];
+
 
 void alloc_recursion_packed()
 {
- //For cleanness, setting all address elements to NULL
- for(int n=1; n<=MAX_M+1; n++)
- { 
-  for(int m=0; m<=MAX_M; m++)
-   G[n][m] = NULL;
-  abook[n] = NULL;
- };  
  //Count physically distinct sequences of momenta...  
+ logs_Write(0, "\n Initializing the address book for sequences with up to %i momenta", 2*(mmax+1));
  for(int n=1; n<=mmax+1; n++)
  {
+  //Estimate the required memory...
+  uint abk_allocated = ABK_BLOCK*((uint)ceil((double)LS2n1[n]/(double)(2*n))/ABK_BLOCK + 1);
+  uint num_reallocs  = 0;
+  SAFE_MALLOC(abook[n], uint, abk_allocated);
   //Init address book counters...
-  uint abk_cnt = 0; //Number of elements in the n'th address book
-  for(uint tP=0; tP<LS2n1[n]; tP++) //Loop over conserved momenta only
+  abook[n][0] = 0;
+  abk_cnt[n]  = 1; //Number of elements in the n'th address book
+  for(uint tP=1; tP<LS2n1[n]; tP++) //Loop over conserved momenta only
   {
-   uint p0 = (mLS - total_momentum(tP, 2*n-1));
+   uint p0 = (mLS - total_momentum(tP, 2*n-1))%mLS;
    uint P   = p0 + mLS*tP;
-   //Now perform the loop of cyclic shifts to find the minimal number + count multiplicity
-   uint sP  = P, mP = P; int cP   = 0;
-   for(int s=0; s<2*n; s++)
-   {
-    if(sP!=P) cP++;
-    mP = MIN(mP, sP);
-    sP = sP/mLS + LS2n1[n]*(sP%mLS); //Shift by 1 bit
-   };
+   //Perform the loop of cyclic shifts to find the minimal number 
+   uint mP = get_mP(P, n);
    //Now add mP to the address book, if it has not been added yet...
-   //We assume that the address book is already ordered in ascending order ad try to maintain it...
-   uint apos = abk_cnt-1;
-   while(apos>=0 && abook[apos]>mP)
+   //We assume that the address book is already ordered in ascending order and maintain this ordering at every step...
+   //We add mP to the top of the address book, or in the middle at the appropriate place
+   uint apos = abk_cnt[n]-1;
+   if(mP<abook[n][apos])
+    apos = get_mP_index(mP, n);
+   if(abook[n][apos]!=mP) //We should add the new element to the address book, it was not found
    {
-    apos --;             
+    if(abk_cnt[n]>=abk_allocated)
+    {
+     abk_allocated += ABK_BLOCK;
+     num_reallocs ++;
+     uint* nbk = (uint* )realloc((void* )abook[n], abk_allocated*sizeof(uint));
+     if(nbk!=NULL)
+      abook[n] = nbk;
+     else
+      logs_WriteErrorAndTerminate("Failed to reallocate %u bytes of memory for abook[%i]", (uint)(abk_allocated*sizeof(uint)), n);
+    }; 
+    for(uint i=abk_cnt[n]; i>apos+1; i--)
+     abook[n][i] = abook[n][i-1];
+    abook[n][apos+1] = mP;
+    abk_cnt[n] ++; 
    };
-   abook[apos] = mP; 
+  }; //End of loop over momenta
+  logs_Write(0, "Length % 3i:\t % 12u elements\t compression %2.4lf \t allocated %2.4lf Mb [%u reallocs]", 2*n, abk_cnt[n], (double)((t_real)abk_cnt[n]/(t_real)LS2n[n]), (double)(abk_allocated)/(double)(1024*1024), num_reallocs);
+  if(logs_noise_level>1)
+  {
+   logs_Write(2, "Elements of the address book:");
+   for(uint i=0; i<abk_cnt[n]; i++)
+   {
+    printf("\t\t %u = ", abook[n][i]);
+    printf_momentum_str(abook[n][i], 2*n, "[", ",", "]\n");
+   };
   };
- };  
+ }; //End of loop over n
+ //Allocating the memory for G[m][n]
+ uint memory_allocated = 0;
+ for(int m=mmin_prc; m<=mmax; m++)
+ {
+  for(int n=1; n<=mmax-m+1; n++) 
+  {
+   G[m][n] = (t_real *)malloc(abk_cnt[n]*sizeof(t_real));
+   if(G[m][n]!=NULL)
+    memory_allocated += abk_cnt[n]*sizeof(t_real);
+   else
+    logs_WriteErrorAndTerminate("\nUnable to allocate %2.4lf Mb of memory at n = %i, m = %i. Exiting.", (double)(abk_cnt[n]*sizeof(t_real))/(double)(1024*1024), n, m); 
+  };
+ }; 
+ logs_Write(0, "\n Allocated %2.4lf Mb of memory for G[m][n]\n", (double)memory_allocated/(double)(1024*1024));
 }
 
+#ifdef PACKED
+static inline t_real get_G(int m, int n, uint P)
+{
+ uint mP = get_mP(P, n);
+ uint iP = get_mP_index(mP, n);
+ return G[m][n][iP];
+}
+
+static inline t_real get_G_check(int m, int n, uint P)
+{
+ uint mP = get_mP(P, n);
+ uint iP = get_mP_index(mP, n);
+ if(abook[n][iP]!=mP)
+  logs_WriteError("(abook[%i][%u]=%u)!=%u, \t P = %u", n, iP, abook[n][iP], mP, P);
+ return G[m][n][iP];
+}
+
+#else
 static inline t_real get_G(int m, int n, uint P)
 {
  return G[m][n][P];
 }
 
+static inline t_real get_G_check(int m, int n, uint P)
+{
+ return G[m][n][P];
+}
+#endif
+
 static inline void set_G(int m, int n, uint P, t_real value)
 {
  G[m][n][P] = value;
+}
+
+//TODO: still polish the binary search algorithm...
+
+void print_Gmn()
+{
+ int old_logs_noise_level = logs_noise_level;
+ logs_noise_level = 1;
+ logs_Write(0, "\n\t THE CONTENT OF G[n][m][P] array: \n");
+
+ for(int m=0; m<=mmax; m++)
+  for(int n=1; n<=mmax-m+1; n++)
+  {
+   char mstr[512];
+   logs_Write(0, " > m = %i, n = %i:", m, n);
+#ifdef PACKED
+   for(uint i=0; i<abk_cnt[n]; i++)
+   {
+    get_momentum_str(abook[n][i], 2*n, mstr, " ");
+    logs_Write(1, "[%s] = %u:\t %+2.4E", mstr, abook[n][i], (double)(get_G_check(m, n, abook[n][i])));
+   };
+#else
+   for(uint P=0; P<LS2n[n]; P++)
+   {
+    get_momentum_str(P, 2*n, mstr, " ");
+    logs_Write(1, "[%s] = %u (mP = %u):\t %2.4E", mstr, P, get_mP(P, n), (double)(get_G_check(m, n, P)));
+   };
+#endif    
+  }; 
+ logs_Write(0, ""); 
+ logs_noise_level = old_logs_noise_level;  
 }
 
 void test_recursion()
@@ -201,14 +326,16 @@ void test_recursion()
    for(uint P=0; P<LS2n[n]; P++)
     if(total_momentum(P, 2*n)!=0)
     {
+     #ifndef PACKED
      t_real err_momentum = ACALL(fabs)(get_G(m,n,P));
      max_err_momentum = MAX(max_err_momentum, err_momentum);
      if(err_momentum>1.0E-8 && logs_noise_level>1)
      {
-      char* mstr = NULL;
-      get_momentum_str(P, 2*n, &mstr, ", ");
+      char mstr[512];
+      get_momentum_str(P, 2*n, mstr, " ");
       logs_WriteWarning("Momentum non-conservation at m = %02i, n = %02i, P = %u > [%s]", m, n, P, mstr);
      };
+     #endif
     }
     else
     {
@@ -221,10 +348,11 @@ void test_recursion()
       max_err_cyclic = MAX(max_err_cyclic, err_cyclic);
       if(err_cyclic>1.0E-8 && logs_noise_level>1)
       {
-       char* mstr1 = NULL; char* mstr2 = NULL;
-       get_momentum_str( P, 2*n, &mstr1, ", ");
-       get_momentum_str(sP, 2*n, &mstr2, ", ");
+       char mstr1[512], mstr2[512];
+       get_momentum_str( P, 2*n, mstr1, ", ");
+       get_momentum_str(sP, 2*n, mstr2, ", ");
        logs_WriteWarning("Cyclic symmetry violated at m = %02i, n = %02i, P=[%s](=%+2.4E), sP=[%s](=%+2.4E)", m, n,  mstr1, (double)(get_G(m,n,P)), mstr2, (double)(get_G(m,n,sP)));
+       system("PAUSE");
       };
      };
     };  
@@ -254,7 +382,7 @@ void printf_momentum_str(uint P, int n, char* prefix, char* separator, char* suf
  fflush(stdout);
 }
 
-void get_momentum_str(uint P, int n, char** s, char* separator) //TODO: control the use of get_momentum_str, now n is the number of momenta, UNDIVIDED BY TWO
+void get_momentum_str_append(uint P, int n, char** s, char* separator) //TODO: control the use of get_momentum_str, now n is the number of momenta, UNDIVIDED BY TWO
 {
  uint mP = P;
  for(int i=0; i<n-1; i++)
@@ -263,6 +391,18 @@ void get_momentum_str(uint P, int n, char** s, char* separator) //TODO: control 
   mP /= LS;
  };
  sprintf_append(s, "%1u", mP%LS);
+}
+
+void get_momentum_str(uint P, int n, char* s, const char* separator) //TODO: control the use of get_momentum_str, now n is the number of momenta, UNDIVIDED BY TWO
+{
+ uint mP = P; int spos = 0;
+ for(int i=0; i<n-1; i++)
+ {
+  int len = sprintf(&(s[spos]), "%1u%s", mP%LS, separator);
+  spos += len;
+  mP /= LS;
+ };
+ sprintf(&(s[spos]), "%1u", mP%LS);
 }
 
 //TODO: packed/unpacked as a flag, probably at compilation time?
@@ -384,7 +524,11 @@ void init_stereographic()
     m0_stereographic = 0.25*(t_real)lambda;
  init_lattice_constants();
  init_kinematics(m0_stereographic);
- alloc_recursion_unpacked();     
+#ifdef PACKED
+ alloc_recursion_packed();
+#else
+ alloc_recursion_unpacked();
+#endif
 }
 
 static uint qsbuf[MAX_MX2];
@@ -434,12 +578,14 @@ void get_Gxy_stereographic(double* Gxy, double* Gx)
   tGx[i] = 0; 
  
  for(int n=1; n<=mmax+1; n++)
-  for(uint P=0; P<LS2n[n]; P++) //TODO: here - sum only over conserved momenta...
+  for(uint tP=0; tP<LS2n1[n]; tP++) //TODO: here - sum only over conserved momenta...
   {
+   uint p0 = (mLS - total_momentum(tP, 2*n-1))%mLS;
+   uint P   = p0 + mLS*tP;  
    GammaXQ(P, n, gamma);
    for(int m=0; m<=(mmax-n+1); m++)
    {
-    t_real fc = (n%2==0? 1 : -1)*ACALL(pow)(alpha_stereographic, (t_real)(n+m))*get_G(m, n, P);
+    t_real fc = (n%2==0? 1 : -1)*ACALL(pow)(alpha_stereographic, (t_real)(n+m))*get_G_check(m, n, P);
     for(int mmax1=m+n-1; mmax1<=mmax; mmax1++)
      tGx[mmax1] += fc;
     for(int x=0; x<mLS; x++)
@@ -464,8 +610,6 @@ void get_Gxy_stereographic(double* Gxy, double* Gx)
  SAFE_FREE(tGx);
 }
 
-//TODO: automatic initialization of LSn arrays!
-//TODO: for vertex and Gamma - pre-computed array of cosines?
 //TODO: pre-computed vertices?
 
 void run_stereographic()
@@ -475,9 +619,16 @@ void run_stereographic()
   for(int n=1; n<=mmax-m+1; n++)
   {
    logs_Write(0, "Generating the m = %02i, n = %02i terms...", m, n);
+#ifdef PACKED
+   for(uint iP=0; iP<abk_cnt[n]; iP++)
+   {
+    if(iP%65536==0) logs_WriteStatus(1, iP, abk_cnt[n], 1024, "");
+    uint P = abook[n][iP];
+#else
    for(uint P=0; P<LS2n[n]; P++)
    {
     if(P%65536==0) logs_WriteStatus(1, P, LS2n[n], 1024, "");
+#endif   
     uint p0 = P%mLS;
     //First contribution - contact terms
     t_real c1 = 0.0;
@@ -488,18 +639,22 @@ void run_stereographic()
       uint pA = (P/LS2n1[A+1])%mLS;
       if((p0+pA)%mLS==0)
       {
-       uint P1 = (P/mLS)%LS2n[A];
+       uint P1 = (P/mLS)%LS2n[A]; //TODO: here we can check the shortest sequence only...
        uint P2 =  P/LS2n[A+1]; 
-       for(int k=0; k<=m; k++)
-        c1 += get_G(k,A,P1)*get_G(m-k,n-A-1,P2);
+#ifdef PACKED
+       uint Pt = (A<n-A-1? total_momentum(P1, 2*A) : total_momentum(P2, 2*(n-A-1)) );
+       if(Pt%mLS==0)
+#endif
+        for(int k=0; k<=m; k++)
+         c1 += get_G_check(k,A,P1)*get_G_check(m-k,n-A-1,P2);
       }; 
      };
      uint p1   = (P%LS2)/mLS;
      if((p0+p1)%mLS==0)
-      c1 += get_G(m,n-1,P/LS2);
+      c1 += get_G_check(m,n-1,P/LS2);
      p1 = P/LS2n1[n];
      if((p0+p1)%mLS==0)
-      c1 += get_G(m,n-1,(P/mLS)%LS2n[n-1]);
+      c1 += get_G_check(m,n-1,(P/mLS)%LS2n[n-1]);
      c1 *= ils*G0[p0];
     }
     else
@@ -518,12 +673,16 @@ void run_stereographic()
       //TODO: both total_momentum and get_vertex require a loop of unpacking... - can one optimize something here?        
       uint q0   = (p0 + (mLS - total_momentum(sQ, 2*k)))%mLS; //This ensures momentum conservation
       uint Q    = q0 + mLS*sQ;
-      c2 += s*get_vertex(Q, k)*get_G(m-k,n+k,Q + P1);
+      c2 += s*get_vertex(Q, k)*get_G_check(m-k,n+k,Q + P1);
      };
     };
     c2 *= G0[p0];
     //Summing up all the contributions
-    set_G(m, n, P, c1 + c2); 
+    #ifdef PACKED
+     G[m][n][iP] = c1 + c2;
+    #else
+     G[m][n][P] = c1 + c2;
+    #endif
    }; //End of loop over P      
   }; //End of loop over n    
  }; //End of loop over m    

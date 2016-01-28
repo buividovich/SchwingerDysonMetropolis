@@ -17,6 +17,7 @@
 #include "recursion.h"
 
 #define  FIX2        //This parameter makes LS=2 a hard-coded choice
+#define   PACKED      //This switches on an economical saving of momenta sequences
 
 #define  MAX_M       (16)             //Maximal orders - to define storage of pre-computed values as static array
 #define  MAX_MP1     (17)             //MAX_M+1

@@ -76,7 +76,10 @@ void print_common_parameters()
  print_largeN_QFT_parameters(1, 0);
  #ifdef FIX2
  ASSERT(LS!=2);
- logs_Write(0, "\nThe value LS=2 is hard-coded in this binary! To make it variable, #undef FIX2\n");
+ logs_Write(0, "The value LS=2 is hard-coded in this binary! To make it variable, #undef FIX2\n");
+ #endif
+ #ifdef PACKED
+ logs_Write(0, "Using the packed representation of momenta!!!\n");
  #endif
  logs_Write(0, "\tGENERIC PARAMETERS OF SERIES GENERATOR: ");
  logs_WriteParameter(0,                    "Max. order",                 "%i", mmax);
