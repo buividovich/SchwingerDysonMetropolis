@@ -23,6 +23,34 @@ static struct option long_options[] =
 
 static char my_short_option_list[] = "a:b:c:";
 
+//From metropolis_options we use 
+// {         "logs-noise-level",  required_argument,                      NULL,  '6'},       
+//{           "no-ansi-colors",        no_argument,              &ansi_colors,    0},       
+// {   "print-errors-to-stderr",        no_argument,   &print_errors_to_stderr,    1},       
+
+// case '6':                                                                 
+//  SAFE_SSCANF_BREAK(optarg,  "%i", logs_noise_level);                      
+// break;                                                                    
+
+
+//From largeN_qft_options we use
+//{                     "lambda",  required_argument,                       NULL, 'A'}, 
+// {                    "meff-sq",  required_argument,                       NULL, 'B'}, 
+// {                         "LS",  required_argument,                       NULL, 'L'}, 
+
+/*  case 'A':                                                             
+    SAFE_SSCANF_BREAK(optarg, "%lf", lambda);                            
+   break;                                                               
+   case 'B':                                                             
+    SAFE_SSCANF_BREAK(optarg, "%lf", meff_sq);                           
+   break; 
+   case 'L':                                                            
+    SAFE_SSCANF_BREAK(optarg,  "%i", LS);                                
+    ASSERT(LS<0);                                                        
+   break;                                                                                                                               \
+
+*/
+
 int parse_common_command_line_options(int argc, char **argv)
 {
  int gc, option_index;
@@ -44,7 +72,7 @@ int parse_common_command_line_options(int argc, char **argv)
    break;
   switch(gc)
   {
-   PARSE_METROPOLIS_OPTIONS;
+   PARSE_METROPOLIS_OPTIONS; 
    PARSE_LARGEN_QFT_OPTIONS;
    case 'a':
     SAFE_SSCANF(optarg,  "%i", mmax);  

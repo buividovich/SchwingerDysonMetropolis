@@ -572,20 +572,20 @@ void get_Gxy_stereographic(double* Gxy, double* Gx)
  DECLARE_AND_MALLOC(  tGxy, t_real, (mmax+1)*mLS);
  DECLARE_AND_MALLOC(   tGx, t_real, (mmax+1)    );
  
- for(int i=0; i<=mmax*mLS; i++)
+ for(int i=0; i<(mmax+1)*mLS; i++)
   tGxy[i] = 0;
- for(int i=0; i<=mmax; i++)
+ for(int i=0; i<(mmax+1); i++)
   tGx[i] = 0; 
  
  for(int n=1; n<=mmax+1; n++)
-  for(uint tP=0; tP<LS2n1[n]; tP++) //TODO: here - sum only over conserved momenta...
+  for(uint tP=0; tP<LS2n1[n]; tP++) 
   {
    uint p0 = (mLS - total_momentum(tP, 2*n-1))%mLS;
    uint P   = p0 + mLS*tP;  
    GammaXQ(P, n, gamma);
    for(int m=0; m<=(mmax-n+1); m++)
    {
-    t_real fc = (n%2==0? 1 : -1)*ACALL(pow)(alpha_stereographic, (t_real)(n+m))*get_G_check(m, n, P);
+    t_real fc = (n%2==0? 1 : -1)*ACALL(pow)(alpha_stereographic, (t_real)(n+m))*get_G(m, n, P);
     for(int mmax1=m+n-1; mmax1<=mmax; mmax1++)
      tGx[mmax1] += fc;
     for(int x=0; x<mLS; x++)
@@ -620,11 +620,13 @@ void run_stereographic()
   {
    logs_Write(0, "Generating the m = %02i, n = %02i terms...", m, n);
 #ifdef PACKED
+   #pragma omp parallel for if(abk_cnt[n]>1000)
    for(uint iP=0; iP<abk_cnt[n]; iP++)
    {
     if(iP%65536==0) logs_WriteStatus(1, iP, abk_cnt[n], 1024, "");
     uint P = abook[n][iP];
 #else
+   #pragma omp parallel for if(LS2n[n]>1000)
    for(uint P=0; P<LS2n[n]; P++)
    {
     if(P%65536==0) logs_WriteStatus(1, P, LS2n[n], 1024, "");
@@ -646,15 +648,15 @@ void run_stereographic()
        if(Pt%mLS==0)
 #endif
         for(int k=0; k<=m; k++)
-         c1 += get_G_check(k,A,P1)*get_G_check(m-k,n-A-1,P2);
+         c1 += get_G(k,A,P1)*get_G(m-k,n-A-1,P2);
       }; 
      };
      uint p1   = (P%LS2)/mLS;
      if((p0+p1)%mLS==0)
-      c1 += get_G_check(m,n-1,P/LS2);
+      c1 += get_G(m,n-1,P/LS2);
      p1 = P/LS2n1[n];
      if((p0+p1)%mLS==0)
-      c1 += get_G_check(m,n-1,(P/mLS)%LS2n[n-1]);
+      c1 += get_G(m,n-1,(P/mLS)%LS2n[n-1]);
      c1 *= ils*G0[p0];
     }
     else
@@ -662,6 +664,26 @@ void run_stereographic()
      if(m==0)
       c1 += G0pq[P];   
     }; //End of if(n>1)
+    #ifdef PACKED
+     G[m][n][iP] = c1;
+    #else
+     G[m][n][P] = c1;
+    #endif
+   }; //End of first loop over P 
+
+#ifdef PACKED
+   #pragma omp parallel for if(abk_cnt[n]>1000)
+   for(uint iP=0; iP<abk_cnt[n]; iP++)
+   {
+    if(iP%65536==0) logs_WriteStatus(1, iP, abk_cnt[n], 1024, "");
+    uint P = abook[n][iP];
+#else
+   #pragma omp parallel for if(LS2n[n]>1000)
+   for(uint P=0; P<LS2n[n]; P++)
+   {
+    if(P%65536==0) logs_WriteStatus(1, P, LS2n[n], 1024, "");
+#endif
+    uint p0 = P%mLS;    
     //Second contribution - higher-order vertices
     t_real c2 = 0.0;
     for(int k=1; k<=m; k++)
@@ -673,15 +695,15 @@ void run_stereographic()
       //TODO: both total_momentum and get_vertex require a loop of unpacking... - can one optimize something here?        
       uint q0   = (p0 + (mLS - total_momentum(sQ, 2*k)))%mLS; //This ensures momentum conservation
       uint Q    = q0 + mLS*sQ;
-      c2 += s*get_vertex(Q, k)*get_G_check(m-k,n+k,Q + P1);
+      c2 += s*get_vertex(Q, k)*get_G(m-k,n+k,Q + P1);
      };
     };
     c2 *= G0[p0];
     //Summing up all the contributions
     #ifdef PACKED
-     G[m][n][iP] = c1 + c2;
+     G[m][n][iP] += c2;
     #else
-     G[m][n][P] = c1 + c2;
+     G[m][n][P] += c2;
     #endif
    }; //End of loop over P      
   }; //End of loop over n    

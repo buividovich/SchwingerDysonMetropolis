@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <omp.h>
 
 #include <largeN_QFT_parameters.h>
 
@@ -19,6 +20,21 @@ int main(int argc, char *argv[])
  parse_common_command_line_options(argc, argv);
  init_common_parameters();
  print_common_parameters();
+ 
+//TODO: with MPI the use of qsbuf is BAD!!!
+ 
+ int n_threads = 4;
+#ifdef _OPENMP
+ omp_set_dynamic(0);
+ if(n_threads<1)
+ {
+  n_threads = omp_get_max_threads();
+ }; 
+ logs_WriteWarning("\nRunning with %i threads!!!\n", n_threads);
+ omp_set_num_threads(n_threads);
+#else
+ n_threads = 1;
+#endif
  
  //init_lattice_constants();
  //alloc_recursion_packed();
@@ -73,14 +89,16 @@ int main(int argc, char *argv[])
   }; 
   sprintf_append(&rstr, " Gx = %+2.4E", Gx[mmax1]);
   logs_Write(0, "\t Order %02i: %s ", mmax1, rstr);
+  SAFE_FREE(rstr);
  };
 
  fclose(f);
- 
  free_recursion();
   
+ SAFE_FREE(out_file1); 
  SAFE_FREE(Gxy);
  SAFE_FREE(Gx);
+ 
  return EXIT_SUCCESS;
 }
 

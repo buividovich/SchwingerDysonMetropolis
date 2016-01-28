@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       157,          7]
-NotebookDataLength[    136953,       2960]
-NotebookOptionsPosition[    134031,       2874]
-NotebookOutlinePosition[    134375,       2889]
-CellTagsIndexPosition[    134332,       2886]
+NotebookDataLength[    142276,       3102]
+NotebookOptionsPosition[    139078,       3007]
+NotebookOutlinePosition[    139422,       3022]
+CellTagsIndexPosition[    139379,       3019]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -2846,30 +2846,163 @@ Cell[BoxData[{
      "2932031358484", ",", "11258999739560", ",", "43303843861744"}], "}"}]}],
    ";"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"mmax", "=", "16"}], ";"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"mmax", "=", "16"}], ";", 
+   RowBox[{"mminprc", "=", "1"}], ";"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{"Calculate", " ", "the", " ", "required", " ", "storage"}], " ", 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"DataMemory", "=", "0"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"For", "[", 
+   RowBox[{
+    RowBox[{"m", "=", "mminprc"}], ",", " ", 
+    RowBox[{"m", "\[LessEqual]", "mmax"}], ",", " ", 
+    RowBox[{"m", "++"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"For", "[", 
+      RowBox[{
+       RowBox[{"n", "=", "1"}], ",", 
+       RowBox[{"n", "\[LessEqual]", 
+        RowBox[{"mmax", "-", "m", "+", "1"}]}], ",", 
+       RowBox[{"n", "++"}], ",", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"DataMemory", " ", "+=", " ", 
+         RowBox[{"sizes", "[", 
+          RowBox[{"[", "n", "]"}], "]"}]}], ";"}]}], "\[IndentingNewLine]", 
+      "]"}], ";"}]}], "\[IndentingNewLine]", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"AddressMemory", " ", "=", " ", "0"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"For", "[", 
+   RowBox[{
+    RowBox[{"n", "=", "1"}], ",", 
+    RowBox[{"n", "\[LessEqual]", 
+     RowBox[{"mmax", "-", "mminprc", "+", "1"}]}], ",", 
+    RowBox[{"n", "++"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"AddressMemory", "+=", 
+      RowBox[{"sizes", "[", 
+       RowBox[{"[", "n", "]"}], "]"}]}], ";"}]}], "\[IndentingNewLine]", 
+   "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"IntSize", "=", 
+   RowBox[{"If", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"2", 
+       RowBox[{"(", 
+        RowBox[{"mmax", "+", "1"}], ")"}]}], ">", "32"}], ",", "8", ",", 
+     "4"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"Print", "[", 
-   RowBox[{"\"\<Required storage for 8-byte double: \>\"", ",", 
+   RowBox[{"\"\<With mmax = \>\"", ",", "mmax"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"\"\<Data storage for 8-byte double: \>\"", ",", 
     RowBox[{"N", "[", 
      RowBox[{
-      RowBox[{
-       RowBox[{"sizes", "[", 
-        RowBox[{"[", 
-         RowBox[{"mmax", "+", "1"}], "]"}], "]"}], "*", 
+      RowBox[{"DataMemory", "*", 
        RowBox[{"8", "/", 
         RowBox[{"(", 
          RowBox[{"1024", "*", "1024"}], ")"}]}]}], ",", "2"}], "]"}], ",", 
-    "\"\< Mb\>\""}], "]"}], ";"}]}], "Input",
- CellChangeTimes->{{3.6629664400342665`*^9, 3.6629664547542877`*^9}}],
+    "\"\< Mb\>\""}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"\"\<Data storage for 12-byte double: \>\"", ",", 
+    RowBox[{"N", "[", 
+     RowBox[{
+      RowBox[{"DataMemory", "*", 
+       RowBox[{"12", "/", 
+        RowBox[{"(", 
+         RowBox[{"1024", "*", "1024"}], ")"}]}]}], ",", "2"}], "]"}], ",", 
+    "\"\< Mb\>\""}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+   "\"\<Address storage for \>\"", ",", "IntSize", ",", 
+    "\"\<-byte uint: \>\"", ",", 
+    RowBox[{"N", "[", 
+     RowBox[{
+      RowBox[{"AddressMemory", "*", 
+       RowBox[{"IntSize", "/", 
+        RowBox[{"(", 
+         RowBox[{"1024", "*", "1024"}], ")"}]}]}], ",", "2"}], "]"}], ",", 
+    "\"\< Mb\>\""}], "]"}], ";"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.6629664400342665`*^9, 3.6629664547542877`*^9}, {
+  3.6629673222715244`*^9, 3.662967356941573*^9}, {3.662967503351778*^9, 
+  3.662967522481805*^9}, {3.662967553231848*^9, 3.662967631471957*^9}, {
+  3.662967665692005*^9, 3.6629678816423073`*^9}, {3.662967915192355*^9, 
+  3.662967938233387*^9}, {3.6629687583766775`*^9, 3.6629688764254293`*^9}}],
+
+Cell[CellGroupData[{
 
 Cell[BoxData[
  InterpretationBox[
-  RowBox[{"\<\"Required storage for 8-byte double: \"\>", "\[InvisibleSpace]",
-    "1927.558837890625`2.", "\[InvisibleSpace]", "\<\" Mb\"\>"}],
-  SequenceForm[
-  "Required storage for 8-byte double: ", 1927.558837890625`2., " Mb"],
+  RowBox[{"\<\"With mmax = \"\>", "\[InvisibleSpace]", "16"}],
+  SequenceForm["With mmax = ", 16],
   Editable->False]], "Print",
- CellChangeTimes->{{3.6629664423242702`*^9, 3.6629664562042894`*^9}}]
+ CellChangeTimes->{{3.6629664423242702`*^9, 3.6629664562042894`*^9}, {
+   3.6629676362119637`*^9, 3.6629676571719933`*^9}, 3.6629678850323124`*^9, {
+   3.6629679167123566`*^9, 3.6629679394633884`*^9}, {3.662968833650983*^9, 
+   3.6629688774584885`*^9}}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Data storage for 8-byte double: \"\>", "\[InvisibleSpace]", 
+   "953.991455078125`2.", "\[InvisibleSpace]", "\<\" Mb\"\>"}],
+  SequenceForm["Data storage for 8-byte double: ", 953.991455078125`2., " Mb"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.6629664423242702`*^9, 3.6629664562042894`*^9}, {
+   3.6629676362119637`*^9, 3.6629676571719933`*^9}, 3.6629678850323124`*^9, {
+   3.6629679167123566`*^9, 3.6629679394633884`*^9}, {3.662968833650983*^9, 
+   3.662968877459489*^9}}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Data storage for 12-byte double: \"\>", "\[InvisibleSpace]", 
+   "1430.9871826171875`2.", "\[InvisibleSpace]", "\<\" Mb\"\>"}],
+  SequenceForm[
+  "Data storage for 12-byte double: ", 1430.9871826171875`2., " Mb"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.6629664423242702`*^9, 3.6629664562042894`*^9}, {
+   3.6629676362119637`*^9, 3.6629676571719933`*^9}, 3.6629678850323124`*^9, {
+   3.6629679167123566`*^9, 3.6629679394633884`*^9}, {3.662968833650983*^9, 
+   3.662968877460489*^9}}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Address storage for \"\>", "\[InvisibleSpace]", "8", 
+   "\[InvisibleSpace]", "\<\"-byte uint: \"\>", "\[InvisibleSpace]", 
+   "698.6570892333984375`2.", "\[InvisibleSpace]", "\<\" Mb\"\>"}],
+  SequenceForm[
+  "Address storage for ", 8, "-byte uint: ", 698.6570892333984375`2., " Mb"],
+  Editable->False]], "Print",
+ CellChangeTimes->{{3.6629664423242702`*^9, 3.6629664562042894`*^9}, {
+   3.6629676362119637`*^9, 3.6629676571719933`*^9}, 3.6629678850323124`*^9, {
+   3.6629679167123566`*^9, 3.6629679394633884`*^9}, {3.662968833650983*^9, 
+   3.6629688774614887`*^9}}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Simplify", "[", 
+  RowBox[{
+   SuperscriptBox[
+    RowBox[{"Cos", "[", "x", "]"}], "2"], "-", 
+   SuperscriptBox[
+    RowBox[{"Sin", "[", "x", "]"}], "2"]}], "]"}]], "Input",
+ CellChangeTimes->{{3.662966817289818*^9, 3.6629668350398426`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"Cos", "[", 
+  RowBox[{"2", " ", "x"}], "]"}]], "Output",
+ CellChangeTimes->{3.662966836659845*^9}]
 }, Open  ]]
 },
 WindowSize->{1272, 908},
@@ -2959,8 +3092,17 @@ Cell[131450, 2803, 1005, 26, 23, "Print"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[132504, 2835, 1142, 27, 92, "Input"],
-Cell[133649, 2864, 366, 7, 23, "Print"]
+Cell[132504, 2835, 3971, 103, 412, "Input"],
+Cell[CellGroupData[{
+Cell[136500, 2942, 416, 8, 23, "Print"],
+Cell[136919, 2952, 535, 9, 23, "Print"],
+Cell[137457, 2963, 544, 10, 23, "Print"],
+Cell[138004, 2975, 618, 11, 23, "Print"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[138671, 2992, 266, 7, 33, "Input"],
+Cell[138940, 3001, 122, 3, 30, "Output"]
 }, Open  ]]
 }
 ]

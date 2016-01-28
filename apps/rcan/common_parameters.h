@@ -12,7 +12,6 @@
 #include "sd_metropolis_statistics.h"
 #include "largeN_QFT_parameters.h"
 #include "sd_metropolis_parameters.h"
-#include "free_hmm_genus_expansion.h"
 
 #include "recursion.h"
 
