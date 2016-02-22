@@ -14,7 +14,7 @@ static struct option long_options[] =
  {                       0,                  0,                       NULL,   0}
 };
 
-static char my_short_option_list[] = "a:b:c:";
+static char short_option_list[] = "a:b:c:";
 
 int parse_command_line_options(int argc, char **argv)
 {

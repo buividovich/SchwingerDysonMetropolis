@@ -53,7 +53,8 @@ where $\phi_x$ are the Hermitian matrices. The action of the PCM is now rewritte
 \begin{eqnarray}
 \label{pcm_action0}
  S_0\lrs{g_x} = \lambda^{-1} \sum\limits_{x,y} D_{x y} \tr\lr{g^{\dag}_x g_y}
- =  4 \lambda^{-1} \sum\limits_{k,l=1}^{+\infty} \lr{-i \alpha}^k \lr{i \alpha}^l
+ = \nonumber\\ =
+ 4 \lambda^{-1} \sum\limits_{k,l=1}^{+\infty} \lr{-i \alpha}^k \lr{i \alpha}^l
       \sum\limits_{x,y} D_{xy} \tr\lr{\phi_x^k \, \phi_y^l}
  = \nonumber\\ =
  4 \lambda^{-1} \sum\limits_{\substack{k,l=1\\k+l=2 n}}^{+\infty}
@@ -85,10 +86,7 @@ It is instructive to explicitly write out the terms involving interaction vertic
  \frac{\lambda}{16} \sum\limits_{x, y} D_{x y} \lr{\tr\lr{\phi_x^2 \phi_y^2} - D_{x y} \tr\lr{\phi_x^3 \phi_y} - D_{x y} \tr\lr{\phi_x \phi_y^3} }
 \end{eqnarray}
 
-\section{Schwinger-Dyson equations}
-\label{sec:sd_equations}
-
-\subsection{Schwinger-Dyson equations in coordinate space}
+\section{Schwinger-Dyson equations in coordinate space}
 \label{sec:sd_coordinate}
 
  In order to derive the SD equations, we consider the following full derivative:
@@ -131,10 +129,97 @@ The derivative of the action can be represented as follows:
  \sum\limits_y D_{x y}
  \sum\limits_{m=0}^{k-1}
  \phi_x^m \phi_y^l \phi_x^{k-m-1}
+ = \nonumber \\ =
+ \sum\limits_y \lrs{G_0^{-1}}_{x y} \, \phi_y
+ + \nonumber \\ +
+ \sum\limits_{k=1}^{+\infty} \lr{-\alpha^2}^k
+ \lr{
+  \frac{\lambda}{4} \phi_x^{2 k + 1}
+  +
+  \sum\limits_{l=1}^{2 k + 1} \lr{-1}^{l-1}
+  \sum\limits_{m=0}^{2 k + 1 - l}
+  \sum\limits_y D_{x y}
+  \phi_x^m \phi_y^l \phi_x^{2 k + 1 - l - m}
+ }
 \end{eqnarray}
 
-\subsection{Schwinger-Dyson equations in momentum space}
-\label{sec:sd_coordinate}
+\subsection{Schwinger-Dyson equations in algorithmic form}
+\label{subsec:sd_coord_alg}
+
+We now assume the expansion 
+\begin{eqnarray}
+\label{expansion_assumed}
+ \vev{x_0 \ldots x_{2 n - 1}} = \sum\limits_{m=0}^{+\infty}
+ \vev{x_0 \ldots x_{2 n - 1}}_m \lr{-\alpha^2}^m 
+\end{eqnarray}
+
+\begin{eqnarray}
+\label{sd_g2_coord_algorithmic}
+ \vev{x_0 x_1}_m = G_0\lr{x_0, x_1} \delta_{m, 0}
+ - \nonumber \\ -
+ \sum\limits_{k=1}^{m}
+ G_0\lr{x_0, z}
+ \left(
+ \frac{\lambda}{4} \vev{z^{2 k + 1} x_2}_{m - k}
+ + \right. \nonumber \\ \left. 
+ \sum\limits_{l=1}^{2 k + 1} \lr{-1}^{l-1}
+ \sum\limits_{m=0}^{2 k + 1 - l}
+ \sum\limits_y D_{z y}
+ \vev{z^m y^l z^{2k+1-l-m} x_1}_{m - k}
+ \right)
+\end{eqnarray}
+
+\begin{eqnarray}
+\label{sd_gn_coord_algorithmic}
+ \vev{x_0 x_1 \ldots x_{2 n - 1}}_m 
+ = \nonumber \\ =
+ G_0\lr{x_0, x_1} \vev{x_2 x_3 \ldots x_{2 n - 1}}_m
+ +
+ G_0\lr{x_0, x_{2 n - 1}} \vev{x_1 x_3 \ldots x_{2 n - 2}}_m
+ + \nonumber \\ +
+ \sum\limits_{A=3}^{2 n - 3}
+ G_0\lr{x_0, x_A}
+ \sum\limits_{m'=0}^m
+ \vev{x_1 x_2 \ldots x_{A-1}}_m'
+ \vev{x_{A+1} \ldots x_{2 n - 1}}_{m - m'}
+ - \nonumber \\ -
+ \sum\limits_{k=1}^{m} \sum\limits_z
+ G_0\lr{x_0, z}
+ \left(
+ \frac{\lambda}{4} \vev{z^{2 k + 1} x_1 \ldots x_{2 n - 1}}_{m - k}
+ + \right. \nonumber \\ \left.
+ \sum\limits_{l=1}^{2 k + 1} \lr{-1}^{l-1}
+ \sum\limits_{m=0}^{2 k + 1 - l}
+ \sum\limits_y D_{z y}
+ \vev{z^m y^l z^{2k+1-l-m} x_1 \ldots x_{2 n - 1}}_{m - k}
+ \right)
+\end{eqnarray}
+
+
+\subsection{Correlators of $g_x$ variables}
+\label{subsec:gx_correlators_coordinate}
+
+\begin{eqnarray}
+\label{gx_vev_coordinate}
+ \vev{g_x} = 1 + 2 \sum\limits_{n=1}^{+\infty} \lr{- \, \alpha^2}^n \vev{\phi_x^{2 n}}
+\end{eqnarray}
+
+\begin{eqnarray}
+\label{gx_vev_coordinate}
+ \vev{g^{\dag}_0 g_x}
+ =
+ -1 + 2 \vev{g_x}
+ +
+ 4 \sum\limits_{n=1}^{+\infty} \lr{-\alpha^2}^n
+ \sum\limits_{k=1}^{2 n - 1} \lr{-1}^k
+ \vev{\phi_x^k \, \phi_0^{2n - k}}
+\end{eqnarray}
+
+
+\subsection{Observables in coordinate space}
+
+\section{Schwinger-Dyson equations in momentum space}
+\label{sec:sd_momentum}
 
  Let us now define the momentum-space field operators and correlators as
 \begin{eqnarray}
@@ -365,7 +450,7 @@ where we have denoted $Q = q_0 + \ldots + q_{2 k}$.
 
 
 \subsection{Correlators of $g_x$ variables}
-\label{subsec:gx_correlators}
+\label{subsec:gx_correlators_momentum}
 
  An important criterion of whether the $SU\lr{N} \times SU\lr{N}$ symmetry of the action is restored dynamically is the expectation value of a single field variable $\vev{g_x}$, which should tend to zero as the approximation becomes more and more exact. Expressing $\vev{g_x}$ in terms of the variables $\phi_x$, we get:
 \begin{eqnarray}
