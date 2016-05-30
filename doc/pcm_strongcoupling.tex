@@ -1,0 +1,271 @@
+\documentclass[12pt]{article}
+
+\usepackage[a4paper,landscape,dvips]{geometry}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{color}
+
+\newcommand{\comment}[1]{}
+
+\newcommand{\lr}[1]{ \left( #1 \right) }
+\newcommand{\lrs}[1]{ \left[ #1 \right] }
+\newcommand{\lrc}[1]{ \left\{ #1 \right\} }
+\newcommand{\vev}[1]{ \langle \, #1 \, \rangle }
+
+\newcommand{\Tr}{ {\rm Tr} \, }
+\newcommand{\tr}{ {\rm Tr} \, }
+\newcommand{\re}{ {\rm Re} \, }
+\newcommand{\im}{ {\rm Im} \, }
+\renewcommand{\Re}{ {\rm Re} \, }
+\renewcommand{\Im}{ {\rm Im} \, }
+
+\newcommand{\rvac}{ \, | 0 \rangle }
+\newcommand{\lvac}{ \langle 0 | \, }
+\newcommand{\ket}[1]{ \, | #1 \rangle }
+\newcommand{\bra}[1]{ \langle #1 | \, }
+
+\newcommand{\diag}[1]{ {\rm diag} \, \left( #1 \right) }
+\newcommand{\const}{ {\rm const}}
+\renewcommand{\det}[1]{ {\rm det} \left( #1 \right) }
+
+\newcommand{\sign}{ {\rm sign} \,  }
+\newcommand{\sh}{ {\rm sh} \,  }
+\newcommand{\ch}{ {\rm ch} \,  }
+\renewcommand{\th}{ {\rm th} \,  }
+\newcommand{\hodge}{{}^{*}}
+\newcommand{\expa}[1]{ \exp{\left( #1 \right)} }
+\newcommand{\abs}[1]{| #1 |}
+
+\newcommand{\red}[1]{ \textcolor{red}{#1} }
+
+\newcommand{\G}{\mathcal{G}}
+
+\begin{document}
+
+\section*{Generalized expansion from strong-coupling Schwinger-Dyson (no explicit action involved)}
+
+\subsection*{Schwinger-Dyson equations}
+
+Our starting point are the SD equations for the following correlators in the PCM model
+\begin{eqnarray}
+\label{gf_def}
+\G\lr{x_1, y_1, \ldots, x_n, y_n}
+=
+\frac{1}{N}\, \vev{ \tr\lr{
+g_{x_1} g^{\dag}_{y_1} \ldots g_{x_n} g^{\dag}_{y_n}} }
+\end{eqnarray}
+\begin{eqnarray}
+\label{SDs_n2}
+\G\lr{x_1, y_1} =
+\delta_{x_1, y_1}
+ - %\nonumber \\ -
+\frac{1}{\lambda} D_{x_1 x} \, \G\lr{x, y_1}
+ +
+\frac{1}{\lambda} D_{x_1 x} \, \G\lr{x_1, x, x_1, y_1}
+\end{eqnarray}
+
+\begin{eqnarray}
+\label{SDs}
+\G\lr{x_1, y_1, \ldots, x_n, y_n}
+= %\nonumber\\ =
+\sum\limits_{A=2}^{n-1} \delta_{x_1, y_A} \,
+\G\lr{x_A, y_1, \ldots, x_{A-1}, y_{A-1}}\,
+\G\lr{x_{A+1}, y_{A+1}, \ldots, x_n, y_n}\,
++ \nonumber \\ +
+\delta_{x_1, y_1} \, \G\lr{x_2, y_2, \ldots, x_n, y_n}\,
++
+\delta_{x_1, y_n} \, \G\lr{x_n, y_1, \ldots, x_{n-1}, y_{n-1}}\,
+- \nonumber \\ -
+\sum\limits_{A=2}^{n} \delta_{x_1, x_A} \,
+ \G\lr{x_1, y_1, \ldots, x_{A-1}, y_{A-1}}\,
+ \G\lr{x_A, y_A, \ldots, x_n, y_n}\,
+- \nonumber \\ -
+\frac{1}{\lambda} D_{x_1 x} \G\lr{x, y_1, \ldots, x_n, y_n}
++
+\frac{1}{\lambda} D_{x_1 x} \, \G\lr{x_1, x, x_1, y_1, \ldots, x_n, y_n}
+\end{eqnarray}
+
+Let us now define the correlators in the momentum space:
+\begin{eqnarray}
+\label{momentum_space_def}
+ G\lr{p_1, q_1, \ldots, p_n, q_n} = \frac{\lambda^{-n}}{V^{2 n}} \,
+\sum\limits_{x_1, y_1} \ldots \sum\limits_{x_n, y_n} \,
+\expa{i \sum\limits_A p_A x_A + i \sum\limits_A q_A y_A} \,
+\G\lr{x_1, y_1, \ldots, x_n, y_n}  ,
+\end{eqnarray}
+or, conversely,
+\begin{eqnarray}
+\label{momentum_space_def_inverse}
+ \G\lr{x_1, y_1, \ldots, x_n, y_n}
+ =
+ \lambda^{n}
+ \sum\limits_{p_1, q_1} \ldots \sum\limits_{p_n, q_n} \,
+ \expa{-i \sum\limits_A p_A x_A - i \sum\limits_A q_A y_A}
+  G\lr{p_1, q_1, \ldots, p_n, q_n} .
+\end{eqnarray}
+
+In the momentum space the equations (\ref{SDs_n2}), (\ref{SDs}) read:
+\begin{eqnarray}
+\label{SDs_n2_momentum}
+ G\lr{p_1, q_1} = \frac{\G_0\lr{p_1} \delta\lr{p_1 + q_1}}{V}
+ +
+ \lambda G_0\lr{p_1} \,
+\sum\limits_{\tilde{p}_1, \tilde{q}_1, \tilde{p}_2}
+\delta\lr{p_1, \tilde{p}_1 + \tilde{q}_1 + \tilde{p}_2} \,
+D\lr{\tilde{q}_1} G\lr{\tilde{p}_1, \tilde{q}_1, \tilde{p}_2, q_1}
+\end{eqnarray}
+
+\begin{eqnarray}
+\label{SDs_pcm_momentum}
+ G\lr{p_1, q_1, \ldots, p_n, q_n}
+ = \nonumber \\ =
+ \sum\limits_{A=2}^{n-1}
+ \frac{G_0\lr{p_1} \, \delta\lr{p_1 + q_A}}{V} \,
+ G\lr{    p_A,     q_1, \ldots, p_{A-1}, q_{A-1}}
+ G\lr{p_{A+1}, q_{A+1}, \ldots,     p_n,    q_n }
+ + \nonumber \\ +
+ \frac{G_0\lr{p_1} \, \delta\lr{p_1 + q_1}}{V} \,
+ G\lr{p_2, q_2, \ldots, p_n, q_n}
+ + \nonumber \\ +
+ \frac{G_0\lr{p_1} \, \delta\lr{p_1 + q_n}}{V} \,
+ G\lr{p_n, q_1, p_2, q_2, \ldots, p_{n-1}, q_{n-1}}
+ - \nonumber \\ -
+ \lambda \, \frac{G_0\lr{p_1}}{V} \,
+ \sum\limits_{A=2}^{n}
+ \sum\limits_{\tilde{p}_1 \tilde{p}_A} \delta\lr{p_1 + p_A, \tilde{p}_1 + \tilde{p}_A}
+ G\lr{\tilde{p}_1, q_1, p_2, q_2, \ldots, p_{A-1}, q_{A-1}}
+ G\lr{\tilde{p}_A, q_A,           \ldots, p_n, q_n}
+ + \nonumber \\ +
+ \lambda G_0\lr{p_1}
+ \sum\limits_{\tilde{p}_1, \tilde{q}_1, \tilde{p_2}}
+ \delta\lr{p_1, \tilde{p}_1 + \tilde{q}_1 + \tilde{p}_2} D\lr{\tilde{q}_1}
+ G\lr{\tilde{p}_1, \tilde{q}_1, \tilde{p}_2, q_1, p_2, q_2, \ldots, p_n, q_n}
+\end{eqnarray}
+where we have defined the effective propagator $\G_0\lr{p} = \lr{\lambda + D\lr{p}}^{-1}$.
+
+Exploring now the freedom of shifting $D\lr{p} \rightarrow D\lr{p} + c$, which is ensured by the unitarity of the $g$ matrices, let us now define $D\lr{p} = D_0\lr{p} - \lambda + m_0^2$, where $D_0\lr{p}$ behaves as $p^2$ at small $p$. As a result, the bare propagator reads $\G_0\lr{p} = \lr{m_0^2 + D_0\lr{p}}^{-1}$.
+
+\subsection*{Leading order (mean-field) result}
+
+For the leading-order result for $\G_{x y}$ we trivially find
+\begin{eqnarray}
+\label{order0}
+ G_{x y} = \lambda \int \frac{d^2 q}{\lr{2 \pi}^2} \frac{e^{i q \lr{x - y}}}{m_0^2 + D_0\lr{q}} .
+\end{eqnarray}
+Tuning now the mass in order to achieve $G_{xx} = 1$, we get the standard mean-field equation for the bare mass $m_0$, $\lambda I_0\lr{m_0} = 1$, where $I_0 = \int \frac{d^d q}{\lr{2 \pi}^d} G_0\lr{q}$. In 1D and 2D we have, correspondingly
+\begin{eqnarray}
+\label{lattice_I0_1D}
+ I_0\lr{m} = \frac{1}{m \sqrt{4 + m^2}} \quad (d = 1)
+ \nonumber \\
+\label{lattice_I0_2D}
+ I_0\lr{m} = \frac{2 \text{EllipticK}\left[-\frac{16}{8 m^2 + m^4}\right]}{\pi  \sqrt{8 m^2 + m^4}} =
+ \frac{1}{4 \pi} \ln\lr{\frac{32}{m^2}} + O\lr{m^2 \ln\lr{m}}
+\end{eqnarray}
+
+\subsection*{Next-to-leading order result}
+
+ For the next correction it is easy to find
+\begin{eqnarray}
+\label{nlo_Gpq}
+ G^{\lr{1}}\lr{p_1 q_1} = \lambda \, \frac{G_0^2\lr{p_1} \delta\lr{p_1 + q_1}}{V}
+ \, 2 \, \frac{1}{V} \sum\limits_q D\lr{q} G_0\lr{q} .
+\end{eqnarray}
+Taking into account the exact form of $D\lr{q}$, we find for the NLO propagator
+\begin{eqnarray}
+\label{nlo_Gpq}
+ G_1\lr{p} = G_0\lr{p} + \lambda G_0^2\lr{p} \, 2 \, \lr{1 - \lambda I_0}
+\end{eqnarray}
+Calculating now again $\G_{xx}$ we get
+\begin{eqnarray}
+\label{nlo_Gxx}
+ G_{xx} = \lambda \lr{I_0 + 2 \lambda I_1 \lr{1 - \lambda I_0}} ,
+\end{eqnarray}
+where we have defined $I_1\lr{m} = \int \frac{d^d q}{\lr{2 \pi}^d} G_0\lr{q}^2$:
+\begin{eqnarray}
+\label{lattice_I1_1D}
+  I_1\lr{m} = \frac{2 + m^2}{m^3 \lr{4 + m^2}^{3/2}} \quad (d = 1)
+ \nonumber \\
+\label{lattice_I0_2D}
+ I_1\lr{m} = \frac{1}{4 \pi m^2} + O\lr{m^2} \quad (d = 2) .
+\end{eqnarray}
+An obvious solution to $G_{xx} = 1$ is again $\lambda I_0 = 1$, and hence $G_1\lr{p}$ does not receive corrections at this order! This can be easily understood if one remembers that the leading-order result here is the same as for the $O\lr{N}$ sigma model, where the answer is given by cactus diagrams and mean-field is known to be exact. The leading order correction here is the tadpole - and it is a cactus-type diagram!
+
+ Let us also consider the expansion of the mean link:
+\begin{eqnarray}
+\label{mean_link_lo}
+ \vev{g^{\dag}_0 g_1} = 1 - \frac{\lambda}{4} + \frac{m^2}{4}
+\end{eqnarray}
+
+\subsection*{Next-to-next-to-leading-order result}
+
+ For the next-order result we have to calculate $G_1\lr{p_1 q_1 p_2 q_2}$. The last summand takes the form
+\begin{eqnarray}
+\label{G4_nlo1}
+ \sum\limits_{\tilde{p}_1, \tilde{q}_1} D\lr{\tilde{q}_1} G_0\lr{\tilde{p}_1} G_0\lr{p_1 - \tilde{p}_1 - \tilde{q}_1} G_0\lr{p_2}
+ \delta\lr{\tilde{p}_1 + q_1} \delta\lr{p_1 - \tilde{p}_1 - \tilde{q}_1 + \tilde{q}_1} \delta\lr{p_2 + q_2}
+ + \nonumber \\ +
+ \sum\limits_{\tilde{p}_1, \tilde{q}_1} D\lr{\tilde{q}_1} G_0\lr{\tilde{p}_1} G_0\lr{p_1 - \tilde{p}_1 - \tilde{q}_1} G_0\lr{p_2}
+ \delta\lr{\tilde{p}_1 + \tilde{q}_1} \delta\lr{p_1 - \tilde{p}_1 - \tilde{q}_1 + q_1} \delta\lr{p_2 + q_2}
+ + \nonumber \\ +
+ \sum\limits_{\tilde{p}_1, \tilde{q}_1} D\lr{\tilde{q}_1} G_0\lr{\tilde{p}_1} G_0\lr{p_1 - \tilde{p}_1 - \tilde{q}_1} G_0\lr{p_2}
+ \delta\lr{\tilde{p}_1 + \tilde{q}_1} \delta\lr{p_1 - \tilde{p}_1 - \tilde{q}_1 + q_2} \delta\lr{p_2 + q_1}
+ + \nonumber \\ +
+ \sum\limits_{\tilde{p}_1, \tilde{q}_1} D\lr{\tilde{q}_1} G_0\lr{\tilde{p}_1} G_0\lr{p_1 - \tilde{p}_1 - \tilde{q}_1} G_0\lr{p_2}
+ \delta\lr{\tilde{p}_1 + q_2} \delta\lr{p_1 - \tilde{p}_1 - \tilde{q}_1 + q_1} \delta\lr{p_2 + \tilde{q}_1}
+ + \nonumber \\ +
+ \sum\limits_{\tilde{p}_1, \tilde{q}_1} D\lr{\tilde{q}_1} G_0\lr{\tilde{p}_1} G_0\lr{p_1 - \tilde{p}_1 - \tilde{q}_1} G_0\lr{p_2}
+ \delta\lr{\tilde{p}_1 + q_2} \delta\lr{p_1 - \tilde{p}_1 - \tilde{q}_1 + \tilde{q}_1} \delta\lr{p_2 + q_1} ,
+\end{eqnarray}
+which simplifies to (after multiplication by $G_0\lr{p_1}$)
+\begin{eqnarray}
+\label{G4_nlo2}
+ 2 \frac{G_0^2\lr{p_1} \delta\lr{p_1 + q_2}}{V} \frac{G_0\lr{p_2} \delta\lr{p_2 + q_1}}{V} \lr{1 - \lambda I_0} +
+ 2 \frac{G_0^2\lr{p_1} \delta\lr{p_1 + q_1}}{V} \frac{G_0\lr{p_2} \delta\lr{p_2 + q_2}}{V} \lr{1 - \lambda I_0}
+ + \nonumber \\ +
+ D\lr{p_2} G_0\lr{p_1} G_0\lr{q_1} G_0\lr{p_2} G_0\lr{q_2} \delta\lr{p_1 + q_1 + p_2 + q_2}
+\end{eqnarray}
+Here we use the identity $D\lr{p} G_0\lr{p} = 1 - \lambda G_0\lr{p}$. The summand corresponding to $1$ then cancels with the double-trace interaction vertex in this formula, and we are left with the standard four-momentum interaction vertex plus the disconnected tadpole contributions:
+\begin{eqnarray}
+\label{G4_nlo1}
+ G^{\lr{1}}\lr{p_1 q_1 p_2 q_2} =
+ \frac{\delta\lr{p_1 + q_1}}{V} \, \frac{\delta\lr{p_2 + q_2}}{V}
+ \lr{G_0\lr{p_1} G^{\lr{1}}\lr{p_2} + G^{\lr{1}}\lr{p_1} G_0\lr{p_2} }
+ + \nonumber \\ +
+ \frac{\delta\lr{p_1 + q_2}}{V} \, \frac{\delta\lr{p_2 + q_1}}{V}
+ \lr{G_0\lr{p_1} G^{\lr{1}}\lr{p_2} + G^{\lr{1}}\lr{p_1} G_0\lr{p_2} }
+ - \nonumber \\ -
+ \lambda^2 G_0\lr{p_1} G_0\lr{p_2} G_0\lr{q_1} G_0\lr{q_2} \frac{\delta\lr{p_1 + q_1 + p_2 + q_2}}{V^3}
+\end{eqnarray}
+We can now calculate the next-to-next-to-leading order contribution to $G\lr{p_1 q_1}$. In a compact form we can write
+\begin{eqnarray}
+\label{Gp_nnlo1}
+ G^{\lr{2}}\lr{p} = G_0^3\lr{p} \Sigma_1^2 + G_0^2\lr{p} \Sigma_2
+ - \lambda G_0^2\lr{p} V^{-2}\sum\limits_{\tilde{p}, \tilde{q}} G_0\lr{\tilde{p}} D\lr{\tilde{q}} G_0\lr{\tilde{q}} G_0\lr{p - \tilde{p} - \tilde{q}} ,
+\end{eqnarray}
+where we have denoted
+\begin{eqnarray}
+\label{sigmas_def}
+ \Sigma_1 = 2 \vev{D\lr{p} G_0\lr{p}} = 2 \lr{1 - \lambda I_0},
+ \nonumber \\
+ \Sigma_2 = 2 \vev{D\lr{p} G_0^2\lr{p}} \Sigma_1 = 2 \lr{I_0 - \lambda I_1} \Sigma_1 , \quad I_1 \equiv \vev{G_0^2\lr{p}}
+\end{eqnarray}
+Transforming the term $D\lr{\tilde{q}} G_0\lr{\tilde{q}}$, we arrive at
+\begin{eqnarray}
+\label{Gp_nnlo1}
+ G^{\lr{2}}\lr{p} = G_0^3\lr{p} \Sigma_1^2 + G_0^2\lr{p} \Sigma_2
+ - \lambda I_0^2 G_0^2\lr{p}
+  +
+  \lambda^2 G_0^2\lr{p} V^{-2}\sum\limits_{\tilde{p}, \tilde{q}} G_0\lr{\tilde{p}} G_0\lr{\tilde{q}} G_0\lr{p - \tilde{p} - \tilde{q}}
+\end{eqnarray}
+For $G_{xx}$ we now get
+\begin{eqnarray}
+\label{Gp_nnlo1}
+ G_{xx}^{\lr{2}} = I_2 \Sigma_1^2 + I_1 \Sigma_2
+ - \lambda I_0^2 I_1
+  +
+  \lambda^2 \vev{ G_0^2\lr{p} G_0\lr{\tilde{p}} G_0\lr{\tilde{q}} G_0\lr{p - \tilde{p} - \tilde{q}} }
+\end{eqnarray}
+
+\end{document}
+

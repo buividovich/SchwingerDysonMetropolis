@@ -2,6 +2,8 @@
 
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{color}
+\usepackage{lscape}
 
 \newcommand{\comment}[1]{}
 
@@ -33,6 +35,8 @@
 \newcommand{\hodge}{{}^{*}}
 \newcommand{\expa}[1]{ \exp{\left( #1 \right)} }
 \newcommand{\abs}[1]{| #1 |}
+
+\newcommand{\red}[1]{ \textcolor{red}{#1} }
 
 \begin{document}
 
@@ -78,12 +82,40 @@ We now see that in order to get the canonical form of the free (quadratic) part 
   \lr{-1}^{\frac{k-l}{2}} \frac{4 \, \lambda^{\frac{k+l-2}{2}}}{8^{\frac{k+l}{2}}}
        \sum\limits_{x,y} D_{xy} \tr\lr{\phi_x^k \, \phi_y^l}
 \end{eqnarray}
-It is instructive to explicitly write out the terms involving interaction vertices with powers of $\phi$ equal to four:
+It is convenient to rewrite the interacting part of the action as
+\begin{eqnarray}
+\label{pcm_action_int}
+ S_I\lrs{\phi_x}
+ = \sum\limits_{n=2}^{+\infty} \lr{- \alpha^2}^{n-1} S_I^{\lr{2 n}}\lrs{\phi_x} ,
+ \nonumber \\
+ S_I^{\lr{2 n}}\lrs{\phi_x} =
+ \lr{
+  \frac{\alpha^2}{n} \sum\limits_x \tr \phi_x^{2 n}
+  +
+  \frac{1}{2} \sum\limits_{l=1}^{2 n - 1} \lr{-1}^{l-1}
+  \sum\limits_{x,y} D_{x y} \tr\lr{\phi_x^{2 n - l} \phi_y^l }
+ }
+\end{eqnarray}
+
+It is instructive to explicitly write out the terms involving interaction vertices with powers of $\phi$ equal to four and six:
 \begin{eqnarray}
 \label{interaction_action_phi4}
- S_I^{\lr{4}} = - \frac{\lambda^2}{128} \sum\limits_x \tr \phi_x^4
+ S_I^{\lr{4}} = \frac{\lambda}{16} \sum\limits_x \tr \phi_x^4
+ +
+ \frac{1}{2} \sum\limits_{x, y} D_{x y} \lr{
+  2 \tr\lr{\phi_x \phi_y^3}
+  -
+  \tr\lr{\phi_x^2 \phi_y^2} } \\
+\label{interaction_action_phi6}
+ S_I^{\lr{6}} = \frac{\lambda}{24} \sum\limits_x \tr \phi_x^6
  + \nonumber \\ +
- \frac{\lambda}{16} \sum\limits_{x, y} D_{x y} \lr{\tr\lr{\phi_x^2 \phi_y^2} - D_{x y} \tr\lr{\phi_x^3 \phi_y} - D_{x y} \tr\lr{\phi_x \phi_y^3} }
+ \frac{1}{2} \sum\limits_{x, y} D_{x y} \lr{
+  2 \tr\lr{\phi_x^5 \phi_y}
+  -
+  2 \tr\lr{\phi_x^4 \phi_y^2}
+  +
+  \tr\lr{\phi_x^3 \phi_y^3}
+ }
 \end{eqnarray}
 
 \section{Schwinger-Dyson equations in coordinate space}
@@ -146,22 +178,22 @@ The derivative of the action can be represented as follows:
 \subsection{Schwinger-Dyson equations in algorithmic form}
 \label{subsec:sd_coord_alg}
 
-We now assume the expansion 
+We now assume the expansion
 \begin{eqnarray}
 \label{expansion_assumed}
  \vev{x_0 \ldots x_{2 n - 1}} = \sum\limits_{m=0}^{+\infty}
- \vev{x_0 \ldots x_{2 n - 1}}_m \lr{-\alpha^2}^m 
+ \vev{x_0 \ldots x_{2 n - 1}}_m \lr{-\alpha^2}^m
 \end{eqnarray}
 
 \begin{eqnarray}
 \label{sd_g2_coord_algorithmic}
  \vev{x_0 x_1}_m = G_0\lr{x_0, x_1} \delta_{m, 0}
  - \nonumber \\ -
- \sum\limits_{k=1}^{m}
  G_0\lr{x_0, z}
+ \sum\limits_{k=1}^{m}
  \left(
- \frac{\lambda}{4} \vev{z^{2 k + 1} x_2}_{m - k}
- + \right. \nonumber \\ \left. 
+ \frac{\lambda}{4} \vev{z^{2 k + 1} x_1}_{m - k}
+ + \right. \nonumber \\ \left.
  \sum\limits_{l=1}^{2 k + 1} \lr{-1}^{l-1}
  \sum\limits_{m=0}^{2 k + 1 - l}
  \sum\limits_y D_{z y}
@@ -171,17 +203,17 @@ We now assume the expansion
 
 \begin{eqnarray}
 \label{sd_gn_coord_algorithmic}
- \vev{x_0 x_1 \ldots x_{2 n - 1}}_m 
+ \vev{x_0 x_1 \ldots x_{2 n - 1}}_m
  = \nonumber \\ =
  G_0\lr{x_0, x_1} \vev{x_2 x_3 \ldots x_{2 n - 1}}_m
  +
  G_0\lr{x_0, x_{2 n - 1}} \vev{x_1 x_3 \ldots x_{2 n - 2}}_m
  + \nonumber \\ +
- \sum\limits_{A=3}^{2 n - 3}
- G_0\lr{x_0, x_A}
+ \sum\limits_{A=1}^{n-2}
+ G_0\lr{x_0, x_{2A+1}}
  \sum\limits_{m'=0}^m
- \vev{x_1 x_2 \ldots x_{A-1}}_m'
- \vev{x_{A+1} \ldots x_{2 n - 1}}_{m - m'}
+ \vev{x_1 x_2 \ldots x_{2 A}}_{m'}
+ \vev{x_{2 A+2} \ldots x_{2 n - 1}}_{m - m'}
  - \nonumber \\ -
  \sum\limits_{k=1}^{m} \sum\limits_z
  G_0\lr{x_0, z}
@@ -189,9 +221,9 @@ We now assume the expansion
  \frac{\lambda}{4} \vev{z^{2 k + 1} x_1 \ldots x_{2 n - 1}}_{m - k}
  + \right. \nonumber \\ \left.
  \sum\limits_{l=1}^{2 k + 1} \lr{-1}^{l-1}
- \sum\limits_{m=0}^{2 k + 1 - l}
+ \sum\limits_{m'=0}^{2 k + 1 - l}
  \sum\limits_y D_{z y}
- \vev{z^m y^l z^{2k+1-l-m} x_1 \ldots x_{2 n - 1}}_{m - k}
+ \vev{z^{m'} y^l z^{2k+1-l-m'} x_1 \ldots x_{2 n - 1}}_{m - k}
  \right)
 \end{eqnarray}
 
@@ -201,18 +233,20 @@ We now assume the expansion
 
 \begin{eqnarray}
 \label{gx_vev_coordinate}
- \vev{g_x} = 1 + 2 \sum\limits_{n=1}^{+\infty} \lr{- \, \alpha^2}^n \vev{\phi_x^{2 n}}
+ \vev{g_x}_{m_{max}} = 1 + 2 \sum\limits_{n=1}^{m_{max}+1} \sum\limits_{m=0}^{m_{max}-n+1} \lr{- \, \alpha^2}^{n+m} \vev{\phi_x^{2 n}}_m
 \end{eqnarray}
 
 \begin{eqnarray}
 \label{gx_vev_coordinate}
- \vev{g^{\dag}_0 g_x}
+ \vev{g^{\dag}_0 g_x}_{m_{max}}
  =
  -1 + 2 \vev{g_x}
- +
- 4 \sum\limits_{n=1}^{+\infty} \lr{-\alpha^2}^n
+ + \nonumber \\ +
+ 4 \sum\limits_{n=1}^{m_{max}+1}
+   \sum\limits_{m=0}^{m_{max}-n+1}
+ \lr{-\alpha^2}^{n+m}
  \sum\limits_{k=1}^{2 n - 1} \lr{-1}^k
- \vev{\phi_x^k \, \phi_0^{2n - k}}
+ \vev{\phi_x^k \, \phi_0^{2n - k}}_m
 \end{eqnarray}
 
 
@@ -295,38 +329,6 @@ where we have defined the ``vertex function'' for the four-momentum vertex
 \end{eqnarray}
 Interestingly, at small momenta, when all the $D\lr{q}$ functions can be approximated by $q^2$, the vertex function reduces to $\frac{\lambda}{4} + \lr{q_1 + q_3}^2$ - which is manifestly positive and \textbf{very good for the sign problem in MC}!!!
 
-\subsection{First-order correction to the renormalized mass}
-
- Plugging the equation (\ref{dsdPhi_phi4}) into the lowest-order SD equation (\ref{sd_eqs_G2_mom}), we get for the first order nontrivial correction to the Green's function:
-\begin{eqnarray}
-\label{g1}
- g_1\lr{p} = g_0\lr{p} - g_0^2\lr{p} \Sigma_1\lr{p} ,
-\end{eqnarray}
-where we have introduced the first-order correction to the self-energy:
-\begin{eqnarray}
-\label{self_energy}
- \Sigma_1\lr{p} = - \frac{\lambda}{8} \frac{1}{V} \sum\limits_q g_0\lr{q} \lr{V\lr{-q, q, -p} + V\lr{-p, q, -q}}
- = \nonumber \\ =
- - 2 \frac{\lambda}{8} \int \frac{d^2 q}{\lr{2 \pi}^2} g_0\lr{q} \lr{\frac{\lambda}{4} + 2 D\lr{p} + 2 D\lr{q} - D\lr{q - p}}
-\end{eqnarray}
-Interestingly, we note that $\Sigma^1\lr{0} = -\frac{\lambda}{4}$, thus it exactly cancels the bare mass term!
-
-For the expectation values of the $g_x$ operators, to the lowest orders in $\lambda$ we have
-\begin{eqnarray}
-\label{gx_vev_lowest}
- \vev{g_x} = 1 - \frac{\lambda}{4} \vev{\phi_x^2} + \frac{\lambda^2}{32} \vev{\phi_x^4}
-\end{eqnarray}
-
-\begin{eqnarray}
-\label{gxgy_vev_lowest}
- \vev{g^{\dag}_x g_y} =
- -1 + 2 \vev{g_x} + \frac{\lambda}{2} \vev{\phi_x \phi_y}
- + \nonumber \\ +
-   \frac{\lambda^2}{16} \vev{\phi_x^2 \phi_y^2}
- - \frac{\lambda^2}{16} \lr{\vev{\phi_x \phi_y^3} + \vev{\phi_x^3 \phi_y}}
-\end{eqnarray}
-
-
 \subsection{Vertex functions}
 \label{subsec:vertex_func}
 
@@ -408,16 +410,16 @@ where we have denoted $Q = q_1 + \ldots + q_{2 n + 1}$.
  \vev{p_0 \ldots p_{2 n - 1}}
  =
  \sum\limits_{m=0}^{+\infty}
- \vev{p_0 \ldots p_{2 n - 1}}_m \alpha^m
+ \vev{p_0 \ldots p_{2 n - 1}}_m \lr{-\frac{\lambda}{8}}^m
 \end{eqnarray}
 
 The SD equations (\ref{sd_eqs_G2_mom_vertex}) and (\ref{sd_eqs_Gn_mom_vertex}) can be now rewritten as the recursive relations between successive coefficients in the series (\ref{alpha_series_def}):
 \begin{eqnarray}
 \label{sd_eqs_G2_mom_vertex_alg}
  \vev{p_0 p_1}_m = \frac{\delta\lr{p_0 + p_1}}{V} \, G_0\lr{p_0} \, \delta_{m,0}
- + \nonumber \\ +
+ - \nonumber \\ -
  \lr{1 - \delta_{m,0}} \,
- G_0\lr{p_0} \sum\limits_{k=1}^{m} \lr{-1}^{k-1}
+ G_0\lr{p_0} \sum\limits_{k=1}^{m}
  \times \nonumber \\ \times
  \sum\limits_{q_0, \ldots, q_{2 k}}
  \delta\lr{p_0 - Q}
@@ -437,9 +439,9 @@ and for higher-order correlators with $n > 1$
  \frac{\delta\lr{p_0 + p_{2A+1}}}{V} \, G_0\lr{p_0} \,
  \sum\limits_{k=0}^m
  \vev{p_1 \ldots p_{2A}}_k \, \vev{p_{2 A+2} \ldots p_{2n-1}}_{m-k}
- + \nonumber \\ +
+ - \nonumber \\ -
  \lr{1 - \delta_{m,0}} \,
- G_0\lr{p_0} \sum\limits_{k=1}^{m} \lr{-1}^{k-1}
+ G_0\lr{p_0} \sum\limits_{k=1}^{m}
  \times \nonumber \\ \times
  \sum\limits_{q_0, \ldots, q_{2 k}}
  \delta\lr{p_0 - Q}
@@ -448,6 +450,198 @@ and for higher-order correlators with $n > 1$
 \end{eqnarray}
 where we have denoted $Q = q_0 + \ldots + q_{2 k}$.
 
+\subsection{Lowest-order results with explicit formulae}
+
+ Plugging the equation (\ref{dsdPhi_phi4}) into the lowest-order SD equation (\ref{sd_eqs_G2_mom}), we get for the first order nontrivial correction to the Green's function:
+\begin{eqnarray}
+\label{p0p1_1}
+ \vev{p_0 p_1}_1 = G_0^2\lr{p_0} \frac{\delta\lr{p_0 + p_1}}{V} \Sigma_1\lr{p_0} ,
+\end{eqnarray}
+where
+\begin{eqnarray}
+\label{sigma_1}
+ \Sigma_1\lr{p} = -\frac{1}{V} \sum\limits_q \lr{V\lr{q, -q, p} + V\lr{p, q, -q}} G_0\lr{q}
+ = \nonumber \\ =
+ -\frac{2}{V} \sum\limits_q \lr{\frac{\lambda}{4} + 2 D\lr{p} + 2 D\lr{q} - D\lr{p-q}} G_0\lr{q} .
+\end{eqnarray}
+In particular, $\Sigma_1\lr{0} = -2$. If we interpret this quantity as the first-order correction to the self-energy, then $\Sigma_1\lr{0}$ exactly cancels the bare mass term $\lambda/4$!
+
+ The lowest-order result for $\vev{k_0 k_1 k_2 k_3 k_4 k_5}$ can be written as
+\begin{eqnarray}
+\label{G6_0}
+ \vev{k_0 k_1 k_2 k_3 k_4 k_5}_0
+ =
+ \frac{1}{V^3} G_0\lr{k_0} G_0\lr{k_2} G_0\lr{k_4}
+ \times \nonumber \\ \times
+ \left(
+ \delta\lr{k_0 + k_1} \delta\lr{k_2 + k_3} \delta\lr{k_4 + k_5}
+ \right. + \red{(u1)} \, \nonumber\\ +
+ \delta\lr{k_0 + k_1} \delta\lr{k_2 + k_5} \delta\lr{k_4 + k_3}
+         + \red{(u2)} \, \nonumber\\ +
+ \delta\lr{k_0 + k_3} \delta\lr{k_2 + k_1} \delta\lr{k_4 + k_5}
+         + \red{(u3)} \, \nonumber\\ +
+ \delta\lr{k_0 + k_5} \delta\lr{k_2 + k_1} \delta\lr{k_4 + k_3}
+         + \red{(u4)} \, \nonumber\\ + \left.
+ \delta\lr{k_0 + k_5} \delta\lr{k_2 + k_3} \delta\lr{k_4 + k_1}
+           \red{(u5)}
+ \right)
+\end{eqnarray}
+From this we can infer the leading-order correction to $\vev{l_0 l_1 l_2 l_3}$:
+\begin{eqnarray}
+\label{G4_1}
+ \vev{l_0 l_1 l_2 l_3}_1
+ = \nonumber \\ =
+  \frac{\delta\lr{l_0 + l_1}}{V} \, \frac{\delta\lr{l_2 + l_3}}{V} \lr{ G_0\lr{l_0} G_1\lr{l_2} + G_1\lr{l_0} G_0\lr{l_2} }
+  + \nonumber \\ +
+  \frac{\delta\lr{l_0 + l_3}}{V} \, \frac{\delta\lr{l_1 + l_2}}{V} \lr{ G_0\lr{l_0} G_1\lr{l_2} + G_1\lr{l_0} G_0\lr{l_2} }
+ - \nonumber \\ -
+ \frac{\delta\lr{l_0 + l_1 + l_2 + l_3}}{V^3}
+ G_0\lr{l_0} G_0\lr{l_1} G_0\lr{l_2} G_0\lr{l_3}
+ V\lr{l_1, l_2, l_3} ,
+\end{eqnarray}
+where we have defined $G_1\lr{p} = G_0\lr{p} \Sigma_1\lr{p} G_0\lr{p}$.
+
+With this result, we can find
+\begin{eqnarray}
+\label{G2_2}
+ \vev{p_0 p_1}_2
+ = \nonumber \\ =
+ \frac{\delta\lr{p_0 + p_1}}{V} G_0\lr{p_0} \Sigma_1\lr{p_0} G_1\lr{p_0}
+ +
+ \frac{\delta\lr{p_0 + p_1}}{V} G_0\lr{p_0} \Sigma_2\lr{p_0} G_0\lr{p_0}
+ ,
+\end{eqnarray}
+where $\Sigma_2\lr{p} = \Sigma_2^a\lr{p} + \Sigma_2^b\lr{p} + \Sigma_2^c\lr{p}$ and
+\begin{eqnarray}
+\label{sigma2_a}
+ \Sigma_2^a\lr{p} = - \frac{1}{V} \sum\limits_q \lr{V\lr{q, -q, p} + V\lr{p, q, -q}} G_1\lr{q}
+\\
+\label{sigma2_b}
+ \Sigma_2^b\lr{p} = \frac{1}{V^2} \sum\limits_{q_1, q_2}
+ V\lr{p - q_1 - q_2, q_1, q_2}
+ \times \nonumber \\ \times
+ G_0\lr{p - q_1 - q_2} G_0\lr{q_1} G_0\lr{q_2}
+ V\lr{-q_1, -q_2, -p_1}
+\\
+\label{sigma2_c}
+ \Sigma_2^c\lr{p} = \frac{1}{V^2} \sum\limits_{q_1, q_2}
+ G\lr{q_1} G\lr{q_2}
+ \left(
+  V\lr{-q_1, q_1, q_2, -q_2, -p}
+  + \right. \nonumber \\ +
+  V\lr{-q_1, q_1, -p, -q_2, q_2}
+  + \nonumber \\ +
+  V\lr{-q_2, q_1, -q_1, q_2, -p}
+  + \nonumber \\ +
+  V\lr{p_0, q_1, -q_1, q_2, -q_2}
+  + \nonumber \\ \left. +
+  V\lr{p_0, q_1, q_2, -q_2, -q_1}
+ \right)
+ = \nonumber \\ =
+ \frac{1}{V^2} \sum\limits_{q_1, q_2}
+ G\lr{q_1} G\lr{q_2}
+ \times \nonumber \\ \times
+ \left(
+ \frac{5 \lambda }{4}
+ +14 D\lr{p}
+  -6 D\lr{p-q_1}
+  +14 D\lr{q_1}
+ - \right. \nonumber \\ -
+ 3 D\lr{p-q_2}
+ - 3 D\lr{q_1-q_2}
+  + D\lr{p+q_1-q_2}
+  +14 D\lr{q_2}
+  - \nonumber \\ \left. -
+  3 D\lr{p+q_2}
+  +D\lr{p-q_1+q_2}
+  -3 D\lr{q_1+q_2}
+   +D\lr{-p+q_1+q_2}
+ \right)
+ = \nonumber \\ =
+ \lr{\frac{5 \lambda}{4} + 14 D\lr{p}} I_0^2
+ - 12 I_0 \vev{G_0\lr{q} D\lr{p - q}}
+ + \nonumber \\ +
+ 28 I_0 \lr{1 - \frac{\lambda}{4} I_0}
+ - 6 \vev{D\lr{q_1 - q_2} G_0\lr{q_1} G_0\lr{q_2}}
+ + \nonumber \\ +
+  3 \vev{D\lr{p - q_1 - q_2} G_0\lr{q_1} G_0\lr{q_2}} 
+\end{eqnarray}
+For some particular terms in this sum we find
+\begin{eqnarray}
+\label{s2c_term1}
+ \vev{G_0\lr{q} D\lr{p - q}} = \lr{1 - \frac{\lambda}{4} I_0} \lr{1 - \frac{1}{2 d} D\lr{p}}
+ + D\lr{p} I_0
+\end{eqnarray}
+
+\subsubsection{Some integrals in 1D and 2D...}
+
+For the infinite 1D lattice,
+\begin{eqnarray}
+\label{phixphiy0}
+ \vev{\phi_x \phi_y}_0 = \int\limits_{-\pi}^{\pi} \frac{d p}{2 \pi} \, \frac{\cos\lr{p\lr{x - y}}}{\frac{\lambda}{4} + 4 \sin^2\lr{\frac{p}{2}}}
+ \nonumber \\
+ \vev{\phi_0 \phi_0}_0 \equiv I_0\lr{\lambda} =  \int\limits_{-\pi}^{\pi} \frac{d p}{2 \pi} \, \frac{1}{\frac{\lambda}{4} + 4 \sin^2\lr{\frac{p}{2}}} = \frac{4}{\sqrt{\lambda \, \lr{16 + \lambda}}}
+ \nonumber \\
+ \vev{\phi_0 \phi_1}_0 =  \int\limits_{-\pi}^{\pi} \frac{d p}{2 \pi} \, \frac{1 - 2 \sin^2\lr{\frac{p}{2}}}{\frac{\lambda}{4} + 4 \sin^2\lr{\frac{p}{2}}} =
+ \lr{1 + \frac{\lambda}{8}} I_0\lr{\lambda} - \frac{1}{2}
+\end{eqnarray}
+We can now explicitly find the self-energy $\Sigma_1\lr{p}$:
+\begin{eqnarray}
+\label{sigma1p}
+ -\frac{1}{2} \Sigma_1\lr{p}
+ =
+ 1 + \frac{D\lr{p}}{2}\lr{1 + \lr{2 - \frac{\lambda}{4}} I_0\lr{\lambda} }
+\end{eqnarray}
+
+For the infinite 2D lattice,
+\begin{eqnarray}
+\label{I0_2D}
+ I_0\lr{\lambda} = \frac{8 \text{EllipticK}\left[-\frac{256}{32 \lambda +\lambda ^2}\right]}{\pi  \sqrt{\lambda  (32+\lambda )}}
+\end{eqnarray}
+We can now explicitly find the self-energy $\Sigma_1\lr{p}$:
+\begin{eqnarray}
+\label{sigma1p}
+ -\frac{1}{2} \Sigma_1\lr{p}
+ =
+ 1 + \frac{D\lr{p}}{4}\lr{1 + \lr{4 - \frac{\lambda}{4}} I_0\lr{\lambda} }
+\end{eqnarray}
+
+For the expectation values of the $g_x$ operators, to the lowest orders in $\lambda$ we have
+\begin{eqnarray}
+\label{gx_vev_lowest}
+ \vev{g_x} = 1 - \frac{\lambda}{4} \vev{\phi_x^2} + \frac{\lambda^2}{32} \vev{\phi_x^4}
+\end{eqnarray}
+
+\begin{eqnarray}
+\label{gxgy_vev_lowest}
+ \vev{g^{\dag}_x g_y} =
+ -1 + 2 \vev{g_x} + \frac{\lambda}{2} \vev{\phi_x \phi_y}
+ + \nonumber \\ +
+   \frac{\lambda^2}{16} \vev{\phi_x^2 \phi_y^2}
+ - \frac{\lambda^2}{16} \lr{\vev{\phi_x \phi_y^3} + \vev{\phi_x^3 \phi_y}}
+\end{eqnarray}
+
+We can now calculate
+\begin{eqnarray}
+\label{gcorrs_order0}
+ \vev{g_0}_0 = 1 - \frac{\lambda}{4} I_0\lr{\lambda}
+ \nonumber \\
+ \vev{g^{\dag}_0 g_1} = 1 - \frac{\lambda}{4} + \frac{\lambda^2}{16} I_0\lr{\lambda} = 1 - \frac{\lambda}{4} + \frac{\lambda^{3/2}}{16} + O\lr{\lambda^2}
+\end{eqnarray}
+
+\begin{eqnarray}
+\label{}
+ \vev{g^{\dag}_p g_q}_1 =
+ \lr{2 \vev{g} - 1} \delta\lr{p} \delta\lr{q}
+ +
+ \frac{\lambda}{2}
+ \lr{\vev{p q}_0 - \frac{\lambda}{8} \vev{p q}_1}
+ + \nonumber \\ +
+ \frac{\lambda^2}{16} \frac{-4 \delta\lr{p+q}}{V} G_0\lr{p} \frac{1}{V} \sum\limits_l G_0\lr{l}
+ + \frac{\lambda^2}{16} \delta\lr{p} \delta\lr{q} \lr{\frac{1}{V} \sum\limits_l G_0\lr{l}}^2
+ + \nonumber \\ +
+ + \frac{\lambda^2}{16} \frac{\delta\lr{p+q}}{V} \frac{1}{V} \sum\limits_{l} G_0\lr{l} G_0\lr{q+l}
+ \end{eqnarray}
 
 \subsection{Correlators of $g_x$ variables}
 \label{subsec:gx_correlators_momentum}
@@ -466,15 +660,34 @@ where we have denoted $Q = q_0 + \ldots + q_{2 k}$.
 \end{eqnarray}
 In the same way, we can express the correlator $\vev{g^{\dag}_x g_y}$ in coordinate space as:
 \begin{eqnarray}
-\label{gx_vev_space}
+\label{gxgy_vev_space}
  \vev{g^{\dag}_x g_y}
  =
  2 \vev{g_x} - 1
  +
  4 \sum\limits_{k,l=1}^{+\infty}
  \lr{-1}^{\frac{k-l}{2}} \, \lr{\frac{\lambda}{8}}^{\frac{k+l}{2}}
- \vev{\phi_x^k \phi_y^l} .
+ \vev{\phi_x^k \phi_y^l}
+ = \nonumber \\ =
+ \lr{2 \vev{g_x} - 1} + 4 \sum\limits_{n=1}^{+\infty} \lr{-\frac{\lambda}{8}}^n
+ \sum\limits_{k=1}^{2 n - 1} \lr{-1}^k \vev{\phi_x^k \phi_y^{2 n - k}}
 \end{eqnarray}
+It is also convenient to write out the result for the Fourier transform of $\vev{g^{\dag}_x g_y}$:
+\begin{eqnarray}
+\label{gxgy_vev_fourier}
+ \vev{g^{\dag}_p g_q}
+ =
+ \lr{2 \vev{g_x} - 1} \delta\lr{p} \delta\lr{q}
+ + \nonumber \\ +
+ 4 \sum\limits_{m=1}^{+\infty} \lr{-\frac{\lambda}{8}}^m
+ \sum\limits_{p_0 \ldots p_{2 m-1}}
+ \sum\limits_{l = 1}^{2 m - l} \lr{-1}^l
+ \delta\lr{p - p_0 - \ldots - p_{l-1}}
+ \delta\lr{q - p_l - \ldots - p_{2 m - 1}}
+ \vev{p_0 \ldots p_{2 m-1}}
+\end{eqnarray}
+
+
 Performing the Fourier transform and assuming translational invariance, we get
 \begin{eqnarray}
 \label{gx_vev_momentum}
@@ -491,4 +704,106 @@ Performing the Fourier transform and assuming translational invariance, we get
  \sum\limits_{k=1}^{2 n - 1} \lr{-1}^k \cos\lr{\lr{q_1 + \ldots + q_k} x}
 \end{eqnarray}
 
+
+\begin{eqnarray}
+\label{simplify1}
+ -\delta\lr{p - p_0} \delta\lr{q - p_1 - p_2 - p_3}
+  \delta\lr{p_0 + p_1} G_0\lr{p_0} \delta\lr{p_2 + p_3} G_0\lr{p_2}
+ \nonumber \\
+ +\delta\lr{p - p_0 - p_1} \delta\lr{q - p_2 - p_3}
+  \delta\lr{p_0 + p_1} G_0\lr{p_0} \delta\lr{p_2 + p_3} G_0\lr{p_2}
+ \nonumber \\
+ -\delta\lr{p - p_0 - p_1 - p_2} \delta\lr{q - p_3}
+  \delta\lr{p_0 + p_1} G_0\lr{p_0} \delta\lr{p_2 + p_3} G_0\lr{p_2}
+ \nonumber \\
+ -\delta\lr{p - p_0} \delta\lr{q - p_1 - p_2 - p_3}
+  \delta\lr{p_0 + p_3} G_0\lr{p_0} \delta\lr{p_2 + p_1} G_0\lr{p_2}
+ \nonumber \\
+ +\delta\lr{p - p_0 - p_1} \delta\lr{q - p_2 - p_3}
+  \delta\lr{p_0 + p_3} G_0\lr{p_0} \delta\lr{p_2 + p_1} G_0\lr{p_2}
+ \nonumber \\
+ -\delta\lr{p - p_0 - p_1 - p_2} \delta\lr{q - p_3}
+  \delta\lr{p_0 + p_3} G_0\lr{p_0} \delta\lr{p_2 + p_1} G_0\lr{p_2}
+ \nonumber \\
+\end{eqnarray}
+
+\section{Cross-check with Gross-Witten higher correlators...}
+
+In Gross-Witten,
+\begin{eqnarray}
+ \vev{g}   = 1 - \frac{\lambda_{GW}}{4} = 1 - \frac{\lambda}{8}
+ \nonumber \\
+ \vev{g^2} = 1 - \lambda_{GW} + \frac{\lambda_{GW}^2}{4} = 1 - \frac{\lambda}{2} + \frac{\lambda^2}{16}
+\nonumber \\
+ \vev{g^3} = 1 - \frac{9 \lambda_{GW}}{4} + \frac{3 \lambda_{GW}^2}{2} - \frac{5 \lambda_{GW}^3}{16} = 1 - \frac{9 \lambda}{8} + \frac{3 \lambda^2}{8} - \frac{5 \lambda^3}{128}
+\end{eqnarray}
+
+\newpage
+\begin{landscape}
+\begin{eqnarray}
+ \hspace{-4cm} \sum\limits_{q_1 q_2 q_3 q_4} V\lr{p_0 - q_1 - q_2 - q_3 - q_4, q_1, q_2, q_3, q_4}
+ G_0\lr{(p_0 - q_1 - q_2 - q_3 - q_4)} G_0\lr{q_2} G_0\lr{q_4} \delta\lr{p_0 - q_2 - q_3 - q_4} \delta\lr{q_2 + q_3} \delta\lr{q_4 + p_1}
+     + \red{(u1)} \, \nonumber\\ \hspace{-4cm} +
+ \sum\limits_{q_1 q_2 q_3 q_4} V\lr{p_0 - q_1 - q_2 - q_3 - q_4, q_1, q_2, q_3, q_4}
+ G_0\lr{(p_0 - q_1 - q_2 - q_3 - q_4)} G_0\lr{q_2} G_0\lr{q_4} \delta\lr{p_0 - q_2 - q_3 - q_4} \delta\lr{q_2 + p_1} \delta\lr{q_4 + q_3}
+         + \red{(u2)} \, \nonumber\\ \hspace{-4cm} +
+\sum\limits_{q_1 q_2 q_3 q_4} V\lr{p_0 - q_1 - q_2 - q_3 - q_4, q_1, q_2, q_3, q_4}
+ G_0\lr{(p_0 - q_1 - q_2 - q_3 - q_4)} G_0\lr{q_2} G_0\lr{q_4} \delta\lr{p_0 - q_1 - q_2 - q_4} \delta\lr{q_2 + q_1} \delta\lr{q_4 + p_1}
+         + \red{(u3)} \, \nonumber\\ \hspace{-4cm} +
+\sum\limits_{q_1 q_2 q_3 q_4} V\lr{p_0 - q_1 - q_2 - q_3 - q_4, q_1, q_2, q_3, q_4}
+  G_0\lr{(p_0 - q_1 - q_2 - q_3 - q_4)} G_0\lr{q_2} G_0\lr{q_4} \delta\lr{(p_0 - q_1 - q_2 - q_3 - q_4) + p_1} \delta\lr{q_2 + q_1} \delta\lr{q_4 + q_3}
+         + \red{(u4)} \, \nonumber\\ \hspace{-4cm} +
+  \sum\limits_{q_1 q_2 q_3 q_4} V\lr{p_0 - q_1 - q_2 - q_3 - q_4, q_1, q_2, q_3, q_4}
+  G_0\lr{(p_0 - q_1 - q_2 - q_3 - q_4)} G_0\lr{q_2} G_0\lr{q_4} \delta\lr{(p_0 - q_1 - q_2 - q_3 - q_4) + p_1} \delta\lr{q_2 + q_3} \delta\lr{q_4 + q_1}
+           \red{(u5)}
+\end{eqnarray}
+\end{landscape}
+
 \end{document}
+
+\comment{
+ \begin{eqnarray}
+\label{G4_1_contribs}
+ \sum\limits_{q_1, q_2}
+ V\lr{l_0 - q_1 - q_2, q_1, q_2} G_0\lr{l_0 - q_1 - q_2} G_0\lr{q_2} G_0\lr{l_2} %u1
+ \delta\lr{l_0 - q_1 - q_2 + q_1} \delta\lr{q_2 + l_1} \delta\lr{l_2 + l_3}
+ \nonumber \\
+ \sum\limits_{q_1, q_2}
+ V\lr{l_0 - q_1 - q_2, q_1, q_2} G_0\lr{l_0 - q_1 - q_2} G_0\lr{q_2} G_0\lr{l_2} %u2
+ \delta\lr{l_0 - q_1 - q_2 + q_1} \delta\lr{q_2 + l_3} \delta\lr{l_2 + l_1}
+ \nonumber \\
+ \sum\limits_{q_1, q_2}
+ V\lr{l_0 - q_1 - q_2, q_1, q_2} G_0\lr{l_0 - q_1 - q_2} G_0\lr{q_2} G_0\lr{l_2} %u3
+ \delta\lr{l_0 - q_1 - q_2 + l_1} \delta\lr{q_2 + q_1} \delta\lr{l_2 + l_3}
+ \nonumber \\
+ \sum\limits_{q_1, q_2}
+ V\lr{l_0 - q_1 - q_2, q_1, q_2} G_0\lr{l_0 - q_1 - q_2} G_0\lr{q_2} G_0\lr{l_2} %u4
+ \delta\lr{l_0 - q_1 - q_2 + l_3} \delta\lr{q_2 + q_1} \delta\lr{l_2 + l_1}
+ \nonumber \\
+ \sum\limits_{q_1, q_2}
+ V\lr{l_0 - q_1 - q_2, q_1, q_2} G_0\lr{l_0 - q_1 - q_2} G_0\lr{q_2} G_0\lr{l_2} %u5
+ \delta\lr{l_0 - q_1 - q_2 + l_3} \delta\lr{q_2 + l_1} \delta\lr{l_2 + q_1}
+\end{eqnarray}
+This translates into
+\begin{eqnarray}
+\label{G4_1_contribs_simplified}
+ \sum\limits_{q_1}
+ V\lr{- q_1, q_1, l_0} G_0\lr{-q_1} G_0\lr{l_0} G_0\lr{l_2} %u1
+ \delta\lr{l_0 + l_1} \delta\lr{l_2 + l_3} %DONE
+ \nonumber \\
+ \sum\limits_{q_1}
+ V\lr{- q_1, q_1, l_0} G_0\lr{-q_1} G_0\lr{l_0} G_0\lr{l_2} %u2
+ \delta\lr{l_0 + l_3} \delta\lr{l_2 + l_1} %DONE
+ \nonumber \\
+ \sum\limits_{q_1}
+ V\lr{l_0, q_1, -q_1} G_0\lr{l_0} G_0\lr{q_1} G_0\lr{l_2} %u3
+ \delta\lr{l_0 + l_1} \delta\lr{l_2 + l_3} %DONE
+ \nonumber \\
+ \sum\limits_{q_1}
+ V\lr{l_0, q_1, -q_1} G_0\lr{l_0} G_0\lr{q_1} G_0\lr{l_2} %u4
+ \delta\lr{l_0 + l_3} \delta\lr{l_2 + l_1}
+ \nonumber \\
+ V\lr{-l_3, -l_2, -l_1} G_0\lr{l_3} G_0\lr{l_1} G_0\lr{l_2} %u5
+ \delta\lr{l_0 + l_2 + l_1 + l_3}
+\end{eqnarray}
+}
