@@ -55,4 +55,7 @@ DECLARE_ACTION_UNDO(      vertex);
 //Action fetcher
 int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int list_length);
 
+//Implementation of vertex functions ...
+double vertex(int** P, int n);
+
 #endif

@@ -1,0 +1,190 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      6262,        181]
+NotebookOptionsPosition[      5868,        164]
+NotebookOutlinePosition[      6212,        179]
+CellTagsIndexPosition[      6169,        176]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{"IntegerDigits", "[", "]"}]], "Input",
+ CellChangeTimes->{{3.6615978762678933`*^9, 3.6615978808178997`*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"T", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{"1", ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "1", ",", "28"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"N", "[", 
+  RowBox[{"8", " ", 
+   RowBox[{
+    RowBox[{"FromDigits", "[", 
+     RowBox[{"T", ",", "2"}], "]"}], "/", 
+    RowBox[{"(", 
+     RowBox[{"1024", " ", "1024", " ", "1024"}], ")"}]}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.661597922117957*^9, 3.6615980052080736`*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"LS", "=", "2"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"n", "=", "14"}], ";", 
+  RowBox[{"nP", "=", 
+   SuperscriptBox["LS", "n"]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"pU", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{"0", ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "1", ",", "nP"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"L2D", "=", 
+   RowBox[{"{", "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"For", "[", 
+   RowBox[{
+    RowBox[{"P", "=", "0"}], ",", 
+    RowBox[{"P", "<", "nP"}], ",", 
+    RowBox[{"P", "++"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"sP", " ", "=", " ", "P"}], ";", 
+     RowBox[{"mP", "=", "P"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"(*", 
+      RowBox[{
+       RowBox[{"Print", "[", "\"\<Shifts: \>\"", "]"}], ";"}], "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{"For", "[", 
+      RowBox[{
+       RowBox[{"i", "=", "0"}], ",", 
+       RowBox[{"i", "<", "n"}], ",", 
+       RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"(*", 
+        RowBox[{
+         RowBox[{"Print", "[", 
+          RowBox[{"IntegerDigits", "[", 
+           RowBox[{"sP", ",", "LS", ",", "n"}], "]"}], "]"}], ";"}], "*)"}], 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"nsP", "=", 
+         RowBox[{
+          RowBox[{"Quotient", "[", 
+           RowBox[{"sP", ",", "LS"}], "]"}], " ", "+", " ", 
+          RowBox[{
+           RowBox[{"Mod", "[", 
+            RowBox[{"sP", ",", "LS"}], "]"}], " ", 
+           SuperscriptBox["LS", 
+            RowBox[{"n", "-", "1"}]]}]}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"sP", "=", "nsP"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"mP", "=", 
+         RowBox[{"Min", "[", 
+          RowBox[{"mP", ",", "sP"}], "]"}]}], ";"}]}], "\[IndentingNewLine]", 
+      "]"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"AppendTo", "[", 
+      RowBox[{"L2D", ",", 
+       RowBox[{"{", 
+        RowBox[{"P", ",", "mP"}], "}"}]}], "]"}], ";", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"pU", "[", 
+       RowBox[{"[", 
+        RowBox[{"mP", "+", "1"}], "]"}], "]"}], "=", "1"}], ";"}]}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{"Print", "[", 
+      RowBox[{"\"\<P = \>\"", ",", "P", ",", "\"\< or \>\"", ",", 
+       RowBox[{"IntegerDigits", "[", 
+        RowBox[{"P", ",", "LS", ",", "n"}], "]"}], ",", "\"\<, mP = \>\"", 
+       ",", "mP", ",", "\"\< or \>\"", ",", 
+       RowBox[{"IntegerDigits", "[", 
+        RowBox[{"mP", ",", "LS", ",", "n"}], "]"}]}], "]"}], ";"}], "*)"}], 
+   "\[IndentingNewLine]", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"ListPlot", "[", 
+  RowBox[{"L2D", ",", 
+   RowBox[{"PlotRange", "\[Rule]", "All"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{
+    RowBox[{"Total", "[", "pU", "]"}], ",", "\"\< of \>\"", ",", 
+    RowBox[{"Length", "[", "pU", "]"}]}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Print", "[", "pU", "]"}]}], "Input",
+ CellChangeTimes->{{3.6615980233880987`*^9, 3.661598122018237*^9}, {
+  3.661598180468319*^9, 3.6615983574585667`*^9}, {3.6615983914786143`*^9, 
+  3.6615983924086156`*^9}, {3.661598431808671*^9, 3.661598553398841*^9}, {
+  3.661598583398883*^9, 3.6615986579689875`*^9}, {3.6615988618292727`*^9, 
+  3.6615989336993732`*^9}, {3.6615989707694254`*^9, 3.6615991038696117`*^9}, {
+  3.661599265980839*^9, 3.6615992746708508`*^9}, {3.661599606781316*^9, 
+  3.661599607451317*^9}}],
+
+Cell[BoxData[
+ RowBox[{"N", "[", 
+  SuperscriptBox["2", "32"], "]"}]], "Input",
+ CellChangeTimes->{{3.66159935227096*^9, 3.6615993558509645`*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"T1", "=", 
+   RowBox[{"{", 
+    RowBox[{
+    "1", ",", "2", ",", "3", ",", "4", ",", "6", ",", "8", ",", "14", ",", 
+     "20", ",", "36", ",", "60", ",", "108", ",", "188", ",", "352", ",", 
+     "632", ",", "1182", ",", "2192", ",", "4116", ",", "7712", ",", "14602", 
+     ",", "27596", ",", "52488", ",", "99880", ",", "190746", ",", "364724", 
+     ",", "699252", ",", "1342184", ",", "2581428", ",", "4971068", ",", 
+     "9587580"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"T2", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     SuperscriptBox["2", 
+      RowBox[{"n", "-", "1"}]], ",", 
+     RowBox[{"{", 
+      RowBox[{"n", ",", "1", ",", 
+       RowBox[{"Length", "[", "T1", "]"}]}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"ListLogPlot", "[", 
+  RowBox[{"{", 
+   RowBox[{"T1", ",", "T2"}], "}"}], "]"}]}], "Input",
+ CellChangeTimes->{{3.6615994837011433`*^9, 3.661599540441223*^9}}]
+},
+WindowSize->{1272, 908},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"8.0 for Microsoft Windows (64-bit) (February 23, 2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[557, 20, 131, 2, 31, "Input"],
+Cell[691, 24, 499, 15, 52, "Input"],
+Cell[1193, 41, 3548, 90, 424, "Input"],
+Cell[4744, 133, 146, 3, 33, "Input"],
+Cell[4893, 138, 971, 24, 75, "Input"]
+}
+]
+*)
+
+(* End of internal cache information *)

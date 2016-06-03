@@ -1,6 +1,5 @@
 #include "parameters.h"
 
-double mean_link       = 1.0;
 double alpha           = 0.0;
 int    max_alpha_order = 50;
 
@@ -8,13 +7,12 @@ static struct option long_options[] =
 {
  METROPOLIS_LONG_OPTIONS,
  LARGEN_QFT_LONG_OPTIONS,
- {             "mean-link",  required_argument,                       NULL, 'a'},
- {                 "alpha",  required_argument,                       NULL, 'b'},
- {       "max-alpha-order",  required_argument,                       NULL, 'c'},
+ {                 "alpha",  required_argument,                       NULL, 'a'},
+ {       "max-alpha-order",  required_argument,                       NULL, 'b'},
  {                       0,                  0,                       NULL,   0}
 };
 
-static char my_short_option_list[] = "a:b:c:";
+static char my_short_option_list[] = "a:b:";
 
 int parse_command_line_options(int argc, char **argv)
 {
@@ -40,12 +38,9 @@ int parse_command_line_options(int argc, char **argv)
    PARSE_METROPOLIS_OPTIONS;
    PARSE_LARGEN_QFT_OPTIONS;
    case   'a':
-    SAFE_SSCANF_BREAK(optarg, "%lf", mean_link);
-   break;
-   case   'b':
     SAFE_SSCANF_BREAK(optarg, "%lf", alpha);
    break;
-   case   'c':
+   case   'b':
     SAFE_SSCANF_BREAK(optarg,  "%i", max_alpha_order);
    break;
    case   0:
@@ -65,7 +60,7 @@ int parse_command_line_options(int argc, char **argv)
 
 void init_parameters()
 {
- init_lat_propagator(&P, 1, 2.0*meff_sq + lambda - 2.0*(double)DIM*(1.0 - mean_link));
+ init_lat_propagator(&P, 1, 0.25*lambda);
  
  double* my_params[2] = {&cc, &NN};
  if(param_auto_tuning)
@@ -91,7 +86,6 @@ void print_parameters()
  logs_Write(0, "\tPARAMETERS OF LATTICE PROPAGATOR");
  logs_WriteParameter(0,            "alpha", "%2.4E", alpha);
  logs_WriteParameter(0, "Max. alpha order",    "%i", max_alpha_order);
- logs_WriteParameter(0,        "Mean link", "%2.4E", mean_link);
  logs_WriteParameter(0,            "Sigma", "%2.4E", P.sigma);
  logs_WriteParameter(0,     "Mass squared", "%2.4E", P.mass_sq);
  logs_WriteParameter(0,          "lat_dim",    "%i", lat_dim);
