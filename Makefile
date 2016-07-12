@@ -34,9 +34,17 @@ endif
 
 CLUE_DIR  = ../clue
 
-#Include directories
+#Include and source directories
 INC_DIRS := ./include
 CLUE_INC_DIRS := $(CLUE_DIR)/include $(CLUE_DIR)/complex
+SRC_DIRS = ./src
+
+#Some additional things which should be there for testing
+ifeq ($(TESTS), 1)
+ INC_DIRS += ./tests
+ SRC_DIRS += ./tests
+ CCFLAGS     +=  -DTESTS
+endif
 
 ifeq ($(OS),Windows_NT)
  CLUE_INC_DIRS	+=	$(CLUE_DIR)/complex/my_complex_sys
@@ -48,9 +56,6 @@ CLUE_INCLUDE	 := $(addprefix -I, $(CLUE_INC_DIRS))
 #List of include files
 INCLUDE_FILES := $(wildcard $(addsuffix /*.h, $(INC_DIRS)))
 CLUE_INCLUDE_FILES := $(wildcard $(addsuffix /*.h, $(CLUE_INC_DIRS)))
-
-#Source directories
-SRC_DIRS = ./src
 
 #List of source files
 SRC_FILES := $(wildcard $(addsuffix /*.c, $(SRC_DIRS)))
@@ -90,7 +95,7 @@ define app_compile_template
  $(1)_SRC  = $$(wildcard $$($(1)_DIR)/*.c)
  $(1)_INC  = $$(wildcard $$($(1)_DIR)/*.h)
 $(1): $$(OBJ_FILES) $$(INCLUDE_FILES) $$(CLUE_INCLUDE_FILES) $$($(1)_SRC) $$($(1)_INC)
-	$$(CC) $$(CCFLAGS) $$(INCLUDE) $$(CLUE_INCLUDE) -I$$($(1)_DIR) -L$$(CLUE_DIR)/lib $$(OBJ_FILES) $$($(1)_SRC) $(LIBS) $$(LIBFILES) -o $$(BIN_DIR)/$$@$$(EXEEXT)
+	$$(CC) $$(CCFLAGS) $$(INCLUDE) $$(CLUE_INCLUDE) -I$$($(1)_DIR) -L$$(CLUE_DIR)/lib $$(OBJ_FILES) $$($(1)_SRC) $(LIBS) $$(LIBFILES) -o $$(BIN_DIR)/$$@$$(SUFF)$$(EXEEXT)
 endef
 
 define app_upload_template

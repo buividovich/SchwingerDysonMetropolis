@@ -119,7 +119,7 @@ DECLARE_ACTION_UNDO(create)
 /************************ Create new factorized-in line *****************/
 DECLARE_ACTION_AMPLITUDE(add_line)
 {
- return 2.0*P.sigma/cc;;
+ return 2.0*P.sigma/cc;
 }
 
 DECLARE_ACTION_DO(add_line) 
@@ -137,7 +137,7 @@ DECLARE_ACTION_DO(add_line)
  
  rand_momentum(&P, STACK_EL(X, 0));
  if((*data_in)==1)
-  invert_momentum(STACK_EL(X, 1), STACK_EL(X, 0))
+  invert_momentum(STACK_EL(X, 1), STACK_EL(X, 0));
  else
   invert_momentum(STACK_EL(X, X.len[X.top-1]-1), STACK_EL(X, 0)); 
  
@@ -233,22 +233,20 @@ DECLARE_ACTION_UNDO(join)
 DECLARE_ACTION_AMPLITUDE(vertex)
 {
  int    Q[4];
+ 
  if(data_in==NULL || (*data_in)<0)
  {
-  //TODO: change here
-  double res = alpha*cc/P.mass_sq;
-  if(fabs(4.0*DIM + meff_sq) >= fabs(meff_sq))
-   return res*(4.0*DIM + meff_sq);
-  else
-   return res*meff_sq;
+  //TODO: what about higher dimensions here? Makes reason to check
+  double mcc = alpha*cc;
+  return (4.0*mcc*(4.0 - 3.0*mcc + mcc*mcc)/((1.0-mcc)*(1.0-mcc)*(1.0-mcc)) + 0.25*lambda*mcc/(1.0 - mcc))/P.mass_sq;
  };
  
- if(adata>=3)
+ if((*data_in)>=3 && (alpha_order_stack[alpha_order_stop-1] + ((*data_in)-1)/2)<=max_alpha_order)
  {
-  //TODO: here we'll need the sum of all momenta
-  //and the vertex amplitude
-  double res = vertex(&(STACK_EL(X, 0), Q, adata)
-  return alpha*cc*lat_propagator(Q, P.mass_sq)*res;
+  double res = vertex(&(STACK_EL(X, 0)), Q, (*data_in));
+  res *= lat_propagator(Q, P.mass_sq);
+  res *= pow(alpha*cc, 0.5*(double)((*data_in)-1) );
+  return -1.0*res; //Minus sign because we decompose in powers of (-\lambda/8)
  };
  
  return 0.0;
@@ -256,58 +254,68 @@ DECLARE_ACTION_AMPLITUDE(vertex)
 
 DECLARE_ACTION_DO(vertex)
 {
- RETURN_IF_FALSE( X.len[X.top-1]>=4, ERR_WRONG_STATE);
- RETURN_IF_FALSE( H.nel<H.max_nel-2, ERR_HISTORY_OVERFLOW);
+ RETURN_IF_FALSE(          X.len[X.top-1]>=4, ERR_WRONG_STATE);
+ RETURN_IF_FALSE(              data_in!=NULL, ERR_WRONG_DATA);
+ RETURN_IF_FALSE(              (*data_in)>=3, ERR_WRONG_DATA);
+ RETURN_IF_FALSE(        ((*data_in)-1)%2==0, ERR_WRONG_DATA);
+ RETURN_IF_FALSE(  X.len[X.top-1]>(*data_in), ERR_WRONG_DATA);
+ RETURN_IF_FALSE(          H.nel<H.max_nel-2, ERR_HISTORY_OVERFLOW);
  
  //Push the momenta which are being joined into the H(istory)stack
  H.start[ H.top] = (H.top>0? H.start[H.top-1] + H.len[H.top-1] : 0);
- H.len[   H.top] = 2; //We push a pair of momenta on the top of the stack
+ H.len[   H.top] = ((*data_in)-1); //We push all the momenta being joined on the top of the stack
  H.top ++;
- H.nel += 2;
+ H.nel += ((*data_in)-1);
  
- assign_momentum(STACK_EL(H, 0), STACK_EL(X, 0)); //\tilde{p}_1
- assign_momentum(STACK_EL(H, 1), STACK_EL(X, 1)); //\tilde{q}_1
+ for(int ip=0; ip<(*data_in)-1; ip++)
+ {
+  assign_momentum(STACK_EL(H, ip), STACK_EL(X, ip)); 
+  addto_momentum(STACK_EL(X, (*data_in)-1), +1, STACK_EL(X, ip));
+ }; 
+ 
+ X.len[X.top-1] -= ((*data_in)-1);
+ X.nel          -= ((*data_in)-1);
+ 
+ alpha_order_stack[alpha_order_stop-1] += ((*data_in) - 1)/2;
+ sign_stack[sign_stop-1]               *= -1;
   
- //Now modify the stack
- addto2momenta(STACK_EL(X, 2), +1, STACK_EL(X, 1), +1, STACK_EL(X, 0)); //p2 -> \tilde{p}2 + \tilde{p}1 + \tilde{q}1
- 
- X.len[X.top-1] -= 2;
- X.nel          -= 2;
- 
- alpha_order_stack[alpha_order_stop-1] ++;
- 
  return ACTION_SUCCESS;
 }
 
 DECLARE_ACTION_UNDO(vertex)
 {
- RETURN_IF_FALSE(           H.top>0, ERR_WRONG_STATE);
- RETURN_IF_FALSE( H.len[H.top-1]==2, ERR_WRONG_STATE);
+ RETURN_IF_FALSE(                        H.top>0, ERR_WRONG_STATE);
+ RETURN_IF_FALSE(                  (*data_in)>=3, ERR_WRONG_DATA);
+ RETURN_IF_FALSE(            ((*data_in)-1)%2==0, ERR_WRONG_DATA);
+ RETURN_IF_FALSE( H.len[H.top-1]==((*data_in)-1), ERR_WRONG_STATE);
  
  //Increase again the size of the topmost sequence
- X.len[X.top-1] += 2;
- X.nel          += 2;
+ X.len[X.top-1] += ((*data_in)-1);
+ X.nel          += ((*data_in)-1);
  
  //Pop the momenta incoming to the vertex from the H(istory)stack
- assign_momentum(STACK_EL(X, 0), STACK_EL(H, 0));
- assign_momentum(STACK_EL(X, 1), STACK_EL(H, 1));
- H.top --;
- H.nel -= 2;
-
- addto2momenta(STACK_EL(X, 2), -1, STACK_EL(X, 0), -1, STACK_EL(X, 1)); //p2 -> p2 - p1 - q1
+ for(int ip=0; ip<(*data_in)-1; ip++)
+ {
+  assign_momentum(STACK_EL(X, ip), STACK_EL(H, ip)); 
+  addto_momentum(STACK_EL(X, (*data_in)-1), -1, STACK_EL(X, ip));
+ }; 
  
- alpha_order_stack[alpha_order_stop-1] --;
-
+ H.top --;
+ H.nel -= ((*data_in)-1);
+ 
+ alpha_order_stack[alpha_order_stop-1] -= ((*data_in)-1)/2;
+ sign_stack[sign_stop-1]               *= -1;
+ 
  return ACTION_SUCCESS;
 }
 
 /************** Action fetcher *****************/
 int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int list_length)
 {
- int nact = 0, adata = 0, iact;
+ int nact = 0, adata = 0;
  double ampl;
  
- logs_Write((step_number%mc_reporting_interval==0? 1 : 2), "Step %08i:\t X.top = % 5i, X.nel = % 5i, H.top = % 5i, H.nel = % 5i, alpha_order = % 3i", step_number, X.top, X.nel, H.top, H.nel, alpha_order_stack[alpha_order_stop-1]);
+ logs_Write((step_number%mc_reporting_interval==0? 1 : 2), "Step %08i:\t X.top = % 5i, X.len[X.top-1] = % 5i,  X.nel = % 5i, H.top = % 5i, H.nel = % 5i, alpha_order = % 3i", step_number, X.top, X.len[X.top-1], X.nel, H.top, H.nel, alpha_order_stack[alpha_order_stop-1]);
  
  if(check_stack)
  {
@@ -331,14 +339,14 @@ int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int 
 /************* Vertex functions **************/
 double vertex(int** P, int* Pt, int n)
 {
- double res = 0.0;
+ double res = 0.25*lambda;
  for(int m=0; m<n; m++)
  {
   int Qt[4] = {0, 0, 0, 0};
   int s = +1;
   for(int l=0; l<n-m; l++)
   {
-   addto_momentum(Qt, +1, P[m+l])
+   addto_momentum(Qt, +1, P[-(m+l)]); //Minus here because we get the pointer to the topmost element in the stack
    res += s*lat_momentum_sq(Qt);
    s *= -1;
   };

@@ -24,7 +24,10 @@ void init_lat_propagator(t_lat_propagator* P, int allocate, double mass_sq)
  };
  //Finally, normalizing the probabilities to unity
  for(i=0; i<lat_vol; i++)
+ {
   probs[i] /= P->sigma;
+  printf(">>>>>>> %i %2.2lf\n", i, probs[i]);
+ }; 
  //Initializing the fast random choice algorithm
  if(allocate)
   SAFE_MALLOC(P->frc_data, t_frc_data, 1); 

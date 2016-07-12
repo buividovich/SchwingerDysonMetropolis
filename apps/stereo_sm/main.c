@@ -16,6 +16,12 @@
 #include <unistd.h>
 #include <limits.h>
 
+#ifdef TESTS
+ #include "test_stereo_vertex.h"
+#endif
+
+//A good set ob parameters: --lambda 1.31 --alpha 0.015 --average-seq-len 1.5 --average-num-seq 1.1
+
 int main(int argc, char *argv[])
 {
  ansi_colors = 1;
@@ -30,7 +36,8 @@ int main(int argc, char *argv[])
  init_parameters();
 
  init_metropolis();
- init_observable_stat();
+ t_observable_stat* obs_stat = init_observable_stat();
+ t_stack_stat* Xstack_stat = init_stack_statistics(max_stack_nel);
  
  print_parameters();
  
@@ -43,15 +50,24 @@ int main(int argc, char *argv[])
  {
   metropolis_step(imc);
   if(imc%mc_interval==0)
-   gather_observable_stat(); 
+  {
+   gather_observable_stat(obs_stat); 
+   gather_stack_statistics(Xstack_stat, &X);
+  }; 
  };
+ 
+ print_stack_statistics(Xstack_stat);
   
  char prefix[500];
  largeN_QFT_prefix(prefix);
  process_mc_stat(prefix, 1);
- process_observable_stat();
+ process_observable_stat(obs_stat);
  
- free_observable_stat();
+ free_observable_stat(obs_stat);
+ free_stack_statistics(Xstack_stat);
+ SAFE_FREE(obs_stat);
+ SAFE_FREE(Xstack_stat);
+ 
  free_metropolis();
  free_actions();
  free_lat_propagator(&P);

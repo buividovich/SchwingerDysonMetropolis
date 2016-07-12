@@ -564,7 +564,7 @@ where $\Sigma_2\lr{p} = \Sigma_2^a\lr{p} + \Sigma_2^b\lr{p} + \Sigma_2^c\lr{p}$ 
  28 I_0 \lr{1 - \frac{\lambda}{4} I_0}
  - 6 \vev{D\lr{q_1 - q_2} G_0\lr{q_1} G_0\lr{q_2}}
  + \nonumber \\ +
-  3 \vev{D\lr{p - q_1 - q_2} G_0\lr{q_1} G_0\lr{q_2}} 
+  3 \vev{D\lr{p - q_1 - q_2} G_0\lr{q_1} G_0\lr{q_2}}
 \end{eqnarray}
 For some particular terms in this sum we find
 \begin{eqnarray}
@@ -704,28 +704,42 @@ Performing the Fourier transform and assuming translational invariance, we get
  \sum\limits_{k=1}^{2 n - 1} \lr{-1}^k \cos\lr{\lr{q_1 + \ldots + q_k} x}
 \end{eqnarray}
 
+\section{SD metropolis for our model}
 
+\subsection{Estimating the maximal weight of the vertex action}
+
+The maximum of $V$, as a short numerical experiment shows, can be found by setting all the momenta to $\pm \pi$, the corner of the Brillouin zone. This way we obtain, in $D=1$:
 \begin{eqnarray}
-\label{simplify1}
- -\delta\lr{p - p_0} \delta\lr{q - p_1 - p_2 - p_3}
-  \delta\lr{p_0 + p_1} G_0\lr{p_0} \delta\lr{p_2 + p_3} G_0\lr{p_2}
- \nonumber \\
- +\delta\lr{p - p_0 - p_1} \delta\lr{q - p_2 - p_3}
-  \delta\lr{p_0 + p_1} G_0\lr{p_0} \delta\lr{p_2 + p_3} G_0\lr{p_2}
- \nonumber \\
- -\delta\lr{p - p_0 - p_1 - p_2} \delta\lr{q - p_3}
-  \delta\lr{p_0 + p_1} G_0\lr{p_0} \delta\lr{p_2 + p_3} G_0\lr{p_2}
- \nonumber \\
- -\delta\lr{p - p_0} \delta\lr{q - p_1 - p_2 - p_3}
-  \delta\lr{p_0 + p_3} G_0\lr{p_0} \delta\lr{p_2 + p_1} G_0\lr{p_2}
- \nonumber \\
- +\delta\lr{p - p_0 - p_1} \delta\lr{q - p_2 - p_3}
-  \delta\lr{p_0 + p_3} G_0\lr{p_0} \delta\lr{p_2 + p_1} G_0\lr{p_2}
- \nonumber \\
- -\delta\lr{p - p_0 - p_1 - p_2} \delta\lr{q - p_3}
-  \delta\lr{p_0 + p_3} G_0\lr{p_0} \delta\lr{p_2 + p_1} G_0\lr{p_2}
- \nonumber \\
+\label{vertex_max}
+ \max{V\lr{q_1, \ldots, q_{2m+1}}} = 4 \lr{m+1}^2
 \end{eqnarray}
+Thus the maximal probability of the ``vertex'' action is (in the case of infinite number of momenta, all of which are equal to $\pi$:)
+\begin{eqnarray}
+\label{vertex_max_prob}
+ \sum\limits_{m=1}^{+\infty} c^m 4 \lr{m+1}^2 =
+\end{eqnarray}
+
+\subsection{Setting the values for $c$ and $\mathcal{N}$ in free planar field theory}
+
+The normalization of the free propagators involves the Catalan numbers:
+\begin{eqnarray}
+\label{free_greenfunc_normalizations}
+ \sum\limits_{\lrc{p}} \vev{p_1 \ldots p_{2n}} = \Sigma^n \, \frac{\lr{2 n}!}{n! \lr{n+1}!}
+\end{eqnarray}
+
+Now the total sum of probabilities over $n$ is
+\begin{eqnarray}
+\label{free_greenfunc_normalizations}
+ \sum\limits_{n=1,\lrc{p}}^{+\infty} c^{-n} \vev{p_1 \ldots p_{2n}} 
+ = 
+ \sum\limits_{n=1}^{+\infty}
+ \lr{\frac{\Sigma}{c}}^n \, \frac{\lr{2 n}!}{n! \lr{n+1}!}
+ \equiv \mathcal{U}\lr{\Sigma/c} = 
+ \frac{1 - \sqrt{1 - \frac{4 \Sigma}{c}}}{\frac{2 \Sigma}{c}} - 1 ,
+\end{eqnarray}
+where we have used the well-known expression for the generating function of the Catalan numbers. In particular, this expression sets the limits $c > 4 \Sigma$. It is also obvious that the sum over multiple-trace correlators is only finite if $\mathcal{N} > \mathcal{U}\lr{\Sigma/c} $.
+
+It is now easy to find that the average length of the topmost (or any other) element in the sequence of sequences is $x \partial_x \ln \mathcal{U} = \lr{1 - 4 x}^{-1/2}$, with $x = \Sigma/c$, and the average number of sequences in the stack is $\frac{1}{1 - \mathcal{U}/\mathcal{N}}$.
 
 \section{Cross-check with Gross-Witten higher correlators...}
 
@@ -805,5 +819,29 @@ This translates into
  \nonumber \\
  V\lr{-l_3, -l_2, -l_1} G_0\lr{l_3} G_0\lr{l_1} G_0\lr{l_2} %u5
  \delta\lr{l_0 + l_2 + l_1 + l_3}
+\end{eqnarray}
+}
+
+\comment{
+\begin{eqnarray}
+\label{simplify1}
+ -\delta\lr{p - p_0} \delta\lr{q - p_1 - p_2 - p_3}
+  \delta\lr{p_0 + p_1} G_0\lr{p_0} \delta\lr{p_2 + p_3} G_0\lr{p_2}
+ \nonumber \\
+ +\delta\lr{p - p_0 - p_1} \delta\lr{q - p_2 - p_3}
+  \delta\lr{p_0 + p_1} G_0\lr{p_0} \delta\lr{p_2 + p_3} G_0\lr{p_2}
+ \nonumber \\
+ -\delta\lr{p - p_0 - p_1 - p_2} \delta\lr{q - p_3}
+  \delta\lr{p_0 + p_1} G_0\lr{p_0} \delta\lr{p_2 + p_3} G_0\lr{p_2}
+ \nonumber \\
+ -\delta\lr{p - p_0} \delta\lr{q - p_1 - p_2 - p_3}
+  \delta\lr{p_0 + p_3} G_0\lr{p_0} \delta\lr{p_2 + p_1} G_0\lr{p_2}
+ \nonumber \\
+ +\delta\lr{p - p_0 - p_1} \delta\lr{q - p_2 - p_3}
+  \delta\lr{p_0 + p_3} G_0\lr{p_0} \delta\lr{p_2 + p_1} G_0\lr{p_2}
+ \nonumber \\
+ -\delta\lr{p - p_0 - p_1 - p_2} \delta\lr{q - p_3}
+  \delta\lr{p_0 + p_3} G_0\lr{p_0} \delta\lr{p_2 + p_1} G_0\lr{p_2}
+ \nonumber \\
 \end{eqnarray}
 }

@@ -1,7 +1,7 @@
 #include "largeN_QFT_parameters.h"
 
 //Parameters of a generic SD equations for practically any large-N QFT
-double   lambda                   = 0.05;     //tHooft coupling constant
+double   lambda                   = 1.31;     //tHooft coupling constant
 double   meff_sq                  = 0.0;      //Square of the effective mass
 double   cc                       = 1.0;      //Rescaling of observables according to the number of fields in the correlator
 double   NN                       = 1.0;      //Overall rescaling of observables

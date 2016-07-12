@@ -1,46 +1,70 @@
 #include "statistics.h"
 
-double                     astop  = 0.0;
-int*                   G2_hist[2] = {NULL, NULL};
-int*                    G_hist[2] = {NULL, NULL};
-int        actual_max_alpha_order = 0;
-
-void init_observable_stat()
+t_observable_stat* init_observable_stat()
 {
- actual_max_alpha_order = 0;
+ t_observable_stat* my_observable_stat = (t_observable_stat *)malloc(sizeof(t_observable_stat));
 
  for(int s=0; s<2; s++)
  {
-  SAFE_MALLOC(G2_hist[s], int, lat_vol*max_alpha_order);
+  SAFE_MALLOC(my_observable_stat->G2_hist[s], int, lat_vol*max_alpha_order);
   for(int i=0; i<lat_vol*max_alpha_order; i++)
-   G2_hist[s][i] = 0;
-  SAFE_MALLOC(G_hist[s], int, max_correlator_order);
+   my_observable_stat->G2_hist[s][i] = 0;
+  
+  my_observable_stat->nG4 = SQR(lat_vol)*SQR(lat_vol);
+  SAFE_MALLOC(my_observable_stat->G4_hist[s], int, my_observable_stat->nG4*max_alpha_order);
+  for(int i=0; i<my_observable_stat->nG4*max_alpha_order; i++)
+   my_observable_stat->G4_hist[s][i] = 0; 
+   
+  SAFE_MALLOC(my_observable_stat->G_hist[s], int, max_correlator_order);
   for(int i=0; i<max_correlator_order; i++)
-   G_hist[s][i] = 0; 
+   my_observable_stat->G_hist[s][i] = 0; 
  };
  
- init_stack_statistics(max_stack_nel);
+ my_observable_stat->nstat = 0;
+ my_observable_stat->actual_max_alpha_order = 0;
+ 
+ return my_observable_stat;
 }
 
-void gather_observable_stat()
+void gather_observable_stat(t_observable_stat* stat)
 {
  int ao = alpha_order_stack[alpha_order_stop-1];
  int si =        sign_stack[       sign_stop-1];
  if(X.len[X.top-1]==2 && ao<max_alpha_order)
  {
   int m = lat_coords2idx_safe(STACK_EL(X,0));
-  G2_hist[(si>0? 0 : 1)][lat_vol*ao + m] ++;
-  actual_max_alpha_order = MAX(ao, actual_max_alpha_order);
+  stat->G2_hist[(si>0? 0 : 1)][lat_vol*ao + m] ++;
+  stat->actual_max_alpha_order = MAX(ao, stat->actual_max_alpha_order);
  };
+ 
+ if(X.len[X.top-1]==4 && ao<max_alpha_order)
+ {
+  int mall = 0; int factor = 1;
+  for(int i=0; i<4; i++)
+  {
+   int m = lat_coords2idx_safe(STACK_EL(X,i));
+   mall += m*factor;
+   factor *= lat_vol;
+  }; 
+  
+  stat->G4_hist[(si>0? 0 : 1)][stat->nG4*ao + mall] ++;
+  stat->actual_max_alpha_order = MAX(ao, stat->actual_max_alpha_order);
+ };
+ 
+ /*if(X.len[X.top-1]==2 && ao==1)
+ {
+  print_action_history();
+  sleep(10);                   
+ };*/
  /*int i = X.len[X.top-1]/2 - 1;
  if(i>=0 && i<max_correlator_order)
   G_hist[(asign[ns]>0? 0 : 1)][i] ++;*/
- gather_stack_statistics(&X); 
+ stat->nstat ++;
 }
 
-void process_observable_stat() //It is assumed that process_mc_stat was already called!!!
+void process_observable_stat(t_observable_stat* stat) //It is assumed that process_mc_stat was already called!!!
 {
- if(stack_stat_file!=NULL)
+ /*if(stack_stat_file!=NULL)
  {
   FILE* f = fopen(stack_stat_file, "w");
   if(f==NULL)
@@ -48,10 +72,10 @@ void process_observable_stat() //It is assumed that process_mc_stat was already 
   else
    print_stack_statistics(f);
   fclose(f);
- };
+ };*/
  
- if(logs_noise_level>=2)
-  print_stack_statistics(stdout);
+ //if(logs_noise_level>=2)
+ // print_stack_statistics(stdout);
  
  double source_norm          = action_create_amplitude(NULL);
  double normalization_factor = source_norm/(1.0 - mean_nA);
@@ -62,19 +86,50 @@ void process_observable_stat() //It is assumed that process_mc_stat was already 
  logs_Write(0, "Normalization factor of factorized single-trace correlators: %2.4E\n", normalization_factor);
 
  //Saving the data for G2 
- logs_Write(0, "Collected data for G2 (up to alpha_order = %i):", actual_max_alpha_order);
+ logs_Write(0, "Collected data for G2 (up to alpha_order = %i):", stat->actual_max_alpha_order);
   
- double rescaling_factor     = NN*cc;
- 
- FILE* fobs = fopen(observables_file, "a");
+ /*FILE* fobs = fopen(observables_file, "a");
  if(fobs==NULL)
-  logs_WriteError("Cannot open the file %s for writing", observables_file);
+  logs_WriteError("Cannot open the file %s for writing", observables_file);*/
  
- for(int ia=0; ia<=actual_max_alpha_order; ia++)
+ for(int ia=0; ia<=stat->actual_max_alpha_order; ia++)
  {
-  char* outstr = NULL;
-  sprintf_append(&outstr, "Order %03i: ", ia);
-  double  G2_total[2] = {0.0, 0.0};
+  //char* outstr = NULL;
+  //sprintf_append(&outstr, "Order %03i: ", ia);
+  logs_Write(0, "Order %03i: ", ia);
+  
+  for(int m=0; m<lat_vol; m++)
+  {
+   double rescaling_factor     = NN*cc;
+   double aG2   =     ((double)(stat->G2_hist[0][ia*lat_vol + m])  -  (double)(stat->G2_hist[1][ia*lat_vol + m]))/(double)(stat->nstat);
+   int    nG2   =     (        (stat->G2_hist[0][ia*lat_vol + m])  +          (stat->G2_hist[1][ia*lat_vol + m]));
+   double eG2   = sqrt((double)nG2)/(double)(stat->nstat);
+   double sG2   = (nG2>0?  (double)(stat->nstat)*aG2/nG2 : 0.0);
+          aG2  *= rescaling_factor*normalization_factor*pow(alpha, -(double)ia);
+          eG2  *= rescaling_factor*normalization_factor*pow(alpha, -(double)ia);
+   //sprintf_append(&outstr, "G[%02i] = %+2.3E +/- %2.1E (sp = %+2.2E, tnp = % 10i)  ", aG2,  eG2,  sG2,  (int)round(nG2_link));       
+   logs_Write(0, "G2[%02i] = %+2.3E +/- %2.1E (sp = %+2.2E, tnp = % 10i)", m, aG2,  eG2,  sG2, nG2);
+  };
+  logs_Write(0, "");
+  
+  /*for(int mall=0; mall<stat->nG4; mall++)
+  {
+   double rescaling_factor     = NN*cc*cc;
+   double aG4   =     ((double)(stat->G4_hist[0][ia*stat->nG4 + mall])  -  (double)(stat->G4_hist[1][ia*stat->nG4 + mall]))/(double)(stat->nstat);
+   int    nG4   =     (        (stat->G4_hist[0][ia*stat->nG4 + mall])  +          (stat->G4_hist[1][ia*stat->nG4 + mall]));
+   double eG4   = sqrt((double)nG4)/(double)(stat->nstat);
+   double sG4   = (nG4>0?  (double)(stat->nstat)*aG4/nG4 : 0.0);
+          aG4  *= rescaling_factor*normalization_factor*pow(alpha, -(double)ia);
+          eG4  *= rescaling_factor*normalization_factor*pow(alpha, -(double)ia);
+   //sprintf_append(&outstr, "G[%02i] = %+2.3E +/- %2.1E (sp = %+2.2E, tnp = % 10i)  ", aG2,  eG2,  sG2,  (int)round(nG2_link)); 
+   if(nG4>0)
+   logs_Write(0, "G4[%02i] = %+2.3E +/- %2.1E (sp = %+2.2E, tnp = % 10i)", mall, aG4,  eG4,  sG4, nG4);
+  };
+  logs_Write(0, "");*/
+   
+ }; //End of loop over ia
+  
+  /*double  G2_total[2] = {0.0, 0.0};
   double dG2_total[2] = {0.0, 0.0};
   double  G2_link[2]  = {0.0, 0.0};
   double dG2_link[2]  = {0.0, 0.0};
@@ -121,7 +176,7 @@ void process_observable_stat() //It is assumed that process_mc_stat was already 
   fprintf(fobs, "%02i %+2.4E %+2.4E %+2.4E %+2.4E\n", ia, aG2_total, eG2_total, aG2_link, eG2_link);
  };
  
- fclose(fobs);
+ fclose(fobs); */
  
  
  /*   G2_total_sum     += G2_total[ia];
@@ -164,14 +219,14 @@ void process_observable_stat() //It is assumed that process_mc_stat was already 
  };*/
 }
 
-void free_observable_stat()
+void free_observable_stat(t_observable_stat* stat)
 {
- free_stack_statistics();
  for(int s=0; s<2; s++)
  {
-  SAFE_FREE(G2_hist[s]);
-  SAFE_FREE(G_hist[s]);
- };  
+  SAFE_FREE(stat->G2_hist[s]);
+  SAFE_FREE(stat->G4_hist[s]);
+  SAFE_FREE(stat->G_hist[s]);
+ };
 }
 
 /* G2_total[ia]     += G;

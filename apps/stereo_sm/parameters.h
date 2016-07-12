@@ -14,9 +14,11 @@
 #include "lattice_stack.h"
 #include "actions.h"
 
-extern double mean_link;
 extern double alpha;
 extern int    max_alpha_order;
+extern double average_seq_len; //Desired number of momenta in the sequence
+extern double average_num_seq;  //Desired number of sequences
+
 
 int  parse_command_line_options(int argc, char **argv);
 void init_parameters();
