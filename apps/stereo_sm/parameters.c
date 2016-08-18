@@ -4,6 +4,8 @@ double    alpha           = 0.002;
 int       max_alpha_order = 50;
 double    average_seq_len = 6.0; //Desired number of momenta in the sequence
 double    average_num_seq = 3.0; //Desired number of sequences
+//Useful calculable parameters
+double    stereo_alpha    = 0.0;  // -\lambda/8, expansion parameter...
 
 static struct option long_options[] =
 {
@@ -71,6 +73,9 @@ int parse_command_line_options(int argc, char **argv)
 void init_parameters()
 {
  init_lat_propagator(&P, 1, 0.25*lambda);
+ 
+ stereo_alpha = -0.125*lambda;
+ 
  //More motivated tuning
  if(param_auto_tuning)
  {

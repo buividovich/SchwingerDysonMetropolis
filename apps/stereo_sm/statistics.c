@@ -1,5 +1,37 @@
 #include "statistics.h"
 
+void init_obs(t_obs* obs)
+{
+ obs->meanA[0] = 0.0; obs->meanA[1] = 0.0;
+ obs->meanA2[0] = 0.0; obs->meanA2[1] = 0.0;
+ obs->nA[0] = 0; obs->nA[1] = 0;
+}
+
+void add_to_obs(t_obs* obs, double A, int s)
+{
+ obs->meanA[s] += A;
+ obs->meanA2[s] += A*A;
+ obs->nA[s] ++;
+}
+
+void process_obs(t_obs* obs, int n, t_obs_res* res)
+{
+ double mA[2] = {0.0, 0.0}, mA2[2] = {0.0, 0.0}, dA[2] = {0.0, 0.0};
+ for(int s=0; s<2; s++)
+ {
+  mA[s]  = obs->meanA[s]/(double)n;
+  mA2[s] = obs->meanA2[s]/(double)n - SQR(mA[s]);
+  dA[s]  = sqrt(mA2[s]/(double)(n-1));
+ };
+ 
+ res->meanA = mA[0] - mA[1];
+ res->errA  = sqrt(SQR(dA[0]) + SQR(dA[1]));
+ if(fabs(mA[0] + mA[1])>1.0E-10)
+  res->spA   = (mA[0] - mA[1])/(mA[0] + mA[1]); 
+ else
+  res->spA   = 0.0; 
+}
+
 t_observable_stat* init_observable_stat()
 {
  t_observable_stat* my_observable_stat = (t_observable_stat *)malloc(sizeof(t_observable_stat));
@@ -10,17 +42,28 @@ t_observable_stat* init_observable_stat()
   for(int i=0; i<lat_vol*max_alpha_order; i++)
    my_observable_stat->G2_hist[s][i] = 0;
   
-  my_observable_stat->nG4 = SQR(lat_vol)*SQR(lat_vol);
+  SAFE_MALLOC(my_observable_stat->Gx,  t_obs,    max_alpha_order);
+  SAFE_MALLOC(my_observable_stat->Gxy, t_obs, LT*max_alpha_order);
+  for(int i=0; i<max_alpha_order; i++)
+  {          
+   init_obs(&(my_observable_stat->Gx[i]));
+   for(int t=0; t<LT; t++)
+    init_obs(&(my_observable_stat->Gxy[i*LT + t]));
+  }; 
+    
+  /*my_observable_stat->nG4 = SQR(lat_vol)*SQR(lat_vol);
   SAFE_MALLOC(my_observable_stat->G4_hist[s], int, my_observable_stat->nG4*max_alpha_order);
   for(int i=0; i<my_observable_stat->nG4*max_alpha_order; i++)
-   my_observable_stat->G4_hist[s][i] = 0; 
-   
+   my_observable_stat->G4_hist[s][i] = 0;*/
+     
   SAFE_MALLOC(my_observable_stat->G_hist[s], int, max_correlator_order);
   for(int i=0; i<max_correlator_order; i++)
    my_observable_stat->G_hist[s][i] = 0; 
  };
  
- my_observable_stat->nstat = 0;
+ my_observable_stat->nstat            = 0;
+ my_observable_stat->nstat_useless    = 0;
+ my_observable_stat->max_useful_Xtop  = 0;
  my_observable_stat->actual_max_alpha_order = 0;
  
  return my_observable_stat;
@@ -29,15 +72,40 @@ t_observable_stat* init_observable_stat()
 void gather_observable_stat(t_observable_stat* stat)
 {
  int ao = alpha_order_stack[alpha_order_stop-1];
- int si =        sign_stack[       sign_stop-1];
+ int no = X.len[X.top-1]/2;
+ int si = (sign_stack[sign_stop-1]>0? 0 : 1);
+ 
+ int eff_order = no + ao - 1;
+ 
+ if(eff_order<max_alpha_order)
+ {
+  double W =  pow(cc, (double)no)*pow(alpha, -(double)ao);
+  add_to_obs(&(stat->Gx[eff_order]), W, si);
+  int Pt[4] = {0.0, 0.0, 0.0, 0.0}; 
+  int sg = -1;
+  for(int i=0; i<X.len[X.top-1]-1; i++)
+  {
+   addto_momentum(Pt, +1, STACK_EL(X, i));
+   reduce_torus(&(Pt[0]), lat_size[0]);
+   int sgi = (sg>0? si : 1 - si);
+   if(Pt[0]>=0 && Pt[0]<lat_size[0])
+    add_to_obs(&(stat->Gxy[eff_order*LT + Pt[0]]), W, sgi);
+   else
+    logs_WriteError("Pt[0] = %i out of range", Pt[0]); 
+   sg *= -1;
+  };
+ }
+ else
+  stat->nstat_useless ++;
+ stat->actual_max_alpha_order = MAX(ao, stat->actual_max_alpha_order);
+ 
  if(X.len[X.top-1]==2 && ao<max_alpha_order)
  {
   int m = lat_coords2idx_safe(STACK_EL(X,0));
   stat->G2_hist[(si>0? 0 : 1)][lat_vol*ao + m] ++;
-  stat->actual_max_alpha_order = MAX(ao, stat->actual_max_alpha_order);
  };
  
- if(X.len[X.top-1]==4 && ao<max_alpha_order)
+ /*if(X.len[X.top-1]==4 && ao<max_alpha_order)
  {
   int mall = 0; int factor = 1;
   for(int i=0; i<4; i++)
@@ -48,8 +116,7 @@ void gather_observable_stat(t_observable_stat* stat)
   }; 
   
   stat->G4_hist[(si>0? 0 : 1)][stat->nG4*ao + mall] ++;
-  stat->actual_max_alpha_order = MAX(ao, stat->actual_max_alpha_order);
- };
+ };*/
  
  /*if(X.len[X.top-1]==2 && ao==1)
  {
@@ -84,21 +151,71 @@ void process_observable_stat(t_observable_stat* stat) //It is assumed that proce
  normalization_factor = normalization_factor/(1.0 + normalization_factor);
  
  logs_Write(0, "Normalization factor of factorized single-trace correlators: %2.4E\n", normalization_factor);
-
+ logs_Write(0, "Total %i calls to gather(), %s%i useless (%2.2lf%%)", stat->nstat, ANSI_COLOR(red), stat->nstat_useless, 100.0*(double)stat->nstat_useless/(double)stat->nstat);
  //Saving the data for G2 
+ 
  logs_Write(0, "Collected data for G2 (up to alpha_order = %i):", stat->actual_max_alpha_order);
+ 
   
  /*FILE* fobs = fopen(observables_file, "a");
  if(fobs==NULL)
   logs_WriteError("Cannot open the file %s for writing", observables_file);*/
  
- for(int ia=0; ia<=stat->actual_max_alpha_order; ia++)
+  double f = stereo_alpha;
+ double sGx   = 1.0; double dsGx  = 0.0;
+ DECLARE_AND_MALLOC(sGxy,  double, LT);
+ DECLARE_AND_MALLOC(dsGxy, double, LT);
+ for(int pt=0; pt<LT; pt++){ sGxy[pt] = 0.0; dsGxy[pt] = 0.0; };
+ sGxy[0] = 1.0;
+  
+ t_obs_res Rx, Rxy;
+ 
+ char suffix[512], GxFname[512], mlFname[512];
+ sprintf(suffix, "d%i_t%i_s%i_l%2.4lf", DIM, LT, LS, lambda);
+ sprintf(GxFname, "G:\\LAT\\sd_metropolis\\data\\stereo\\Gx_%s.dat", suffix);
+ sprintf(mlFname, "G:\\LAT\\sd_metropolis\\data\\stereo\\mlink_%s.dat", suffix);
+ 
+ FILE* GxF = fopen(GxFname, "a");
+ FILE* mlF = fopen(mlFname, "a");
+ 
+ for(int ia=0; ia<stat->actual_max_alpha_order; ia++)
  {
   //char* outstr = NULL;
   //sprintf_append(&outstr, "Order %03i: ", ia);
   logs_Write(0, "Order %03i: ", ia);
+  char GxyFname[512];
+  sprintf(GxyFname, "G:\\LAT\\sd_metropolis\\data\\stereo\\Gxy_%s_o%i.dat", suffix, ia);
+  FILE* GxyF = fopen(GxyFname, "w");
   
-  for(int m=0; m<lat_vol; m++)
+  process_obs(&(stat->Gx[ia]), stat->nstat, &Rx);
+  Rx.meanA *= NN*normalization_factor;
+  Rx.errA  *= NN*normalization_factor;
+  
+  sGx += 2.0*f*Rx.meanA; dsGx += SQR(2.0*f*Rx.errA);
+  logs_Write(0, "\tGx = %+2.4E +/- %2.2E", sGx, sqrt(dsGx));
+  fprintf(GxF, "%i %2.4E %2.4E %2.4E\n", ia, sGx, sqrt(dsGx), Rx.spA);
+  
+  double sml = 0.0;
+  sGxy[0] += 4.0*f*Rx.meanA; dsGxy[0] += SQR(4.0*f*Rx.errA);  
+  for(int pt=0; pt<LT; pt++)
+  {
+   process_obs(&(stat->Gxy[ia*LT + pt]), stat->nstat, &Rxy);
+   Rxy.meanA *= NN*normalization_factor;
+   Rxy.errA  *= NN*normalization_factor;
+   sGxy[pt] += 4.0*f*Rxy.meanA; dsGxy[pt] += SQR(4.0*f*Rxy.errA);
+   sml += sGxy[pt]*cos(2.0*M_PI*(double)pt/(double)LT);
+   //logs_Write(0, "G[%i] = %+2.4E +/- %2.2E, sp = %+2.4E", pt, sGxy[pt], sqrt(dsGxy[pt]), Rxy.spA);
+   fprintf(GxyF, "%i %+2.4E %+2.4E %+2.4E\n", pt, sGxy[pt], sqrt(dsGxy[pt]), Rxy.spA);
+  };
+  //logs_Write(0, "G[%i] = %+2.4E +/- %2.2E\n", LT, sGxy[0], sqrt(dsGxy[0]));
+  fprintf(GxyF, "%i %+2.4E %+2.4E %+2.4E\n", LT, sGxy[0], sqrt(dsGxy[0]), 0.0);
+  fclose(GxyF);
+  logs_Write(0, "\tMean link = %2.4lf", sml);
+  fprintf(mlF, "%i %2.4E\n", ia, sml);
+  
+  f *= stereo_alpha;
+  
+  /*for(int m=0; m<lat_vol; m++)
   {
    double rescaling_factor     = NN*cc;
    double aG2   =     ((double)(stat->G2_hist[0][ia*lat_vol + m])  -  (double)(stat->G2_hist[1][ia*lat_vol + m]))/(double)(stat->nstat);
@@ -112,7 +229,7 @@ void process_observable_stat(t_observable_stat* stat) //It is assumed that proce
   };
   logs_Write(0, "");
   
-  /*for(int mall=0; mall<stat->nG4; mall++)
+  for(int mall=0; mall<stat->nG4; mall++)
   {
    double rescaling_factor     = NN*cc*cc;
    double aG4   =     ((double)(stat->G4_hist[0][ia*stat->nG4 + mall])  -  (double)(stat->G4_hist[1][ia*stat->nG4 + mall]))/(double)(stat->nstat);
@@ -128,6 +245,12 @@ void process_observable_stat(t_observable_stat* stat) //It is assumed that proce
   logs_Write(0, "");*/
    
  }; //End of loop over ia
+ fclose(GxF);
+ fclose(mlF);
+ 
+ SAFE_FREE(sGxy);
+ SAFE_FREE(dsGxy);
+
   
   /*double  G2_total[2] = {0.0, 0.0};
   double dG2_total[2] = {0.0, 0.0};
@@ -224,9 +347,12 @@ void free_observable_stat(t_observable_stat* stat)
  for(int s=0; s<2; s++)
  {
   SAFE_FREE(stat->G2_hist[s]);
-  SAFE_FREE(stat->G4_hist[s]);
+  //SAFE_FREE(stat->G4_hist[s]);
   SAFE_FREE(stat->G_hist[s]);
  };
+ SAFE_FREE(stat->Gx);
+ SAFE_FREE(stat->Gxy);
+
 }
 
 /* G2_total[ia]     += G;

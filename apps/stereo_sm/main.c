@@ -20,7 +20,7 @@
  #include "test_stereo_vertex.h"
 #endif
 
-//A good set ob parameters: --lambda 1.31 --alpha 0.015 --average-seq-len 1.5 --average-num-seq 1.1
+//A good set ob parameters: bin\stereo_sm.exe  --alpha 0.030 --average-seq-len 1.5 --average-num-seq 1.1 --no-stack-check --max-alpha-order 5 --prod-mc-steps 1000000 --DIM 2 --LT 16 --LS 16
 
 int main(int argc, char *argv[])
 {

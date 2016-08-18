@@ -24,10 +24,7 @@ void init_lat_propagator(t_lat_propagator* P, int allocate, double mass_sq)
  };
  //Finally, normalizing the probabilities to unity
  for(i=0; i<lat_vol; i++)
- {
   probs[i] /= P->sigma;
-  printf(">>>>>>> %i %2.2lf\n", i, probs[i]);
- }; 
  //Initializing the fast random choice algorithm
  if(allocate)
   SAFE_MALLOC(P->frc_data, t_frc_data, 1); 
@@ -51,9 +48,8 @@ void free_lat_propagator(t_lat_propagator* P)
 
 double  lat_momentum_sq(int *m)
 {
- int mu;
  double res = 0.0;
- for(mu=0; mu<DIM; mu++)
+ for(int mu=0; mu<DIM; mu++)
   res += 4.0*SQR(sin( M_PI*(double)(m[mu])/(double)lat_size[mu] ));
  return res; 
 }
@@ -65,8 +61,14 @@ double  lat_propagator(int* m, double mass_sq)
 
 void rand_momentum(t_lat_propagator* P, int* m)
 {
+ //printf("A call to rand_momentum...\n");
+ //fflush(stdout);
  int i = fast_rand_choice(P->frc_data);
- lat_idx2coords(i, m);    
+ //printf("After fast_rand_choice...\n");
+ //fflush(stdout);
+ lat_idx2coords(i, m);
+ //printf("After lat_idx2coords...\n");
+ //fflush(stdout);
 }
 
 void      zero_momentum(int* m)
@@ -85,8 +87,7 @@ void    assign_momentum(int* m_out, int* m_in)
 
 void    invert_momentum(int* m_out, int* m_in)
 {
- int mu;
- for(mu=0; mu<DIM; mu++)
+ for(int mu=0; mu<DIM; mu++)
   m_out[mu] = -m_in[mu];
 }
 

@@ -9,7 +9,7 @@ ifeq ($(OS),Windows_NT)
 endif
 
 ifeq ($(DEBUG), 1)
- CCFLAGS	+=	 -O0 -g3  -Wno-unknown-pragmas
+ CCFLAGS	+=	 -O0 -g3  -Wno-unknown-pragmas -m32
  SUFF       :=   dbg
 else
  CCFLAGS	+=	-O2 -fopenmp

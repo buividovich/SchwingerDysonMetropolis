@@ -74,7 +74,7 @@ void call_state_initializer()
  ns = 0;
  action_history[ns].action_id = action_collection_size; //This is the additional action code for state initializer
  action_history[ns].action_data_in = -1;
- asign[ns] = state_initializer(&(action_history[ns].action_data_in)); //TODO: Was this necessary for sign-alternating source vectors?
+ asign[ns] = state_initializer(&(action_history[ns].action_data_in));
 }
 
 int   metropolis_step()
