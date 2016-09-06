@@ -4,9 +4,15 @@ t_lat_stack      X; //This stack is the current state of the system
 t_lat_stack      H; //This stack will contain the data related to the sequence of actions
 
 //Data for the formal counting of diagram orders
-int*             O      =        NULL; //Contains the orders of the diagrams in the stack
-int*            OH      =        NULL; //Stack-like structure to keep the history of diagram orders
-int             OH_top  =        0;    //Topmost element of the OH stack
+int* alpha_order_stack   = NULL; //This is necessary to make the full use of factorization
+int  alpha_order_stop    = 0;
+int* alpha_order_history = NULL;
+int  alpha_order_htop    = 0;
+
+int* sign_stack          = NULL;
+int  sign_stop           = 0;
+int* sign_history        = NULL;
+int  sign_htop           = 0;
 
 t_lat_propagator P;
 
@@ -32,23 +38,32 @@ void init_actions()
  init_lat_stack(&X, DIM, max_stack_nel);
  init_lat_stack(&H, DIM, max_history_nel);
  
- //Initializing the order counting
- SAFE_MALLOC( O, int, max_stack_nel);
- SAFE_MALLOC(OH, int, max_history_nel);
- OH_top = 0;
+ //Initializing the order counting and sign stack
+ SAFE_MALLOC(  alpha_order_stack, int, max_stack_nel);
+ SAFE_MALLOC(alpha_order_history, int, max_history_nel);
+ alpha_order_stop     = 0;
+ alpha_order_htop     = 0;
+ 
+ SAFE_MALLOC(         sign_stack, int, max_stack_nel);
+ SAFE_MALLOC(       sign_history, int, max_history_nel);
+ sign_stop            = 0;
+ sign_htop            = 0;
 }
 
 void free_actions()
 {
- SAFE_FREE(O);
- SAFE_FREE(OH);
  free_lat_stack(&X);
  free_lat_stack(&H);
+ 
+ SAFE_FREE(alpha_order_stack);
+ SAFE_FREE(alpha_order_history);
+ SAFE_FREE(sign_stack);
+ SAFE_FREE(sign_history);
  
  SAFE_FREE(action_collection_do);
  SAFE_FREE(action_collection_undo);
  SAFE_FREE(action_collection_amplitude);
- for(int i=0; i<action_collection_size; i++)
+ for(int i=0; i<=action_collection_size; i++)
   SAFE_FREE(action_collection_name[i]);
  SAFE_FREE(action_collection_name); 
 }
@@ -56,18 +71,21 @@ void free_actions()
 /************* Create new factorized-out line ****************/
 DECLARE_ACTION_AMPLITUDE(create)
 {
- return lambda*P.sigma/(NN*cc);
+ return P.sigma/(NN*cc);
 }
 
 DECLARE_ACTION_DO(create)
 {
- if(data_in == NULL)
+ if((data_in==NULL) || ((*data_in)<0))
  {
   X.top  = 0; //If called with NULL, should completely reset the state
   X.nel  = 0;
   H.top  = 0;
   H.nel  = 0;
-  OH_top = 0;
+  alpha_order_stop     = 0;
+  alpha_order_htop     = 0;
+         sign_stop     = 0;
+         sign_htop     = 0;
  };
  
  RETURN_IF_FALSE(X.nel<X.max_nel-2, ERR_STACK_OVERFLOW);  
@@ -77,10 +95,13 @@ DECLARE_ACTION_DO(create)
  X.top ++;
  X.nel += 2;
  
- O[X.top-1] = 0;
- 
  rand_momentum(&P, STACK_EL(X, 0) );
  invert_momentum(  STACK_EL(X, 1), STACK_EL(X, 0));
+ 
+ alpha_order_stack[alpha_order_stop] = 0;
+ alpha_order_stop ++;
+        sign_stack[       sign_stop] = +1;
+        sign_stop ++;
  
  return ACTION_SUCCESS; 
 }
@@ -92,13 +113,16 @@ DECLARE_ACTION_UNDO(create)
  X.top --;
  X.nel -= 2;
  
+ alpha_order_stop --;
+        sign_stop --;        
+ 
  return ACTION_SUCCESS;
 }
 
 /************************ Create new factorized-in line *****************/
 DECLARE_ACTION_AMPLITUDE(evolve_line)
 {
- return 2.0*lambda*P.sigma/cc;
+ return 2.0*P.sigma/cc;
 }
 
 DECLARE_ACTION_DO(evolve_line)
@@ -148,13 +172,15 @@ DECLARE_ACTION_UNDO(evolve_line)
  return ACTION_SUCCESS;
 }
 
+//TODO: introduce alpha in the interacting part
+
 /*************************** Create new vertex ****************************/
 DECLARE_ACTION_AMPLITUDE(evolve_vertex)
 {
  int    Q[4];
  if(data_in==NULL || (*data_in)<0)
  {
-  double res = cc/(meff_sq + lambda);
+  double res = cc*lambda/(meff_sq + lambda);
   if(fabs(4.0*DIM + meff_sq) >= fabs(meff_sq))
    return res*(4.0*DIM + meff_sq);
   else
@@ -164,7 +190,7 @@ DECLARE_ACTION_AMPLITUDE(evolve_vertex)
   if(X.len[X.top-1]>=3)
   {
    add3momenta(Q, STACK_EL(X, 0), STACK_EL(X, 1), STACK_EL(X, 2));
-   return cc*lat_propagator(Q, meff_sq + lambda)*(lat_momentum_sq(STACK_EL(X, 1)) + meff_sq);
+   return lambda*cc*lat_propagator(Q, meff_sq + lambda)*(lat_momentum_sq(STACK_EL(X, 1)) + meff_sq);
   };
  return 0.0;
 }

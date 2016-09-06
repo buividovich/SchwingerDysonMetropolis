@@ -34,6 +34,8 @@ int main(int argc, char *argv[])
  parse_command_line_options(argc, argv);
  init_actions();
  init_parameters();
+ 
+ max_recursion_depth = 2*max_alpha_order;
 
  init_metropolis();
  t_observable_stat* obs_stat = init_observable_stat();

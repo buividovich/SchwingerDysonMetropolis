@@ -11,7 +11,7 @@
 extern t_lat_stack      X; //This stack is the current state of the system
 extern t_lat_stack      H; //This stack will contain the data related to the sequence of actions
 
-extern int* alpha_order_stack;    //Counting orders in the formal lambda-counting for vertices
+/*extern int* alpha_order_stack;    //Counting orders in the formal lambda-counting for vertices
 extern int  alpha_order_stop;
 extern int* alpha_order_history;
 extern int  alpha_order_htop;
@@ -19,7 +19,9 @@ extern int  alpha_order_htop;
 extern int* sign_stack;
 extern int  sign_stop;
 extern int* sign_history;
-extern int  sign_htop;
+extern int  sign_htop;*/
+
+extern int alpha_order;
 
 extern t_lat_propagator P;
 

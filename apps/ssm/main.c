@@ -15,30 +15,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-/*void lambda_descent(int tune_mc_steps, int tune_iterations)
-{
- find_cc_NN_minimum(param_tuning_accuracy, NULL);
- int prev_logs_noise_level = logs_noise_level;
- logs_noise_level = -1;
- 
- for(int iter=0; iter<tune_iterations; iter++)
- {
-  double mnA = tune_cc_NN_minimum(1.0E-4, tune_mc_steps);
-  while(mnA<0.9)
-  {
-   lambda *= 0.9;
-   init_metropolis();
-   for(int imc=0; imc<tune_mc_steps; imc++)
-    metropolis_step(imc);
-   process_mc_stat("", 0);
-   mnA = mean_nA;
-   logs_Write(-1, "At lambda = %2.4E, <nA> = %2.4E", lambda, mean_nA); 
-  };
-  lambda /= 0.9;
- }; 
- logs_noise_level = prev_logs_noise_level;    
-}*/
-
 int main(int argc, char *argv[])
 {
  ansi_colors = 1;
@@ -88,3 +64,28 @@ int main(int argc, char *argv[])
  
  return 0;
 }
+
+
+/*void lambda_descent(int tune_mc_steps, int tune_iterations)
+{
+ find_cc_NN_minimum(param_tuning_accuracy, NULL);
+ int prev_logs_noise_level = logs_noise_level;
+ logs_noise_level = -1;
+ 
+ for(int iter=0; iter<tune_iterations; iter++)
+ {
+  double mnA = tune_cc_NN_minimum(1.0E-4, tune_mc_steps);
+  while(mnA<0.9)
+  {
+   lambda *= 0.9;
+   init_metropolis();
+   for(int imc=0; imc<tune_mc_steps; imc++)
+    metropolis_step(imc);
+   process_mc_stat("", 0);
+   mnA = mean_nA;
+   logs_Write(-1, "At lambda = %2.4E, <nA> = %2.4E", lambda, mean_nA); 
+  };
+  lambda /= 0.9;
+ }; 
+ logs_noise_level = prev_logs_noise_level;    
+}*/

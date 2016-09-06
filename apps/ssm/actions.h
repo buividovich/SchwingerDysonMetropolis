@@ -12,17 +12,16 @@ extern t_lat_stack      X; //This stack is the current state of the system
 extern t_lat_stack      H; //This stack will contain the data related to the sequence of actions
 
 //Stack-like structure for automatic counting of diagram orders
-extern int*             O; //Contains the orders of the diagrams in the stack
-extern int*            OH; //Stack-like structure to keep the history of diagram orders
-extern int         OH_top; //Topmost element of the OH stack
+//Data for the formal counting of diagram orders
+extern int* alpha_order_stack; //This is necessary to make the full use of factorization
+extern int  alpha_order_stop;
+extern int* alpha_order_history;
+extern int  alpha_order_htop;
 
-#define OH_PUSH(_x)                                  { \
- OH[OH_top] = (_x);                                    \
- OH_top ++;                                          }  
- 
-#define OH_POP(_x)                                   { \
- OH_top--;                                             \
- (_x) = OH[OH_top];                                  }  
+extern int* sign_stack;
+extern int  sign_stop;
+extern int* sign_history;
+extern int  sign_htop;
  
 
 extern t_lat_propagator P;

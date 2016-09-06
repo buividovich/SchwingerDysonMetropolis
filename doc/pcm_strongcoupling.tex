@@ -50,41 +50,113 @@
 Our starting point are the SD equations for the following correlators in the PCM model
 \begin{eqnarray}
 \label{gf_def}
-\G\lr{x_1, y_1, \ldots, x_n, y_n}
+\G\lr{x_0, y_0, \ldots, x_{n-1}, y_{n-1}}
 =
 \frac{1}{N}\, \vev{ \tr\lr{
-g_{x_1} g^{\dag}_{y_1} \ldots g_{x_n} g^{\dag}_{y_n}} }
+g_{x_0} g^{\dag}_{y_0} \ldots g_{x_{n-1}} g^{\dag}_{y_{n-1}}} }
 \end{eqnarray}
 \begin{eqnarray}
 \label{SDs_n2}
-\G\lr{x_1, y_1} =
-\delta_{x_1, y_1}
+G\lr{x_0, y_0} =
+\delta_{x_0, y_0}
  - %\nonumber \\ -
-\frac{1}{\lambda} D_{x_1 x} \, \G\lr{x, y_1}
+\frac{1}{\lambda} D_{x_0 x} \, \G\lr{x, y_0}
  +
-\frac{1}{\lambda} D_{x_1 x} \, \G\lr{x_1, x, x_1, y_1}
+\frac{1}{\lambda} D_{x_0 x} \, \G\lr{x_0, x, x_0, y_0}
 \end{eqnarray}
 
 \begin{eqnarray}
 \label{SDs}
-\G\lr{x_1, y_1, \ldots, x_n, y_n}
+\G\lr{x_0, y_0, \ldots, x_{n-1}, y_{n-1}}
 = %\nonumber\\ =
-\sum\limits_{A=2}^{n-1} \delta_{x_1, y_A} \,
-\G\lr{x_A, y_1, \ldots, x_{A-1}, y_{A-1}}\,
-\G\lr{x_{A+1}, y_{A+1}, \ldots, x_n, y_n}\,
+\sum\limits_{A=1}^{n-2} \delta_{x_0, y_A} \,
+\G\lr{x_A, y_0, \ldots, x_{A-1}, y_{A-1}}\,
+\G\lr{x_{A+1}, y_{A+1}, \ldots, x_{n-1}, y_{n-1}}\,
 + \nonumber \\ +
-\delta_{x_1, y_1} \, \G\lr{x_2, y_2, \ldots, x_n, y_n}\,
+\delta_{x_0, y_0} \, \G\lr{x_1, y_1, \ldots, x_{n-1}, y_{n-1}}\,
 +
-\delta_{x_1, y_n} \, \G\lr{x_n, y_1, \ldots, x_{n-1}, y_{n-1}}\,
+\delta_{x_0, y_{n-1}} \, \G\lr{x_{n-1}, y_0, \ldots, x_{n-2}, y_{n-2}}\,
 - \nonumber \\ -
-\sum\limits_{A=2}^{n} \delta_{x_1, x_A} \,
- \G\lr{x_1, y_1, \ldots, x_{A-1}, y_{A-1}}\,
- \G\lr{x_A, y_A, \ldots, x_n, y_n}\,
+\sum\limits_{A=1}^{n-1} \delta_{x_0, x_A} \,
+ \G\lr{x_0, y_0, \ldots, x_{A-1}, y_{A-1}}\,
+ \G\lr{x_A, y_A, \ldots, x_{n-1}, y_{n-1}}\,
 - \nonumber \\ -
-\frac{1}{\lambda} D_{x_1 x} \G\lr{x, y_1, \ldots, x_n, y_n}
+\frac{1}{\lambda} D_{x_0 x} \G\lr{x, y_0, \ldots, x_n, y_n}
 +
-\frac{1}{\lambda} D_{x_1 x} \, \G\lr{x_1, x, x_1, y_1, \ldots, x_n, y_n}
+\frac{1}{\lambda} D_{x_0 x} \, \G\lr{x_0, x, x_0, y_0, \ldots, x_{n-1}, y_{n-1}}
 \end{eqnarray}
+
+We can also represent these equations in the following form:
+\begin{eqnarray}
+\label{SDs_n2_1}
+\sum\limits_x \lr{\delta_{\bar{x}_0 x} + \frac{1-\alpha}{\lambda} D_{\bar{x}_0 x} } G\lr{x, y_0} =
+\delta_{\bar{x}_0, y_0}
+ - %\nonumber \\ -
+\frac{\alpha}{\lambda} D_{\bar{x}_0 x} \, \G\lr{x, y_0}
+ +
+\frac{1}{\lambda} D_{\bar{x}_0 x} \, \G\lr{\bar{x}_0, x, \bar{x}_0, y_0}
+\end{eqnarray}
+
+\begin{eqnarray}
+\label{SDs_1}
+\sum\limits_x \lr{\delta_{\bar{x}_0 x} + \frac{1-\alpha}{\lambda} D_{\bar{x}_0 x} } \G\lr{x, y_0, \ldots, x_{n-1}, y_{n-1}}
+= %\nonumber\\ =
+\sum\limits_{A=1}^{n-2} \delta_{\bar{x}_0, y_A} \,
+\G\lr{x_A, y_0, \ldots, x_{A-1}, y_{A-1}}\,
+\G\lr{x_{A+1}, y_{A+1}, \ldots, x_{n-1}, y_{n-1}}\,
++ \nonumber \\ +
+\delta_{\bar{x}_0, y_0} \, \G\lr{x_1, y_1, \ldots, x_{n-1}, y_{n-1}}\,
++
+\delta_{\bar{x}_0, y_{n-1}} \, \G\lr{x_{n-1}, y_0, \ldots, x_{n-2}, y_{n-2}}\,
+- \nonumber \\ -
+\sum\limits_{A=1}^{n-1} \delta_{\bar{x}_0, x_A} \,
+ \G\lr{\bar{x}_0, y_0, \ldots, x_{A-1}, y_{A-1}}\,
+ \G\lr{x_A, y_A, \ldots, x_{n-1}, y_{n-1}}\,
+- \nonumber \\ -
+\frac{\alpha}{\lambda} D_{\bar{x}_0 x} \G\lr{x, y_0, \ldots, x_n, y_n}
++
+\frac{1}{\lambda} D_{\bar{x}_0 x} \, \G\lr{\bar{x}_0, x, \bar{x}_0, y_0, \ldots, x_{n-1}, y_{n-1}}
+\end{eqnarray}
+
+ Introducing now the ``propagator'' $G^0_{xy}$ via the identity 
+\begin{eqnarray}
+\label{propagator_coord_def}
+ \sum\limits_x \lr{\delta_{x z} + \frac{1-\alpha}{\lambda} D_{x z} } G^0_{z y} = \delta_{x y} 
+\end{eqnarray}
+and summing the equations (\ref{SDs_1}) and (\ref{SDs_n2_1}) over $\bar{x}_0$ with the weight $G^0_{x_0 \bar{x}_0}$, we get
+\begin{eqnarray}
+\label{SDs_n2_1}
+G\lr{x_0, y_0} =
+G^0_{x_0, y_0}
+ - %\nonumber \\ -
+\frac{\alpha}{\lambda} \lrs{G^0 D}_{x_0 x} \, \G\lr{x, y_0}
+ +
+\frac{1}{\lambda} \sum\limits_{\bar{x}_0 x} G^0_{x_0 \bar{x}_0} D_{\bar{x}_0 x} \, \G\lr{\bar{x}_0, x, \bar{x}_0, y_0}
+\end{eqnarray}
+
+\begin{eqnarray}
+\label{SDs_1}
+\G\lr{x_0, y_0, \ldots, x_{n-1}, y_{n-1}}
+= %\nonumber\\ =
+\sum\limits_{A=1}^{n-2} G^0_{x_0, y_A} \,
+\G\lr{x_A, y_0, \ldots, x_{A-1}, y_{A-1}}\,
+\G\lr{x_{A+1}, y_{A+1}, \ldots, x_{n-1}, y_{n-1}}\,
++ \nonumber \\ +
+G^0_{x_0, y_0} \, \G\lr{x_1, y_1, \ldots, x_{n-1}, y_{n-1}}\,
++
+G^0_{x_0, y_{n-1}} \, \G\lr{x_{n-1}, y_0, \ldots, x_{n-2}, y_{n-2}}\,
+- \nonumber \\ -
+\sum\limits_{A=1}^{n-1} G^0_{x_0, x_A} \,
+ \G\lr{x_A, y_0, \ldots, x_{A-1}, y_{A-1}}\,
+ \G\lr{x_A, y_A, \ldots, x_{n-1}, y_{n-1}}\,
+- \nonumber \\ -
+\frac{\alpha}{\lambda} \lrs{G D}_{x_0 x} \G\lr{x, y_0, \ldots, x_n, y_n}
++
+\frac{1}{\lambda} \sum\limits_{\bar{x}_0, x} G^0_{x_0 \bar{x}_0} D_{\bar{x}_0 x} \, \G\lr{\bar{x}_0, x, \bar{x}_0, y_0, \ldots, x_{n-1}, y_{n-1}}
+\end{eqnarray}
+
+
+\subsection*{Weak-coupling-like expansion}
 
 Let us now define the correlators in the momentum space:
 \begin{eqnarray}
@@ -266,6 +338,65 @@ For $G_{xx}$ we now get
   +
   \lambda^2 \vev{ G_0^2\lr{p} G_0\lr{\tilde{p}} G_0\lr{\tilde{q}} G_0\lr{p - \tilde{p} - \tilde{q}} }
 \end{eqnarray}
+
+\subsection*{Strong-coupling-like expansion}
+
+ To arrive at the conventional strong-coupling-like expansion, we use somewhat different conventions for correlators in momentum space:
+\begin{eqnarray}
+\label{momentum_space_def}
+ G\lr{p_0, q_0, \ldots, p_{n-1}, q_{n-1}} = \frac{1}{V^{2 n}} \,
+\sum\limits_{x_0, y_0} \ldots \sum\limits_{x_{n-1}, y_{n-1}} \,
+\expa{i \sum\limits_A p_A x_A + i \sum\limits_A q_A y_A} \,
+\G\lr{x_0, y_0, \ldots, x_{n-1}, y_{n-1}}  ,
+\end{eqnarray}
+or, conversely,
+\begin{eqnarray}
+\label{momentum_space_def_inverse}
+ \G\lr{x_0, y_0, \ldots, x_{n-1}, y_{n-1}}
+ =
+ \sum\limits_{p_0, q_0} \ldots \sum\limits_{p_{n-1}, q_{n-1}} \,
+ \expa{-i \sum\limits_A p_A x_A - i \sum\limits_A q_A y_A}
+  G\lr{p_0, q_0, \ldots, p_{n-1}, q_{n-1}} .
+\end{eqnarray}
+
+Correspondingly, the Schwinger-Dyson equations in momentum space take the following form:
+\begin{eqnarray}
+\label{SDs_n2_momentum}
+ G\lr{p_0, q_0} = \frac{\G_0\lr{p_0} \delta\lr{p_0 + q_0}}{V}
+ +
+ \red{\lambda^{-1}} \, G_0\lr{p_0} \,
+\sum\limits_{\tilde{p}_0, \tilde{q}_0, \tilde{p}_1}
+\delta\lr{p_0, \tilde{p}_0 + \tilde{q}_0 + \tilde{p}_1} \,
+D\lr{\tilde{q}_0} G\lr{\tilde{p}_0, \tilde{q}_0, \tilde{p}_1, q_0}
+\end{eqnarray}
+
+\begin{eqnarray}
+\label{SDs_pcm_momentum}
+ G\lr{p_0, q_0, \ldots, p_{n-1}, q_{n-1}}
+ = \nonumber \\ =
+ \sum\limits_{A=1}^{n-2}
+ \frac{G_0\lr{p_0} \, \delta\lr{p_0 + q_A}}{V} \,
+ G\lr{    p_A,     q_0, \ldots, p_{A-1}, q_{A-1}}
+ G\lr{p_{A+1}, q_{A+1}, \ldots,     p_{n-1},    q_{n-1} }
+ + \nonumber \\ +
+ \frac{G_0\lr{p_0} \, \delta\lr{p_0 + q_0}}{V} \,
+ G\lr{p_1, q_1, \ldots, p_{n-1}, q_{n-1}}
+ + \nonumber \\ +
+ \frac{G_0\lr{p_0} \, \delta\lr{p_0 + q_{n-1}}}{V} \,
+ G\lr{p_{n-1}, q_0, p_1, q_1, \ldots, p_{n-2}, q_{n-2}}
+ - \nonumber \\ -
+ \frac{G_0\lr{p_0}}{V} \,
+ \sum\limits_{A=1}^{n-1}
+ \sum\limits_{\tilde{p}_0 \tilde{p}_A} \delta\lr{p_0 + p_A, \tilde{p}_0 + \tilde{p}_A}
+ G\lr{\tilde{p}_0, q_0, p_1, q_1, \ldots, p_{A-1}, q_{A-1}}
+ G\lr{\tilde{p}_A, q_A,           \ldots, p_{n-1}, q_{n-1}}
+ + \nonumber \\ +
+ \red{\lambda^{-1}} \, G_0\lr{p_0}
+ \sum\limits_{\tilde{p}_0, \tilde{q}_0, \tilde{p_1}}
+ \delta\lr{p_0, \tilde{p}_0 + \tilde{q}_0 + \tilde{p}_1} D\lr{\tilde{q}_0}
+ G\lr{\tilde{p}_0, \tilde{q}_0, \tilde{p}_1, q_0, p_1, q_1, \ldots, p_{n-1}, q_{n-1}}
+\end{eqnarray}
+where we have defined the effective propagator $\G_0\lr{p} = \lr{1 + \red{\lambda^{-1}} D\lr{p}}^{-1}$.
 
 \end{document}
 

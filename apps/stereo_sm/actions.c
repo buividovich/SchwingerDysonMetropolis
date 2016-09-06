@@ -3,15 +3,7 @@
 t_lat_stack      X; //This stack is the current state of the system
 t_lat_stack      H; //This stack will contain the data related to the sequence of actions
 
-int* alpha_order_stack   = NULL; //This is necessary to make the full use of factorization
-int  alpha_order_stop    = 0;
-int* alpha_order_history = NULL;
-int  alpha_order_htop    = 0;
-
-int* sign_stack          = NULL;
-int  sign_stop           = 0;
-int* sign_history        = NULL;
-int  sign_htop           = 0;
+int  alpha_order         = 0; //This is necessary to make the full use of factorization
 
 t_lat_propagator P;
 
@@ -35,16 +27,6 @@ void init_actions()
  //Initialize the lattice stack
  init_lat_stack(&X, DIM, max_stack_nel);
  init_lat_stack(&H, DIM, max_history_nel);
- 
- SAFE_MALLOC(  alpha_order_stack, int, max_stack_nel);
- SAFE_MALLOC(alpha_order_history, int, max_history_nel);
- alpha_order_stop     = 0;
- alpha_order_htop     = 0;
- 
- SAFE_MALLOC(         sign_stack, int, max_stack_nel);
- SAFE_MALLOC(       sign_history, int, max_history_nel);
- sign_stop            = 0;
- sign_htop            = 0;
 }
 
 void free_actions()
@@ -52,10 +34,10 @@ void free_actions()
  free_lat_stack(&X);
  free_lat_stack(&H);
  
- SAFE_FREE(alpha_order_stack);
+ /*SAFE_FREE(alpha_order_stack);
  SAFE_FREE(alpha_order_history);
  SAFE_FREE(sign_stack);
- SAFE_FREE(sign_history);
+ SAFE_FREE(sign_history);*/
  
  SAFE_FREE(action_collection_do);
  SAFE_FREE(action_collection_undo);
@@ -68,7 +50,10 @@ void free_actions()
 /************* Create new factorized-out line ****************/
 DECLARE_ACTION_AMPLITUDE(create)
 {
- return P.sigma/(NN*cc);
+ int new_eo = (X.nel/2 + alpha_order) + 1;
+ if((data_in==NULL) || ((*data_in)<0) || new_eo <= (max_alpha_order+1))
+  return P.sigma/(NN*cc);
+ return 0.0; 
 }
 
 DECLARE_ACTION_DO(create)
@@ -79,10 +64,7 @@ DECLARE_ACTION_DO(create)
   X.nel  = 0;
   H.top  = 0;
   H.nel  = 0;
-  alpha_order_stop     = 0;
-  alpha_order_htop     = 0;
-         sign_stop     = 0;
-         sign_htop     = 0;
+  alpha_order     = 0;
  };
  
  RETURN_IF_FALSE(X.nel<X.max_nel-2, ERR_STACK_OVERFLOW);  
@@ -95,11 +77,6 @@ DECLARE_ACTION_DO(create)
  rand_momentum(&P, STACK_EL(X, 0) );
  invert_momentum(  STACK_EL(X, 1), STACK_EL(X, 0));
  
- alpha_order_stack[alpha_order_stop] = 0;
- alpha_order_stop ++;
-        sign_stack[       sign_stop] = +1;
-        sign_stop ++;
- 
  return ACTION_SUCCESS; 
 }
 
@@ -110,16 +87,16 @@ DECLARE_ACTION_UNDO(create)
  X.top --;
  X.nel -= 2;
  
- alpha_order_stop --;
-        sign_stop --;        
- 
  return ACTION_SUCCESS;
 }
 
 /************************ Create new factorized-in line *****************/
 DECLARE_ACTION_AMPLITUDE(add_line)
 {
- return 2.0*P.sigma/cc;
+ int new_eo = (X.nel/2 + alpha_order) + 1;
+ if(new_eo <= (max_alpha_order+1))
+  return 2.0*P.sigma/cc;
+ return 0.0; 
 }
 
 DECLARE_ACTION_DO(add_line) 
@@ -163,7 +140,11 @@ DECLARE_ACTION_UNDO(add_line)
 DECLARE_ACTION_AMPLITUDE(join)
 {
  if(data_in==NULL || (*data_in)<0 || X.top>1) //We can join two sequences if there are more than two elements in the stack
-  return NN*P.sigma/cc;
+ {
+  int new_eo = (X.nel/2 + alpha_order) + 1;
+  if(new_eo <= (max_alpha_order+1))
+   return NN*P.sigma/cc;
+ }; 
  return 0.0;
 }
 
@@ -171,18 +152,6 @@ DECLARE_ACTION_DO(join)
 {
  RETURN_IF_FALSE(                          X.top>1, ERR_WRONG_STATE);
  RETURN_IF_FALSE(                X.nel<X.max_nel-2, ERR_STACK_OVERFLOW);
- RETURN_IF_FALSE( alpha_order_htop<max_history_nel, ERR_HISTORY_OVERFLOW);
- RETURN_IF_FALSE(              alpha_order_htop>=0, ERR_WRONG_STATE);
- RETURN_IF_FALSE( alpha_order_htop<max_history_nel, ERR_HISTORY_OVERFLOW);
- RETURN_IF_FALSE(              alpha_order_htop>=0, ERR_WRONG_STATE);
- 
- alpha_order_stack[X.top-2]           += alpha_order_stack[X.top-1];
- alpha_order_history[alpha_order_htop] = alpha_order_stack[X.top-1];
- alpha_order_htop ++;
- 
- sign_stack[X.top-2]     *= sign_stack[X.top-1];
- sign_history[sign_htop] =  sign_stack[X.top-1];
- sign_htop ++;
  
  X.len[X.top-2] += (X.len[X.top-1] + 2);
  //... and now we have to remember what was the length of both sequences in order to perform undo
@@ -205,8 +174,6 @@ DECLARE_ACTION_UNDO(join)
 {
  RETURN_IF_FALSE(                        (*data_in) >= 2, ERR_WRONG_DATA);
  RETURN_IF_FALSE(X.len[X.top-1] >= ((*data_in) + 2) +  2, ERR_WRONG_STATE);
- RETURN_IF_FALSE(                     alpha_order_htop>0, ERR_WRONG_STATE);
- RETURN_IF_FALSE(                            sign_htop>0, ERR_WRONG_STATE);
  
  //Shifting the elements back
  for(int i=(*data_in)+1; i>=2; i--)
@@ -215,13 +182,6 @@ DECLARE_ACTION_UNDO(join)
  X.len[X.top-1] -= ((*data_in) + 2);
  X.len[X.top]    = (*data_in);
  X.start[X.top]  = X.start[X.top-1] + X.len[X.top-1];
- 
- alpha_order_stack[X.top]    = alpha_order_history[alpha_order_htop-1];
- alpha_order_stack[X.top-1] -= alpha_order_history[alpha_order_htop-1];
-        sign_stack[X.top]    =        sign_history[sign_htop-1];
-        sign_stack[X.top-1] *=        sign_history[sign_htop-1];
- alpha_order_htop --;
-        sign_htop --;
  
  X.top ++;
  X.nel -= 2;
@@ -241,7 +201,7 @@ DECLARE_ACTION_AMPLITUDE(vertex)
   return (4.0*mcc*(4.0 - 3.0*mcc + mcc*mcc)/((1.0-mcc)*(1.0-mcc)*(1.0-mcc)) + 0.25*lambda*mcc/(1.0 - mcc))/P.mass_sq;
  };
  
- if((*data_in)>=3 && (alpha_order_stack[alpha_order_stop-1] + ((*data_in)-1)/2)<=max_alpha_order)
+ if((*data_in)>=3)
  {
   double res = vertex(&(STACK_EL(X, 0)), Q, (*data_in));
   res *= lat_propagator(Q, P.mass_sq);
@@ -276,8 +236,7 @@ DECLARE_ACTION_DO(vertex)
  X.len[X.top-1] -= ((*data_in)-1);
  X.nel          -= ((*data_in)-1);
  
- alpha_order_stack[alpha_order_stop-1] += ((*data_in) - 1)/2;
- sign_stack[sign_stop-1]               *= -1;
+ alpha_order += ((*data_in)-1)/2;
   
  return ACTION_SUCCESS;
 }
@@ -303,8 +262,7 @@ DECLARE_ACTION_UNDO(vertex)
  H.top --;
  H.nel -= ((*data_in)-1);
  
- alpha_order_stack[alpha_order_stop-1] -= ((*data_in)-1)/2;
- sign_stack[sign_stop-1]               *= -1;
+ alpha_order -= ((*data_in)-1)/2;
  
  return ACTION_SUCCESS;
 }
@@ -315,7 +273,7 @@ int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int 
  int nact = 0, adata = 0;
  double ampl;
  
- logs_Write((step_number%mc_reporting_interval==0? 1 : 2), "Step %08i:\t X.top = % 5i, X.len[X.top-1] = % 5i,  X.nel = % 5i, H.top = % 5i, H.nel = % 5i, alpha_order = % 3i", step_number, X.top, X.len[X.top-1], X.nel, H.top, H.nel, alpha_order_stack[alpha_order_stop-1]);
+ logs_Write((step_number%mc_reporting_interval==0? 1 : 2), "Step %08i:\t X.top = % 5i, X.len[X.top-1] = % 5i,  X.nel = % 5i, H.top = % 5i, H.nel = % 5i, alpha_order = % 3i, ns = % 3i", step_number, X.top, X.len[X.top-1], X.nel, H.top, H.nel, alpha_order, ns);
  
  if(check_stack)
  {

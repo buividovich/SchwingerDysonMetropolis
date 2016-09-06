@@ -20,6 +20,9 @@ extern double average_seq_len;  //Desired number of momenta in the sequence
 extern double average_num_seq;  //Desired number of sequences
 //Useful calculable parameters
 extern double stereo_alpha;     //-\lambda/8, expansion parameter 
+//Files and directories
+extern char      data_dir[512]; //Directory to save the data files
+extern char      suffix[512];   //Suffix to label the data, if empty on entry, will be generated automatically
 
 
 int  parse_command_line_options(int argc, char **argv);

@@ -1,9 +1,12 @@
 #include "parameters.h"
 
-double    alpha           = 0.002;
-int       max_alpha_order = 50;
-double    average_seq_len = 6.0; //Desired number of momenta in the sequence
-double    average_num_seq = 3.0; //Desired number of sequences
+double    alpha                 = 0.002;
+int       max_alpha_order       = 50;
+double    average_seq_len       = 6.0; //Desired number of momenta in the sequence
+double    average_num_seq       = 3.0; //Desired number of sequences
+//Files and directories
+char      data_dir[512]         = "./data/"; //Directory to save the data files
+char      suffix[512]           = "";        //Suffix to label the data, if empty on entry, will be generated automatically
 //Useful calculable parameters
 double    stereo_alpha    = 0.0;  // -\lambda/8, expansion parameter...
 
@@ -15,10 +18,12 @@ static struct option long_options[] =
  {       "max-alpha-order", required_argument,  NULL, 'b'},
  {       "average-seq-len", required_argument,  NULL, 'c'},
  {       "average-num-seq", required_argument,  NULL, 'd'},
- {                       0,                  0,                       NULL,   0}
+ {              "data-dir", required_argument,  NULL, 'e'},
+ {                "suffix", required_argument,  NULL, 'f'},
+ {                       0,                  0, NULL,   0}
 };
 
-static char my_short_option_list[] = "a:b:c:d:";
+static char my_short_option_list[] = "a:b:c:d:e:f:";
 
 int parse_command_line_options(int argc, char **argv)
 {
@@ -55,6 +60,12 @@ int parse_command_line_options(int argc, char **argv)
    case   'd':
     SAFE_SSCANF_BREAK(optarg, "%lf", average_num_seq);
    break;
+   case   'e':
+    strcpy(data_dir, optarg);      
+   break;
+   case   'f':
+    strcpy(suffix, optarg);
+   break;
    case   0:
    break;
    case '?':
@@ -84,6 +95,9 @@ void init_parameters()
   double u = (1.0 - sqrt(1.0 - 4.0*x))/(2.0*x) - 1.0;
   NN = u*(double)(average_num_seq)/(double)(average_num_seq - 1);
  }; 
+ 
+ if(strlen(suffix)==0)
+  sprintf(suffix, "d%i_t%i_s%i_l%2.4lf", DIM, LT, LS, lambda); 
 }
 
 void free_parameters()
@@ -108,6 +122,11 @@ void print_parameters()
   logs_WriteParameter(0, "lat_size",    "[%i]: %i", mu, lat_size[mu]);
  logs_Write(0, "\tPARAMETERS OF STOCHASTIC SAMPLING");
  logs_WriteParameter(0, "Desired average sequence length", "%2.2lf", average_seq_len);
- logs_WriteParameter(0, "Desired average no.  sequences",  "%2.2lf", average_num_seq); 
+ logs_WriteParameter(0, "Desired average no.  sequences",  "%2.2lf", average_num_seq);
+ 
+ logs_Write(0, "\tOUTPUT PARAMETERS");
+ logs_WriteParameter(0, "Data directory",     "%s", data_dir);
+ logs_WriteParameter(0, "Suffix",             "%s", suffix);
+  
  print_max_amplitudes(); 
 }

@@ -43,6 +43,7 @@ void print_stack_statistics(t_stack_stat* stat)
   mean_num_seq += (double)(imns+1)*(double)(stat->num_seq_hist[imns]);
  mean_num_seq /= (double)(stat->nstat);
  
+ logs_Write(0, "");
  logs_Write(0, "STATISTICS ON STACK USAGE:");
  logs_WriteParameter(0, "Mean sequence length",              "%2.2lf", mean_seq_len);
  logs_WriteParameter(0, "Mean number of sequences in stack", "%2.2lf", mean_num_seq);

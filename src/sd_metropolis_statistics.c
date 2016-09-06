@@ -1,8 +1,8 @@
 #include "sd_metropolis_statistics.h"
 
-double                   maxnA    = 0; //Max. value of nA
-double                     anA    = 0; //Expectation value of nA[x] - it is necessary in order to restore the correct weight
-double                     dnA    = 0; //Expectation value of its square - necessary to estimate the error!
+double                   maxnA    = 0.0; //Max. value of nA
+double                     anA    = 0.0; //Expectation value of nA[x] - it is necessary in order to restore the correct weight
+double                     dnA    = 0.0; //Expectation value of its square - necessary to estimate the error!
 double                   msign    = 0.0; //Expectation value of the sign - also necessary for recovering the correct normalization
 int                        aac    = 0;
 double                     ans    = 0.0;
@@ -42,14 +42,15 @@ double mean_sign            = 0.0;
 
 void init_metropolis_statistics()
 {
- maxnA = 0.0;
- aac   = 0;
- ans   = 0.0;
- anA   = 0.0;
- dnA   = 0.0;
- msign = 0.0;
- ans   = 0.0;
- nmc   = 0;
+ maxnA    =     0.0;
+ aac      =     0.0;
+ ans      =     0.0;
+ anA      =     0.0;
+ dnA      =     0.0;
+ msign    =     0.0;
+ ans      =     0.0;
+ nmc      =     0;
+ 
  SAFE_MALLOC_IF_NULL(action_counter, int, action_collection_size);
  for(int i=0; i<action_collection_size; i++)
   action_counter[i] = 0;
@@ -99,6 +100,7 @@ void gather_mc_stat()
  ans   += (double)(ns+1);
  anA   += nA[ns];
  dnA   += SQR(nA[ns]);
+ 
  maxnA  = MAX(nA[ns], maxnA);
  msign += asign[ns];
  
@@ -134,11 +136,11 @@ void process_mc_stat(const char* prefix, int save_to_files)
  mean_sign            =       msign/(double)nmc;
  
  logs_Write(0, "\nSTATISTICS ON THE MC PROCESS (over %i steps): ",       nmc);
- logs_WriteParameter(0,         "Acceptance rate",    "%2.4lf",            acceptance_rate);
- logs_WriteParameter(0,    "Mean recursion depth",    "%2.4lf",            mean_recursion_depth);
- logs_WriteParameter(0, "Mean A rescaling factor",    "%2.4lf +/- %2.4lf", mean_nA, err_nA);
- logs_WriteParameter(0,  "Max A rescaling factor",    "%2.4lf",            maxnA);
- logs_WriteParameter(0,       "Mean config. sign",    "%2.4lf",            mean_sign);
+ logs_WriteParameter(0,                                   "Acceptance rate",  "%2.4lf",            acceptance_rate);
+ logs_WriteParameter(0,                              "Mean recursion depth",  "%2.4lf",            mean_recursion_depth);
+ logs_WriteParameter(0,                                           "Mean nA",  "%2.4lf +/- %2.4lf", mean_nA, err_nA);
+ logs_WriteParameter(0,                            "Max A rescaling factor",  "%2.4lf",            maxnA);
+ logs_WriteParameter(0,                                 "Mean config. sign",  "%2.4lf",            mean_sign);
  logs_Write(0, "\n");
  
  int action_counter_total = 0;

@@ -19,17 +19,16 @@ t_action_data* action_history     = NULL; //History of actions, elements up to n
 //These are internal variables of sd_metropolis
 t_action_data* action_list        = NULL; //List of currently possible actions at every MC step
 double*        amplitude_list     = NULL; //List of the amplitudes of currently possible actions
-double*        probability_list   = NULL; //LIst of the probabilities of currently possible actions
+double*        probability_list   = NULL; //List of the probabilities of currently possible actions
 int            action_list_length = 0;
-
 
 void   init_metropolis()
 {
  step_number    = 0;
  ns             = 0;
- SAFE_MALLOC_IF_NULL(             nA,        double, max_recursion_depth);
- SAFE_MALLOC_IF_NULL(          asign,           int, max_recursion_depth);
- SAFE_MALLOC_IF_NULL( action_history, t_action_data, max_recursion_depth);
+ SAFE_MALLOC_IF_NULL(             nA,        double, (max_recursion_depth+1));
+ SAFE_MALLOC_IF_NULL(          asign,           int, (max_recursion_depth+1));
+ SAFE_MALLOC_IF_NULL( action_history, t_action_data, (max_recursion_depth+1));
  
  init_metropolis_statistics();
  
@@ -82,9 +81,9 @@ int   metropolis_step()
  int n_actions, iaction, todo, accepted = 0, res;
  double a, alpha;
  
- if(ns>=max_recursion_depth-1)
+ if(ns>max_recursion_depth)
  {
-  logs_WriteError("Step %08i:\tOverflow detected - size of action_history is larger than the allocated memory!!! %s", step_number, (exit_upon_overflow? "Stopping the MC process" : "Resetting the state of the system"));
+  logs_WriteError("Step %08i:\tOverflow detected - size of action_history (ns = %i) is larger than max_recursion_depth=%i !!! %s", step_number, ns, max_recursion_depth, (exit_upon_overflow? "Stopping the MC process" : "Resetting the state of the system"));
   ns = 0;
   if(exit_upon_overflow)
    exit(EXIT_FAILURE);
