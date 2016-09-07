@@ -13,12 +13,6 @@
 #include "sd_metropolis_statistics.h"
 #include "sd_metropolis_parameters.h"
 
-//Possible improvements in the code
-//Can wait:  inline functions for momenta manipulations
-//Can wait:  Numerical values for characters in getopt
-//Can wait:  Coordinates as integers in stack, not as lists - can give some speedup...
-//Can wait:  Timing? Compare, how much time is taken by stack manipulations? How fast is ranlux?
-
 //Functional type for an elementary action on the configuration space
 typedef int (*t_action)(  int* data_in); //In future, probably more data will be necessary to characterize the actions. For the time being, however, single integer seems enough
 //On success, t_action should return 0 

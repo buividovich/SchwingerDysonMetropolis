@@ -12,14 +12,13 @@
 
 #include "parameters.h"
 #include "actions.h"
-#include "stack_statistics.h"
 
 typedef struct 
 {
  double    astop;
  double*   Gx[2];
  double*   Gxy[2];
- double    Gtotal;
+ double*   Gx_ext[2];
  int*      sampling_hist;
  int       actual_max_alpha_order;
  int       nstat;

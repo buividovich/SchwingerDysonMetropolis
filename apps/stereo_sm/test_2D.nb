@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       157,          7]
-NotebookDataLength[     48351,       1117]
-NotebookOptionsPosition[     47400,       1081]
-NotebookOutlinePosition[     47744,       1096]
-CellTagsIndexPosition[     47701,       1093]
+NotebookDataLength[     69786,       1817]
+NotebookOptionsPosition[     68676,       1776]
+NotebookOutlinePosition[     69020,       1791]
+CellTagsIndexPosition[     68977,       1788]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -22,7 +22,7 @@ Notebook[{
 Cell[CellGroupData[{
 Cell[BoxData[{
  RowBox[{
-  RowBox[{"MaxOrder", " ", "=", " ", "8"}], ";"}], "\[IndentingNewLine]", 
+  RowBox[{"MaxOrder", " ", "=", " ", "10"}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{
@@ -258,7 +258,7 @@ Cell[BoxData[{
   RowBox[{"SourceNorms", "=", 
    RowBox[{"{", 
     RowBox[{
-    "0.0", ",", " ", "0.0", ",", "0.0", ",", "0.0", ",", "0.0", ",", 
+    "0.0", ",", " ", "0.2540498", ",", "0.0", ",", "0.0", ",", "0.0", ",", 
      "0.2733377"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"VRdata", "=", 
@@ -308,6 +308,9 @@ Cell[BoxData[{
     RowBox[{
      RowBox[{"\[Lambda]", "=", 
       RowBox[{"lambdas", "[", 
+       RowBox[{"[", "i\[Lambda]", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"SourceNorm", " ", "=", " ", 
+      RowBox[{"SourceNorms", "[", 
        RowBox[{"[", "i\[Lambda]", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
      RowBox[{"c", "=", 
       FractionBox[
@@ -364,6 +367,9 @@ s32_l\>\"", "<>",
             RowBox[{"MeanNAFileName", ",", "\"\<Table\>\""}], "]"}], "]"}], 
           "[", 
           RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"Print", "[", 
+         RowBox[{"Histogram", "[", "MeanNAData", "]"}], "]"}], ";", 
+        "\[IndentingNewLine]", 
         RowBox[{"MeanNA", "=", 
          RowBox[{"Mean", "[", "MeanNAData", "]"}]}], ";", " ", 
         RowBox[{"ErrNA", "=", 
@@ -379,16 +385,19 @@ s32_l\>\"", "<>",
          "\"\<1 - NA = \>\"", ",", "MeanNA", ",", "\"\< +/- \>\"", ",", 
           "ErrNA", ",", "\"\< (\>\"", ",", " ", 
           RowBox[{"100.0", " ", 
-           RowBox[{"ErrNA", "/", "MeanNA"}]}], ",", "\"\< %)\>\""}], "]"}], 
-        ";", "\[IndentingNewLine]", 
+           RowBox[{"ErrNA", "/", "MeanNA"}]}], ",", "\"\< %, \>\"", ",", 
+          RowBox[{"Length", "[", "MeanNAData", "]"}], ",", 
+          "\"\< points)\>\""}], "]"}], ";", "\[IndentingNewLine]", 
         RowBox[{"GxData", "=", 
          RowBox[{"GetConvergenceData", "[", 
           RowBox[{"ScalarFileName", ",", "1", ",", "2", ",", "1", ",", 
-           FractionBox["1", "MeanNA"]}], "]"}]}], ";", "\[IndentingNewLine]", 
+           FractionBox["SourceNorm", "MeanNA"]}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
         RowBox[{"MeanLinkData", "=", 
          RowBox[{"GetConvergenceData", "[", 
           RowBox[{"ScalarFileName", ",", "1", ",", "4", ",", "1", ",", 
-           FractionBox["1", "MeanNA"]}], "]"}]}], ";", "\[IndentingNewLine]", 
+           FractionBox["SourceNorm", "MeanNA"]}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
         RowBox[{"MeanLinkExactData", "=", 
          RowBox[{"{", 
           RowBox[{
@@ -456,17 +465,14 @@ s32_l\>\"", "<>",
   RowBox[{"mlPlots", ",", 
    RowBox[{"PlotRange", "\[Rule]", "All"}]}], 
   "]"}], "\[IndentingNewLine]"}], "Input",
- CellChangeTimes->{{3.68154253893257*^9, 3.681542585301222*^9}, {
-  3.681542651750023*^9, 3.681542684238881*^9}, {3.6815427225000696`*^9, 
-  3.681542760597248*^9}, {3.6815427943731804`*^9, 3.681542949635061*^9}, {
-  3.6815429801148043`*^9, 3.6815430022100677`*^9}, {3.6815430388341627`*^9, 
-  3.6815430975215197`*^9}, {3.681543161361171*^9, 3.681543167952548*^9}, {
-  3.6815432216976223`*^9, 3.681543274847662*^9}, {3.681624139599861*^9, 
-  3.681624145566202*^9}, {3.6821418233022785`*^9, 3.6821418747552214`*^9}, {
-  3.6821431212895193`*^9, 3.682143139624568*^9}, {3.6821431829410453`*^9, 
-  3.682143312681466*^9}, {3.6821433799293127`*^9, 3.6821435519291506`*^9}, {
-  3.682143592553474*^9, 3.682143743702119*^9}, {3.6821437902187796`*^9, 
-  3.682143816921307*^9}}],
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmViYGAQBmIQPfd6rOGf3NeOcxZrmoNoA4YKexD9akm7M4iexBDg
+AaJXyAj7gmiJj96BIDo7aEsKiK5a05wBoh/scMsG0WUbb+WDaK8NBuUgeluf
+dj2Idqv+B6bfBG1rA9E8CtG9IFrAqJhTJe+1Y4icEReIdlnz8rxC/mvHY1oR
+10D0PmfNIkUgXfanuAREc8veqwTRk86JdoHod3tqJ4HoWbv/LgfR/NsE14Lo
+Q+Xf9oNoO4bjR8HqOhLOgeiVTAfDlYB0X2VIBIhOsJNn0gTSf2Q2sIDoKSxm
+DSD60k03ML2n1+KfF5D+MGsZgzeQBgA1OZki
+  "]],
 
 Cell[CellGroupData[{
 
@@ -476,113 +482,959 @@ Cell[BoxData[
   SequenceForm["\[Lambda] = ", 3.23],
   Editable->False]], "Print",
  CellChangeTimes->{
-  3.6816233044440928`*^9, 3.681623463965217*^9, 3.6816234969101014`*^9, 
-   3.6816235411656327`*^9, 3.681623636845105*^9, 3.6816240662976685`*^9, {
-   3.6816241531356354`*^9, 3.681624171805703*^9}, 3.681625447710681*^9, 
-   3.681627392370909*^9, 3.681634164646261*^9, 3.6816366115832176`*^9, 
-   3.6816375159189425`*^9, 3.6816378683821025`*^9, 3.6816382228373766`*^9, 
-   3.6816387556658525`*^9, 3.6816391093760834`*^9, 3.6816395995481195`*^9, 
-   3.681639990903504*^9, 3.6816405826283484`*^9, 3.6816412966551886`*^9, 
-   3.6816417964587755`*^9, 3.681642409958866*^9, 3.681642731706269*^9, 
-   3.681643416719449*^9, 3.6816440914260406`*^9, 3.6817054791852193`*^9, 
-   3.6817066087718277`*^9, 3.6817098958408375`*^9, 3.6817120618207245`*^9, 
-   3.6817133171565256`*^9, 3.681719318650951*^9, 3.6817255149603596`*^9, 
-   3.681728623675168*^9, 3.6817915999672055`*^9, 3.6817966398985944`*^9, 
-   3.681801082973078*^9, 3.68181376573149*^9, 3.6821412927289314`*^9, 
-   3.682141413780855*^9, 3.682141504819062*^9, 3.6821417774276543`*^9, {
-   3.6821418363090224`*^9, 3.682141876724334*^9}, 3.6821419478594027`*^9, {
-   3.682142100048107*^9, 3.6821421137118893`*^9}, 3.682142366702359*^9, 
-   3.682142399997264*^9, {3.682143116331236*^9, 3.682143140729631*^9}, {
-   3.6821432683439302`*^9, 3.6821432872850137`*^9}, 3.6821434570477233`*^9, 
-   3.682143509548726*^9, 3.6821435532262244`*^9, 3.6821435998018885`*^9, 
-   3.6821437163455544`*^9}],
+  3.682144220420386*^9, 3.68214431140759*^9, 3.6821443430784016`*^9, {
+   3.6821443847467847`*^9, 3.6821444056049776`*^9}, 3.6821445295370665`*^9, 
+   3.6821447280294194`*^9, 3.682144871262612*^9, 3.6821449101238346`*^9, 
+   3.6821449649909725`*^9, 3.6821452904745893`*^9, 3.6821456369964094`*^9, 
+   3.682145856391958*^9, 3.68214648337982*^9, 3.6821479065692215`*^9, 
+   3.682151665978247*^9, 3.6821522248762145`*^9, 3.6821532529160147`*^9, 
+   3.682154037630898*^9, 3.6821559946258316`*^9, {3.682158572394272*^9, 
+   3.682158587071111*^9}, 3.6821586310896287`*^9, 3.6821589188250866`*^9, {
+   3.682159352722904*^9, 3.6821593730580673`*^9}, {3.6821594753949203`*^9, 
+   3.6821594855695024`*^9}, {3.6821596096876016`*^9, 
+   3.6821596195771675`*^9}, {3.682159649896901*^9, 3.6821596618415847`*^9}, 
+   3.6821597333196726`*^9, {3.6821597868327336`*^9, 3.6821598026476383`*^9}, 
+   3.682159837703643*^9, 3.68215989971819*^9, 3.682159983053957*^9, 
+   3.6821603813457375`*^9, 3.682160813327446*^9, 3.6821608840774927`*^9, 
+   3.6821611931481705`*^9, 3.6821612279911633`*^9, 3.6821623993431606`*^9, 
+   3.682162442717642*^9, 3.682223307135887*^9, 3.6822236698696346`*^9, 
+   3.682226160039064*^9, 3.6822262576816487`*^9, 3.682227813670646*^9, {
+   3.6822282186018066`*^9, 3.682228229681441*^9}, 3.68222827547606*^9}],
+
+Cell[BoxData[
+ GraphicsBox[
+  {RGBColor[0.798413061722744, 0.824719615472648, 0.968322270542458], 
+   EdgeForm[Opacity[0.7]], {}, 
+   {RGBColor[0.798413061722744, 0.824719615472648, 0.968322270542458], 
+    EdgeForm[Opacity[0.7]], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{-0.002, 0.}, {-0.0019, 2.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{17.5, 26.45102040816326}, {92.567886464718, 
+         95.28778676483914}}],
+       StatusArea[#, 2.]& ,
+       TagBoxNote->"2."],
+      StyleBox["2.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[2., {
+        GrayLevel[0]}], "Tooltip"]& ], {}, {}, 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{-0.0017, 0.}, {-0.0016, 1.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{41.35306122448981, 50.30408163265305}, {
+         93.42783661477857, 95.28778676483914}}],
+       StatusArea[#, 1.]& ,
+       TagBoxNote->"1."],
+      StyleBox["1.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[1., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{-0.0016, 0.}, {-0.0015, 2.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{49.30408163265305, 58.255102040816325`}, {
+         92.567886464718, 95.28778676483914}}],
+       StatusArea[#, 2.]& ,
+       TagBoxNote->"2."],
+      StyleBox["2.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[2., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{-0.0015, 0.}, {-0.0014, 2.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{57.255102040816325`, 66.2061224489796}, {
+         92.567886464718, 95.28778676483914}}],
+       StatusArea[#, 2.]& ,
+       TagBoxNote->"2."],
+      StyleBox["2.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[2., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{-0.0014, 0.}, {-0.0013, 6.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{65.2061224489796, 74.15714285714286}, {
+         89.12808586447574, 95.28778676483914}}],
+       StatusArea[#, 6.]& ,
+       TagBoxNote->"6."],
+      StyleBox["6.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[6., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{-0.0013, 0.}, {-0.0012, 9.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{73.15714285714286, 82.10816326530613}, {
+         86.54823541429403, 95.28778676483914}}],
+       StatusArea[#, 9.]& ,
+       TagBoxNote->"9."],
+      StyleBox["9.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[9., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{-0.0012, 0.}, {-0.0011, 18.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{81.10816326530613, 90.05918367346938}, {
+         78.80868406374891, 95.28778676483914}}],
+       StatusArea[#, 18.]& ,
+       TagBoxNote->"18."],
+      StyleBox["18.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[18., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{-0.0011, 0.}, {-0.001, 15.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{89.05918367346938, 98.01020408163265}, {
+         81.38853451393062, 95.28778676483914}}],
+       StatusArea[#, 15.]& ,
+       TagBoxNote->"15."],
+      StyleBox["15.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[15., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{-0.001, 0.}, {-0.0009, 46.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{97.01020408163265, 105.96122448979592`}, {
+         54.73007986205302, 95.28778676483914}}],
+       StatusArea[#, 46.]& ,
+       TagBoxNote->"46."],
+      StyleBox["46.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[46., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{-0.0009, 0.}, {-0.0008, 44.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{104.96122448979592`, 113.91224489795917`}, {
+         56.44998016217415, 95.28778676483914}}],
+       StatusArea[#, 44.]& ,
+       TagBoxNote->"44."],
+      StyleBox["44.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[44., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{-0.0008, 0.}, {-0.0007, 49.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{112.91224489795917`, 121.86326530612246`}, {
+         52.15022941187131, 95.28778676483914}}],
+       StatusArea[#, 49.]& ,
+       TagBoxNote->"49."],
+      StyleBox["49.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[49., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{-0.0007, 0.}, {-0.0006, 80.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{120.86326530612246`, 129.81428571428572`}, {
+         25.491774759993703`, 95.28778676483914}}],
+       StatusArea[#, 80.]& ,
+       TagBoxNote->"80."],
+      StyleBox["80.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[80., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{-0.0006, 0.}, {-0.0005, 99.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{128.81428571428572`, 137.76530612244898`}, {
+         9.152721908842906, 95.28778676483914}}],
+       StatusArea[#, 99.]& ,
+       TagBoxNote->"99."],
+      StyleBox["99.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[99., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{-0.0005, 0.}, {-0.0004, 120.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{136.76530612244898`, 
+         145.71632653061224`}, {-8.906231242429016, 95.28778676483914}}],
+       StatusArea[#, 120.]& ,
+       TagBoxNote->"120."],
+      StyleBox["120.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[120., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{-0.0004, 0.}, {-0.0003, 157.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{144.71632653061224`, 
+         153.6673469387755}, {-40.724386794670025`, 95.28778676483914}}],
+       StatusArea[#, 157.]& ,
+       TagBoxNote->"157."],
+      StyleBox["157.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[157., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{-0.0003, 0.}, {-0.0002, 171.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{152.6673469387755, 
+         161.61836734693878`}, {-52.76368889551797, 95.28778676483914}}],
+       StatusArea[#, 171.]& ,
+       TagBoxNote->"171."],
+      StyleBox["171.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[171., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{-0.0002, 0.}, {-0.0001, 182.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{160.61836734693878`, 
+         169.56938775510204`}, {-62.22314054618424, 95.28778676483914}}],
+       StatusArea[#, 182.]& ,
+       TagBoxNote->"182."],
+      StyleBox["182.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[182., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{-0.0001, 0.}, {0., 215.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{168.56938775510204`, 
+         177.5204081632653}, {-90.60149549818298, 95.28778676483914}}],
+       StatusArea[#, 215.]& ,
+       TagBoxNote->"215."],
+      StyleBox["215.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[215., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{0., 0.}, {0.0001, 220.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{176.5204081632653, 
+         185.47142857142856`}, {-94.9012462484858, 95.28778676483914}}],
+       StatusArea[#, 220.]& ,
+       TagBoxNote->"220."],
+      StyleBox["220.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[220., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{0.0001, 0.}, {0.0002, 217.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{184.47142857142856`, 
+         193.42244897959182`}, {-92.3213957983041, 95.28778676483914}}],
+       StatusArea[#, 217.]& ,
+       TagBoxNote->"217."],
+      StyleBox["217.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[217., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{0.0002, 0.}, {0.0003, 204.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{192.42244897959182`, 
+         201.3734693877551}, {-81.14204384751672, 95.28778676483914}}],
+       StatusArea[#, 204.]& ,
+       TagBoxNote->"204."],
+      StyleBox["204.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[204., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{0.0003, 0.}, {0.0004, 189.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{200.3734693877551, 
+         209.32448979591837`}, {-68.2427915966082, 95.28778676483914}}],
+       StatusArea[#, 189.]& ,
+       TagBoxNote->"189."],
+      StyleBox["189.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[189., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{0.0004, 0.}, {0.0005, 201.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{208.32448979591837`, 
+         217.27551020408163`}, {-78.56219339733501, 95.28778676483914}}],
+       StatusArea[#, 201.]& ,
+       TagBoxNote->"201."],
+      StyleBox["201.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[201., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{0.0005, 0.}, {0.0006, 177.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{216.27551020408163`, 
+         225.2265306122449}, {-57.92338979588139, 95.28778676483914}}],
+       StatusArea[#, 177.]& ,
+       TagBoxNote->"177."],
+      StyleBox["177.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[177., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{0.0006, 0.}, {0.0007, 166.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{224.2265306122449, 
+         233.17755102040815`}, {-48.46393814521515, 95.28778676483914}}],
+       StatusArea[#, 166.]& ,
+       TagBoxNote->"166."],
+      StyleBox["166.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[166., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{0.0007, 0.}, {0.0008, 154.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{232.17755102040815`, 
+         241.12857142857143`}, {-38.144536344488316`, 95.28778676483914}}],
+       StatusArea[#, 154.]& ,
+       TagBoxNote->"154."],
+      StyleBox["154.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[154., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{0.0008, 0.}, {0.0009, 102.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{240.12857142857143`, 249.07959183673466`}, {
+         6.572871458661211, 95.28778676483914}}],
+       StatusArea[#, 102.]& ,
+       TagBoxNote->"102."],
+      StyleBox["102.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[102., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{0.0009, 0.}, {0.001, 110.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{248.07959183673466`, 
+         257.03061224489795`}, {-0.30672974182333235`, 95.28778676483914}}],
+       StatusArea[#, 110.]& ,
+       TagBoxNote->"110."],
+      StyleBox["110.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[110., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{0.001, 0.}, {0.0011, 69.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{256.03061224489795`, 264.98163265306124`}, {
+         34.95122641065995, 95.28778676483914}}],
+       StatusArea[#, 69.]& ,
+       TagBoxNote->"69."],
+      StyleBox["69.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[69., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{0.0011, 0.}, {0.0012, 69.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{263.98163265306124`, 272.93265306122447`}, {
+         34.95122641065995, 95.28778676483914}}],
+       StatusArea[#, 69.]& ,
+       TagBoxNote->"69."],
+      StyleBox["69.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[69., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{0.0012, 0.}, {0.0013, 47.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{271.93265306122447`, 280.88367346938776`}, {
+         53.87012971199245, 95.28778676483914}}],
+       StatusArea[#, 47.]& ,
+       TagBoxNote->"47."],
+      StyleBox["47.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[47., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{0.0013, 0.}, {0.0014, 29.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{279.88367346938776`, 288.834693877551}, {
+         69.34923241308266, 95.28778676483914}}],
+       StatusArea[#, 29.]& ,
+       TagBoxNote->"29."],
+      StyleBox["29.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[29., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{0.0014, 0.}, {0.0015, 25.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{287.834693877551, 296.7857142857143}, {
+         72.78903301332494, 95.28778676483914}}],
+       StatusArea[#, 25.]& ,
+       TagBoxNote->"25."],
+      StyleBox["25.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[25., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{0.0015, 0.}, {0.0016, 12.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{295.7857142857143, 304.73673469387757`}, {
+         83.96838496411232, 95.28778676483914}}],
+       StatusArea[#, 12.]& ,
+       TagBoxNote->"12."],
+      StyleBox["12.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[12., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{0.0016, 0.}, {0.0017, 10.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{303.73673469387757`, 312.6877551020408}, {
+         85.68828526423346, 95.28778676483914}}],
+       StatusArea[#, 10.]& ,
+       TagBoxNote->"10."],
+      StyleBox["10.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[10., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{0.0017, 0.}, {0.0018, 4.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{311.6877551020408, 320.638775510204}, {
+         90.84798616459688, 95.28778676483914}}],
+       StatusArea[#, 4.]& ,
+       TagBoxNote->"4."],
+      StyleBox["4.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[4., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{0.0018, 0.}, {0.0019, 5.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{319.638775510204, 328.5897959183674}, {
+         89.9880360145363, 95.28778676483914}}],
+       StatusArea[#, 5.]& ,
+       TagBoxNote->"5."],
+      StyleBox["5.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[5., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{0.0019, 0.}, {0.002, 3.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{327.5897959183674, 336.5408163265306}, {
+         91.70793631465743, 95.28778676483914}}],
+       StatusArea[#, 3.]& ,
+       TagBoxNote->"3."],
+      StyleBox["3.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[3., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{0.002, 0.}, {0.0021, 1.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{335.5408163265306, 344.49183673469383`}, {
+         93.42783661477857, 95.28778676483914}}],
+       StatusArea[#, 1.]& ,
+       TagBoxNote->"1."],
+      StyleBox["1.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[1., {
+        GrayLevel[0]}], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[
+      TagBox[
+       DynamicBox[{
+         FEPrivate`If[
+          CurrentValue["MouseOver"], 
+          EdgeForm[{
+            GrayLevel[0.5], 
+            AbsoluteThickness[1.5], 
+            Opacity[0.66]}], {}, {}], 
+         RectangleBox[{0.0021, 0.}, {0.0022, 1.}, "RoundingRadius" -> 0]},
+        ImageSizeCache->{{343.49183673469383`, 352.4428571428572}, {
+         93.42783661477857, 95.28778676483914}}],
+       StatusArea[#, 1.]& ,
+       TagBoxNote->"1."],
+      StyleBox["1.`", {
+        GrayLevel[0]}, StripOnInput -> False]],
+     Annotation[#, 
+      Style[1., {
+        GrayLevel[0]}], "Tooltip"]& ]}, {}, {}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->{True, True},
+  AxesOrigin->{-0.002, 0},
+  FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
+  GridLines->{None, None},
+  PlotRange->{{-0.002, 0.0022}, {All, All}},
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.1]}},
+  Ticks->{Automatic, Automatic}]], "Print",
+ CellChangeTimes->{
+  3.682144220420386*^9, 3.68214431140759*^9, 3.6821443430784016`*^9, {
+   3.6821443847467847`*^9, 3.6821444056049776`*^9}, 3.6821445295370665`*^9, 
+   3.6821447280294194`*^9, 3.682144871262612*^9, 3.6821449101238346`*^9, 
+   3.6821449649909725`*^9, 3.6821452904745893`*^9, 3.6821456369964094`*^9, 
+   3.682145856391958*^9, 3.68214648337982*^9, 3.6821479065692215`*^9, 
+   3.682151665978247*^9, 3.6821522248762145`*^9, 3.6821532529160147`*^9, 
+   3.682154037630898*^9, 3.6821559946258316`*^9, {3.682158572394272*^9, 
+   3.682158587071111*^9}, 3.6821586310896287`*^9, 3.6821589188250866`*^9, {
+   3.682159352722904*^9, 3.6821593730580673`*^9}, {3.6821594753949203`*^9, 
+   3.6821594855695024`*^9}, {3.6821596096876016`*^9, 
+   3.6821596195771675`*^9}, {3.682159649896901*^9, 3.6821596618415847`*^9}, 
+   3.6821597333196726`*^9, {3.6821597868327336`*^9, 3.6821598026476383`*^9}, 
+   3.682159837703643*^9, 3.68215989971819*^9, 3.682159983053957*^9, 
+   3.6821603813457375`*^9, 3.682160813327446*^9, 3.6821608840774927`*^9, 
+   3.6821611931481705`*^9, 3.6821612279911633`*^9, 3.6821623993431606`*^9, 
+   3.682162442717642*^9, 3.682223307135887*^9, 3.6822236698696346`*^9, 
+   3.682226160039064*^9, 3.6822262576816487`*^9, 3.682227813670646*^9, {
+   3.6822282186018066`*^9, 3.682228229681441*^9}, 3.682228275728074*^9}],
 
 Cell[BoxData[
  InterpretationBox[
-  RowBox[{"\<\"1 - NA = \"\>", "\[InvisibleSpace]", "0.0018758299497500003`", 
-   "\[InvisibleSpace]", "\<\" +/- \"\>", "\[InvisibleSpace]", 
-   "0.00009608692532766344`", "\[InvisibleSpace]", "\<\" (\"\>", 
-   "\[InvisibleSpace]", "5.122368652897846`", 
-   "\[InvisibleSpace]", "\<\" %)\"\>"}],
+  RowBox[{"\<\"1 - NA = \"\>", "\[InvisibleSpace]", "0.00019437458815735212`",
+    "\[InvisibleSpace]", "\<\" +/- \"\>", "\[InvisibleSpace]", 
+   "0.000010264171199526583`", "\[InvisibleSpace]", "\<\" (\"\>", 
+   "\[InvisibleSpace]", "5.28061373496901`", 
+   "\[InvisibleSpace]", "\<\" %, \"\>", "\[InvisibleSpace]", "3233", 
+   "\[InvisibleSpace]", "\<\" points)\"\>"}],
   SequenceForm[
-  "1 - NA = ", 0.0018758299497500003`, " +/- ", 0.00009608692532766344, " (", 
-   5.122368652897846, " %)"],
+  "1 - NA = ", 0.00019437458815735212`, " +/- ", 0.000010264171199526583`, 
+   " (", 5.28061373496901, " %, ", 3233, " points)"],
   Editable->False]], "Print",
  CellChangeTimes->{
-  3.6816233044440928`*^9, 3.681623463965217*^9, 3.6816234969101014`*^9, 
-   3.6816235411656327`*^9, 3.681623636845105*^9, 3.6816240662976685`*^9, {
-   3.6816241531356354`*^9, 3.681624171805703*^9}, 3.681625447710681*^9, 
-   3.681627392370909*^9, 3.681634164646261*^9, 3.6816366115832176`*^9, 
-   3.6816375159189425`*^9, 3.6816378683821025`*^9, 3.6816382228373766`*^9, 
-   3.6816387556658525`*^9, 3.6816391093760834`*^9, 3.6816395995481195`*^9, 
-   3.681639990903504*^9, 3.6816405826283484`*^9, 3.6816412966551886`*^9, 
-   3.6816417964587755`*^9, 3.681642409958866*^9, 3.681642731706269*^9, 
-   3.681643416719449*^9, 3.6816440914260406`*^9, 3.6817054791852193`*^9, 
-   3.6817066087718277`*^9, 3.6817098958408375`*^9, 3.6817120618207245`*^9, 
-   3.6817133171565256`*^9, 3.681719318650951*^9, 3.6817255149603596`*^9, 
-   3.681728623675168*^9, 3.6817915999672055`*^9, 3.6817966398985944`*^9, 
-   3.681801082973078*^9, 3.68181376573149*^9, 3.6821412927289314`*^9, 
-   3.682141413780855*^9, 3.682141504819062*^9, 3.6821417774276543`*^9, {
-   3.6821418363090224`*^9, 3.682141876724334*^9}, 3.6821419478594027`*^9, {
-   3.682142100048107*^9, 3.6821421137118893`*^9}, 3.682142366702359*^9, 
-   3.682142399997264*^9, {3.682143116331236*^9, 3.682143140729631*^9}, {
-   3.6821432683439302`*^9, 3.6821432872850137`*^9}, 3.6821434570477233`*^9, 
-   3.682143509548726*^9, 3.6821435532262244`*^9, 3.6821435998018885`*^9, 
-   3.682143716392557*^9}]
+  3.682144220420386*^9, 3.68214431140759*^9, 3.6821443430784016`*^9, {
+   3.6821443847467847`*^9, 3.6821444056049776`*^9}, 3.6821445295370665`*^9, 
+   3.6821447280294194`*^9, 3.682144871262612*^9, 3.6821449101238346`*^9, 
+   3.6821449649909725`*^9, 3.6821452904745893`*^9, 3.6821456369964094`*^9, 
+   3.682145856391958*^9, 3.68214648337982*^9, 3.6821479065692215`*^9, 
+   3.682151665978247*^9, 3.6821522248762145`*^9, 3.6821532529160147`*^9, 
+   3.682154037630898*^9, 3.6821559946258316`*^9, {3.682158572394272*^9, 
+   3.682158587071111*^9}, 3.6821586310896287`*^9, 3.6821589188250866`*^9, {
+   3.682159352722904*^9, 3.6821593730580673`*^9}, {3.6821594753949203`*^9, 
+   3.6821594855695024`*^9}, {3.6821596096876016`*^9, 
+   3.6821596195771675`*^9}, {3.682159649896901*^9, 3.6821596618415847`*^9}, 
+   3.6821597333196726`*^9, {3.6821597868327336`*^9, 3.6821598026476383`*^9}, 
+   3.682159837703643*^9, 3.68215989971819*^9, 3.682159983053957*^9, 
+   3.6821603813457375`*^9, 3.682160813327446*^9, 3.6821608840774927`*^9, 
+   3.6821611931481705`*^9, 3.6821612279911633`*^9, 3.6821623993431606`*^9, 
+   3.682162442717642*^9, 3.682223307135887*^9, 3.6822236698696346`*^9, 
+   3.682226160039064*^9, 3.6822262576816487`*^9, 3.682227813670646*^9, {
+   3.6822282186018066`*^9, 3.682228229681441*^9}, 3.6822282757290745`*^9}]
 }, Open  ]],
 
 Cell[BoxData[
  GraphicsBox[{{}, 
    {RGBColor[1, 0, 0], PointSize[0.01], 
-    PointBox[{{1., 0.20797872833823405`}, {0.5, -0.07814499226659755}, {
-     0.3333333333333333, -0.24428478550400423`}, {
-     0.25, -0.3620237806420057}, {0.2, -0.45049128806298366`}, {
-     0.16666666666666666`, -0.5149812607485915}, {
-     0.14285714285714285`, -0.5800842954018643}, {
-     0.125, -0.6660447643898515}}], {{
-      LineBox[{{1., 0.2113173359645113}, {1., 0.2046401207119568}}], 
-      LineBox[{Offset[{1.5, 0}, {1., 0.2113173359645113}], 
-        Offset[{-1.5, 0}, {1., 0.2113173359645113}]}], 
-      LineBox[{Offset[{1.5, 0}, {1., 0.2046401207119568}], 
-        Offset[{-1.5, 0}, {1., 0.2046401207119568}]}]}, {
-      LineBox[{{0.5, -0.07336897176335368}, {0.5, -0.08292101276984142}}], 
-      LineBox[{Offset[{1.5, 0}, {0.5, -0.07336897176335368}], 
-        Offset[{-1.5, 0}, {0.5, -0.07336897176335368}]}], 
-      LineBox[{Offset[{1.5, 0}, {0.5, -0.08292101276984142}], 
-        Offset[{-1.5, 0}, {0.5, -0.08292101276984142}]}]}, {
-      LineBox[{{0.3333333333333333, -0.2388174972661447}, {
-       0.3333333333333333, -0.24975207374186376`}}], 
-      LineBox[{Offset[{1.5, 0}, {0.3333333333333333, -0.2388174972661447}], 
-        Offset[{-1.5, 0}, {0.3333333333333333, -0.2388174972661447}]}], 
-      LineBox[{Offset[{1.5, 0}, {0.3333333333333333, -0.24975207374186376`}], 
-        Offset[{-1.5, 0}, {0.3333333333333333, -0.24975207374186376`}]}]}, {
-      LineBox[{{0.25, -0.3546760985285353}, {0.25, -0.36937146275547605`}}], 
-      LineBox[{Offset[{1.5, 0}, {0.25, -0.3546760985285353}], 
-        Offset[{-1.5, 0}, {0.25, -0.3546760985285353}]}], 
-      LineBox[{Offset[{1.5, 0}, {0.25, -0.36937146275547605`}], 
-        Offset[{-1.5, 0}, {0.25, -0.36937146275547605`}]}]}, {
-      LineBox[{{0.2, -0.4388431790550038}, {0.2, -0.4621393970709635}}], 
-      LineBox[{Offset[{1.5, 0}, {0.2, -0.4388431790550038}], 
-        Offset[{-1.5, 0}, {0.2, -0.4388431790550038}]}], 
-      LineBox[{Offset[{1.5, 0}, {0.2, -0.4621393970709635}], 
-        Offset[{-1.5, 0}, {0.2, -0.4621393970709635}]}]}, {
-      LineBox[{{0.16666666666666666`, -0.5013149635316732}, {
-       0.16666666666666666`, -0.5286475579655099}}], 
-      LineBox[{Offset[{1.5, 0}, {0.16666666666666666`, -0.5013149635316732}], 
-        Offset[{-1.5, 0}, {0.16666666666666666`, -0.5013149635316732}]}], 
-      LineBox[{Offset[{1.5, 0}, {0.16666666666666666`, -0.5286475579655099}], 
-        Offset[{-1.5, 0}, {0.16666666666666666`, -0.5286475579655099}]}]}, {
-      LineBox[{{0.14285714285714285`, -0.5547389189680897}, {
-       0.14285714285714285`, -0.605429671835639}}], 
-      LineBox[{Offset[{1.5, 0}, {0.14285714285714285`, -0.5547389189680897}], 
-        Offset[{-1.5, 0}, {0.14285714285714285`, -0.5547389189680897}]}], 
-      LineBox[{Offset[{1.5, 0}, {0.14285714285714285`, -0.605429671835639}], 
-        Offset[{-1.5, 0}, {0.14285714285714285`, -0.605429671835639}]}]}, {
-      LineBox[{{0.125, -0.6232643425187832}, {0.125, -0.7088251862609198}}], 
-      LineBox[{Offset[{1.5, 0}, {0.125, -0.6232643425187832}], 
-        Offset[{-1.5, 0}, {0.125, -0.6232643425187832}]}], 
-      LineBox[{Offset[{1.5, 0}, {0.125, -0.7088251862609198}], 
-        Offset[{-1.5, 0}, {0.125, -0.7088251862609198}]}]}}}, {}},
+    PointBox[{{1., 0.7627657598099098}, {0.5, 0.676959982503766}, {
+     0.3333333333333333, 0.6264695503369311}, {0.25, 0.5906633201904246}, {
+     0.2, 0.5646043563001166}, {0.16666666666666666`, 0.5416401029375186}, {
+     0.14285714285714285`, 0.5212050781573587}, {0.125, 0.5061375097817615}, {
+     0.1111111111111111, 0.4913000683986275}, {0.1, 
+     0.4639232412114659}}], {{
+      LineBox[{{1., 0.7631593992331334}, {1., 0.7623721203866862}}], 
+      LineBox[{Offset[{1.5, 0}, {1., 0.7631593992331334}], 
+        Offset[{-1.5, 0}, {1., 0.7631593992331334}]}], 
+      LineBox[{Offset[{1.5, 0}, {1., 0.7623721203866862}], 
+        Offset[{-1.5, 0}, {1., 0.7623721203866862}]}]}, {
+      LineBox[{{0.5, 0.6774835488503547}, {0.5, 0.6764364161571773}}], 
+      LineBox[{Offset[{1.5, 0}, {0.5, 0.6774835488503547}], 
+        Offset[{-1.5, 0}, {0.5, 0.6774835488503547}]}], 
+      LineBox[{Offset[{1.5, 0}, {0.5, 0.6764364161571773}], 
+        Offset[{-1.5, 0}, {0.5, 0.6764364161571773}]}]}, {
+      LineBox[{{0.3333333333333333, 0.6270946807542828}, {0.3333333333333333, 
+       0.6258444199195794}}], 
+      LineBox[{Offset[{1.5, 0}, {0.3333333333333333, 0.6270946807542828}], 
+        Offset[{-1.5, 0}, {0.3333333333333333, 0.6270946807542828}]}], 
+      LineBox[{Offset[{1.5, 0}, {0.3333333333333333, 0.6258444199195794}], 
+        Offset[{-1.5, 0}, {0.3333333333333333, 0.6258444199195794}]}]}, {
+      LineBox[{{0.25, 0.5914604510154844}, {0.25, 0.5898661893653647}}], 
+      LineBox[{Offset[{1.5, 0}, {0.25, 0.5914604510154844}], 
+        Offset[{-1.5, 0}, {0.25, 0.5914604510154844}]}], 
+      LineBox[{Offset[{1.5, 0}, {0.25, 0.5898661893653647}], 
+        Offset[{-1.5, 0}, {0.25, 0.5898661893653647}]}]}, {
+      LineBox[{{0.2, 0.5657081715528491}, {0.2, 0.5635005410473841}}], 
+      LineBox[{Offset[{1.5, 0}, {0.2, 0.5657081715528491}], 
+        Offset[{-1.5, 0}, {0.2, 0.5657081715528491}]}], 
+      LineBox[{Offset[{1.5, 0}, {0.2, 0.5635005410473841}], 
+        Offset[{-1.5, 0}, {0.2, 0.5635005410473841}]}]}, {
+      LineBox[{{0.16666666666666666`, 0.5432827223923243}, {
+       0.16666666666666666`, 0.5399974834827129}}], 
+      LineBox[{Offset[{1.5, 0}, {0.16666666666666666`, 0.5432827223923243}], 
+        Offset[{-1.5, 0}, {0.16666666666666666`, 0.5432827223923243}]}], 
+      LineBox[{Offset[{1.5, 0}, {0.16666666666666666`, 0.5399974834827129}], 
+        Offset[{-1.5, 0}, {0.16666666666666666`, 0.5399974834827129}]}]}, {
+      LineBox[{{0.14285714285714285`, 0.5238241707558421}, {
+       0.14285714285714285`, 0.5185859855588754}}], 
+      LineBox[{Offset[{1.5, 0}, {0.14285714285714285`, 0.5238241707558421}], 
+        Offset[{-1.5, 0}, {0.14285714285714285`, 0.5238241707558421}]}], 
+      LineBox[{Offset[{1.5, 0}, {0.14285714285714285`, 0.5185859855588754}], 
+        Offset[{-1.5, 0}, {0.14285714285714285`, 0.5185859855588754}]}]}, {
+      LineBox[{{0.125, 0.5104187488605073}, {0.125, 0.5018562707030157}}], 
+      LineBox[{Offset[{1.5, 0}, {0.125, 0.5104187488605073}], 
+        Offset[{-1.5, 0}, {0.125, 0.5104187488605073}]}], 
+      LineBox[{Offset[{1.5, 0}, {0.125, 0.5018562707030157}], 
+        Offset[{-1.5, 0}, {0.125, 0.5018562707030157}]}]}, {
+      LineBox[{{0.1111111111111111, 0.4985706767206712}, {0.1111111111111111, 
+       0.4840294600765838}}], 
+      LineBox[{Offset[{1.5, 0}, {0.1111111111111111, 0.4985706767206712}], 
+        Offset[{-1.5, 0}, {0.1111111111111111, 0.4985706767206712}]}], 
+      LineBox[{Offset[{1.5, 0}, {0.1111111111111111, 0.4840294600765838}], 
+        Offset[{-1.5, 0}, {0.1111111111111111, 0.4840294600765838}]}]}, {
+      LineBox[{{0.1, 0.4757816085205999}, {0.1, 0.45206487390233185`}}], 
+      LineBox[{Offset[{1.5, 0}, {0.1, 0.4757816085205999}], 
+        Offset[{-1.5, 0}, {0.1, 0.4757816085205999}]}], 
+      LineBox[{Offset[{1.5, 0}, {0.1, 0.45206487390233185`}], 
+        Offset[{-1.5, 0}, {0.1, 0.45206487390233185`}]}]}}}, {}},
   AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
   Axes->True,
   AxesOrigin->{0, 0},
@@ -610,7 +1462,26 @@ Cell[BoxData[
    3.6821424001342716`*^9, {3.682143116447242*^9, 3.6821431408456373`*^9}, {
    3.6821432685089397`*^9, 3.6821432874500227`*^9}, 3.6821434573767424`*^9, 
    3.682143509716736*^9, 3.682143553392234*^9, 3.6821436000459023`*^9, 
-   3.682143716515564*^9}],
+   3.682143716515564*^9, 3.682143863255957*^9, 3.682143914832907*^9, 
+   3.6821439747383337`*^9, 3.6821441109621253`*^9, 3.6821442209244146`*^9, 
+   3.6821443117276087`*^9, 3.6821443433864193`*^9, {3.682144385062803*^9, 
+   3.6821444059139957`*^9}, 3.6821445298500843`*^9, 3.6821447283464375`*^9, 
+   3.68214487158263*^9, 3.682144910476855*^9, 3.6821449653569937`*^9, 
+   3.682145290806608*^9, 3.6821456373334284`*^9, 3.682145856732978*^9, 
+   3.68214648373584*^9, 3.682147906961244*^9, 3.6821516664222727`*^9, 
+   3.6821522253292403`*^9, 3.682153253388042*^9, 3.682154038122926*^9, 
+   3.682155995152862*^9, {3.682158572558281*^9, 3.6821585872341204`*^9}, 
+   3.6821586312546387`*^9, 3.6821589190911016`*^9, {3.682159352885913*^9, 
+   3.6821593732240763`*^9}, {3.6821594755829315`*^9, 
+   3.6821594857495127`*^9}, {3.6821596099126143`*^9, 
+   3.6821596197391768`*^9}, {3.6821596500609107`*^9, 3.6821596620055943`*^9}, 
+   3.6821597334866824`*^9, {3.6821597869997435`*^9, 3.6821598028146477`*^9}, 
+   3.6821598378716526`*^9, 3.6821598998862*^9, 3.6821599832219667`*^9, 
+   3.682160381523748*^9, 3.6821608135134563`*^9, 3.682160884261503*^9, 
+   3.6821611933401814`*^9, 3.6821612281821737`*^9, 3.682162399559173*^9, 
+   3.682162442934654*^9, 3.6822233086619744`*^9, 3.682223671351719*^9, 
+   3.682226161474146*^9, 3.6822262591217313`*^9, 3.682227815197734*^9, {
+   3.6822282204649134`*^9, 3.6822282313885384`*^9}, 3.6822282772061586`*^9}],
 
 Cell[BoxData[
  GraphicsBox[{{{}, 
@@ -618,71 +1489,86 @@ Cell[BoxData[
      PointBox[{{0., 0.48797999999999997`}, {0.5, 0.6234}, {1., 
       0.6853}}]}, {}}, {{}, 
     {RGBColor[1, 0, 0], PointSize[0.01], 
-     PointBox[{{1., -0.12648063402161314`}, {0.5, -0.34507572697066813`}, {
-      0.3333333333333333, -0.44460944715581463`}, {
-      0.25, -0.5064354138514933}, {0.2, -0.5416450138640225}, {
-      0.16666666666666666`, -0.5866280655349922}, {
-      0.14285714285714285`, -0.5791336051041807}, {
-      0.125, -0.6211579664094582}}], {{
-       LineBox[{{1., -0.1215059108660714}, {1., -0.13145535717715487`}}], 
+     PointBox[{{1., 0.6617963054789776}, {0.5, 0.5952932271869443}, {
+      0.3333333333333333, 0.5653109091495313}, {0.25, 0.5468122812752281}, {
+      0.2, 0.5354940692091461}, {0.16666666666666666`, 0.5253319363495448}, {
+      0.14285714285714285`, 0.5167071165594996}, {0.125, 
+      0.5109586544070988}, {0.1111111111111111, 0.5040247010345813}, {0.1, 
+      0.4895354956039222}}], {{
+       LineBox[{{1., 0.6623782894907483}, {1., 0.6612143214672069}}], 
        LineBox[{
-        Offset[{1.5, 0}, {1., -0.1215059108660714}], 
-         Offset[{-1.5, 0}, {1., -0.1215059108660714}]}], 
+        Offset[{1.5, 0}, {1., 0.6623782894907483}], 
+         Offset[{-1.5, 0}, {1., 0.6623782894907483}]}], 
        LineBox[{
-        Offset[{1.5, 0}, {1., -0.13145535717715487`}], 
-         Offset[{-1.5, 0}, {1., -0.13145535717715487`}]}]}, {
-       LineBox[{{0.5, -0.3389869079183629}, {0.5, -0.35116454602297337`}}], 
+        Offset[{1.5, 0}, {1., 0.6612143214672069}], 
+         Offset[{-1.5, 0}, {1., 0.6612143214672069}]}]}, {
+       LineBox[{{0.5, 0.5960010691426211}, {0.5, 0.5945853852312676}}], 
        LineBox[{
-        Offset[{1.5, 0}, {0.5, -0.3389869079183629}], 
-         Offset[{-1.5, 0}, {0.5, -0.3389869079183629}]}], 
+        Offset[{1.5, 0}, {0.5, 0.5960010691426211}], 
+         Offset[{-1.5, 0}, {0.5, 0.5960010691426211}]}], 
        LineBox[{
-        Offset[{1.5, 0}, {0.5, -0.35116454602297337`}], 
-         Offset[{-1.5, 0}, {0.5, -0.35116454602297337`}]}]}, {
-       LineBox[{{0.3333333333333333, -0.43756560347663087`}, {
-        0.3333333333333333, -0.4516532908349984}}], 
+        Offset[{1.5, 0}, {0.5, 0.5945853852312676}], 
+         Offset[{-1.5, 0}, {0.5, 0.5945853852312676}]}]}, {
+       LineBox[{{0.3333333333333333, 0.5661272928234695}, {0.3333333333333333,
+         0.5644945254755931}}], 
        LineBox[{
-        Offset[{1.5, 0}, {0.3333333333333333, -0.43756560347663087`}], 
-         Offset[{-1.5, 0}, {0.3333333333333333, -0.43756560347663087`}]}], 
+        Offset[{1.5, 0}, {0.3333333333333333, 0.5661272928234695}], 
+         Offset[{-1.5, 0}, {0.3333333333333333, 0.5661272928234695}]}], 
        LineBox[{
-        Offset[{1.5, 0}, {0.3333333333333333, -0.4516532908349984}], 
-         Offset[{-1.5, 0}, {0.3333333333333333, -0.4516532908349984}]}]}, {
-       LineBox[{{0.25, -0.4982958775336127}, {0.25, -0.5145749501693738}}], 
+        Offset[{1.5, 0}, {0.3333333333333333, 0.5644945254755931}], 
+         Offset[{-1.5, 0}, {0.3333333333333333, 0.5644945254755931}]}]}, {
+       LineBox[{{0.25, 0.5477979022993621}, {0.25, 0.545826660251094}}], 
        LineBox[{
-        Offset[{1.5, 0}, {0.25, -0.4982958775336127}], 
-         Offset[{-1.5, 0}, {0.25, -0.4982958775336127}]}], 
+        Offset[{1.5, 0}, {0.25, 0.5477979022993621}], 
+         Offset[{-1.5, 0}, {0.25, 0.5477979022993621}]}], 
        LineBox[{
-        Offset[{1.5, 0}, {0.25, -0.5145749501693738}], 
-         Offset[{-1.5, 0}, {0.25, -0.5145749501693738}]}]}, {
-       LineBox[{{0.2, -0.530640451654714}, {0.2, -0.5526495760733311}}], 
+        Offset[{1.5, 0}, {0.25, 0.545826660251094}], 
+         Offset[{-1.5, 0}, {0.25, 0.545826660251094}]}]}, {
+       LineBox[{{0.2, 0.5367649784402289}, {0.2, 0.5342231599780634}}], 
        LineBox[{
-        Offset[{1.5, 0}, {0.2, -0.530640451654714}], 
-         Offset[{-1.5, 0}, {0.2, -0.530640451654714}]}], 
+        Offset[{1.5, 0}, {0.2, 0.5367649784402289}], 
+         Offset[{-1.5, 0}, {0.2, 0.5367649784402289}]}], 
        LineBox[{
-        Offset[{1.5, 0}, {0.2, -0.5526495760733311}], 
-         Offset[{-1.5, 0}, {0.2, -0.5526495760733311}]}]}, {
-       LineBox[{{0.16666666666666666`, -0.5704674838300537}, {
-        0.16666666666666666`, -0.6027886472399308}}], 
+        Offset[{1.5, 0}, {0.2, 0.5342231599780634}], 
+         Offset[{-1.5, 0}, {0.2, 0.5342231599780634}]}]}, {
+       LineBox[{{0.16666666666666666`, 0.5271317171719513}, {
+        0.16666666666666666`, 0.5235321555271383}}], 
        LineBox[{
-        Offset[{1.5, 0}, {0.16666666666666666`, -0.5704674838300537}], 
-         Offset[{-1.5, 0}, {0.16666666666666666`, -0.5704674838300537}]}], 
+        Offset[{1.5, 0}, {0.16666666666666666`, 0.5271317171719513}], 
+         Offset[{-1.5, 0}, {0.16666666666666666`, 0.5271317171719513}]}], 
        LineBox[{
-        Offset[{1.5, 0}, {0.16666666666666666`, -0.6027886472399308}], 
-         Offset[{-1.5, 0}, {0.16666666666666666`, -0.6027886472399308}]}]}, {
-       LineBox[{{0.14285714285714285`, -0.5517977636657214}, {
-        0.14285714285714285`, -0.6064694465426399}}], 
+        Offset[{1.5, 0}, {0.16666666666666666`, 0.5235321555271383}], 
+         Offset[{-1.5, 0}, {0.16666666666666666`, 0.5235321555271383}]}]}, {
+       LineBox[{{0.14285714285714285`, 0.5194810955528965}, {
+        0.14285714285714285`, 0.5139331375661028}}], 
        LineBox[{
-        Offset[{1.5, 0}, {0.14285714285714285`, -0.5517977636657214}], 
-         Offset[{-1.5, 0}, {0.14285714285714285`, -0.5517977636657214}]}], 
+        Offset[{1.5, 0}, {0.14285714285714285`, 0.5194810955528965}], 
+         Offset[{-1.5, 0}, {0.14285714285714285`, 0.5194810955528965}]}], 
        LineBox[{
-        Offset[{1.5, 0}, {0.14285714285714285`, -0.6064694465426399}], 
-         Offset[{-1.5, 0}, {0.14285714285714285`, -0.6064694465426399}]}]}, {
-       LineBox[{{0.125, -0.5791397201127164}, {0.125, -0.6631762127062}}], 
+        Offset[{1.5, 0}, {0.14285714285714285`, 0.5139331375661028}], 
+         Offset[{-1.5, 0}, {0.14285714285714285`, 0.5139331375661028}]}]}, {
+       LineBox[{{0.125, 0.5154656660668012}, {0.125, 0.5064516427473963}}], 
        LineBox[{
-        Offset[{1.5, 0}, {0.125, -0.5791397201127164}], 
-         Offset[{-1.5, 0}, {0.125, -0.5791397201127164}]}], 
+        Offset[{1.5, 0}, {0.125, 0.5154656660668012}], 
+         Offset[{-1.5, 0}, {0.125, 0.5154656660668012}]}], 
        LineBox[{
-        Offset[{1.5, 0}, {0.125, -0.6631762127062}], 
-         Offset[{-1.5, 0}, {0.125, -0.6631762127062}]}]}}}, {}}},
+        Offset[{1.5, 0}, {0.125, 0.5064516427473963}], 
+         Offset[{-1.5, 0}, {0.125, 0.5064516427473963}]}]}, {
+       LineBox[{{0.1111111111111111, 0.5114510732783868}, {0.1111111111111111,
+         0.49659832879077587`}}], 
+       LineBox[{
+        Offset[{1.5, 0}, {0.1111111111111111, 0.5114510732783868}], 
+         Offset[{-1.5, 0}, {0.1111111111111111, 0.5114510732783868}]}], 
+       LineBox[{
+        Offset[{1.5, 0}, {0.1111111111111111, 0.49659832879077587`}], 
+         Offset[{-1.5, 0}, {0.1111111111111111, 0.49659832879077587`}]}]}, {
+       LineBox[{{0.1, 0.5010754745740978}, {0.1, 0.4779955166337465}}], 
+       LineBox[{
+        Offset[{1.5, 0}, {0.1, 0.5010754745740978}], 
+         Offset[{-1.5, 0}, {0.1, 0.5010754745740978}]}], 
+       LineBox[{
+        Offset[{1.5, 0}, {0.1, 0.4779955166337465}], 
+         Offset[{-1.5, 0}, {0.1, 0.4779955166337465}]}]}}}, {}}},
   AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
   Axes->True,
   AxesOrigin->{0, 0},
@@ -711,239 +1597,26 @@ Cell[BoxData[
    3.6821424001342716`*^9, {3.682143116447242*^9, 3.6821431408456373`*^9}, {
    3.6821432685089397`*^9, 3.6821432874500227`*^9}, 3.6821434573767424`*^9, 
    3.682143509716736*^9, 3.682143553392234*^9, 3.6821436000459023`*^9, 
-   3.6821437165335655`*^9}]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"Show", "[", 
-  RowBox[{"mlplots0", ",", "mlplots1"}], "]"}]], "Input",
- CellChangeTimes->{{3.6821418833287115`*^9, 3.682141890042096*^9}}],
-
-Cell[BoxData[
- GraphicsBox[{{{{{}, 
-      {RGBColor[0.76, 0.7, 0.94], PointSize[0.02], 
-       PointBox[{{0., 0.29200000000000004`}, {0.5, 0.5464}, {1., 
-        0.627}}]}, {}}, {{}, 
-      {RGBColor[
-        NCache[
-         Rational[1, 5], 0.2], 0, 
-        NCache[
-         Rational[4, 5], 0.8]], PointSize[0.01], 
-       PointBox[{{1., 0.6269954840499317}, {0.5, 0.5464103300970892}, {
-        0.3333333333333333, 0.5134756990291279}, {0.25, 
-        0.48371281276005546`}, {0.2, 0.46444511234396607`}, {
-        0.16666666666666666`, 0.4475897502219138}, {0.14285714285714285`, 
-        0.43241006492968026`}, {0.125, 
-        0.41778540606102527`}}], {{
-         LineBox[{{1., 0.6270144867664668}, {1., 0.6269764813333966}}], 
-         LineBox[{
-          Offset[{1.5, 0}, {1., 0.6270144867664668}], 
-           Offset[{-1.5, 0}, {1., 0.6270144867664668}]}], 
-         LineBox[{
-          Offset[{1.5, 0}, {1., 0.6269764813333966}], 
-           Offset[{-1.5, 0}, {1., 0.6269764813333966}]}]}, {
-         LineBox[{{0.5, 0.5464435978672599}, {0.5, 0.5463770623269184}}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.5, 0.5464435978672599}], 
-           Offset[{-1.5, 0}, {0.5, 0.5464435978672599}]}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.5, 0.5463770623269184}], 
-           Offset[{-1.5, 0}, {0.5, 0.5463770623269184}]}]}, {
-         LineBox[{{0.3333333333333333, 0.5135495283737815}, {
-          0.3333333333333333, 0.5134018696844743}}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.3333333333333333, 0.5135495283737815}], 
-           Offset[{-1.5, 0}, {0.3333333333333333, 0.5135495283737815}]}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.3333333333333333, 0.5134018696844743}], 
-           Offset[{-1.5, 0}, {0.3333333333333333, 0.5134018696844743}]}]}, {
-         LineBox[{{0.25, 0.4839129263062503}, {0.25, 0.4835126992138606}}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.25, 0.4839129263062503}], 
-           Offset[{-1.5, 0}, {0.25, 0.4839129263062503}]}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.25, 0.4835126992138606}], 
-           Offset[{-1.5, 0}, {0.25, 0.4835126992138606}]}]}, {
-         LineBox[{{0.2, 0.4650380788512345}, {0.2, 0.46385214583669765`}}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.2, 0.4650380788512345}], 
-           Offset[{-1.5, 0}, {0.2, 0.4650380788512345}]}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.2, 0.46385214583669765`}], 
-           Offset[{-1.5, 0}, {0.2, 0.46385214583669765`}]}]}, {
-         LineBox[{{0.16666666666666666`, 0.4494686270863863}, {
-          0.16666666666666666`, 0.44571087335744125`}}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.16666666666666666`, 0.4494686270863863}], 
-           Offset[{-1.5, 0}, {0.16666666666666666`, 0.4494686270863863}]}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.16666666666666666`, 0.44571087335744125`}], 
-           Offset[{-1.5, 0}, {0.16666666666666666`, 
-            0.44571087335744125`}]}]}, {
-         LineBox[{{0.14285714285714285`, 0.4383198283253345}, {
-          0.14285714285714285`, 0.426500301534026}}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.14285714285714285`, 0.4383198283253345}], 
-           Offset[{-1.5, 0}, {0.14285714285714285`, 0.4383198283253345}]}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.14285714285714285`, 0.426500301534026}], 
-           Offset[{-1.5, 0}, {0.14285714285714285`, 0.426500301534026}]}]}, {
-         LineBox[{{0.125, 0.4367777281991616}, {0.125, 0.3987930839228889}}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.125, 0.4367777281991616}], 
-           Offset[{-1.5, 0}, {0.125, 0.4367777281991616}]}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.125, 0.3987930839228889}], 
-           Offset[{-1.5, 0}, {0.125, 0.3987930839228889}]}]}}}, {}}}, {{{}, 
-      {RGBColor[1., 0.7, 0.7], PointSize[0.02], 
-       PointBox[{{0., 0.48797999999999997`}, {0.5, 0.6234}, {1., 
-        0.6853}}]}, {}}, {{}, 
-      {RGBColor[1, 0, 0], PointSize[0.01], 
-       PointBox[{{1., 0.6853636648633669}, {0.5, 0.6234586072964354}, {
-        0.3333333333333333, 0.599244970176173}, {0.25, 0.5803440019420146}, {
-        0.2, 0.5680171896240818}, {0.16666666666666666`, 
-        0.5591659259259265}, {0.14285714285714285`, 0.5466182384796777}, {
-        0.125, 0.5405401036343438}}], {{
-         LineBox[{{1., 0.6853786852607612}, {1., 0.6853486444659725}}], 
-         LineBox[{
-          Offset[{1.5, 0}, {1., 0.6853786852607612}], 
-           Offset[{-1.5, 0}, {1., 0.6853786852607612}]}], 
-         LineBox[{
-          Offset[{1.5, 0}, {1., 0.6853486444659725}], 
-           Offset[{-1.5, 0}, {1., 0.6853486444659725}]}]}, {
-         LineBox[{{0.5, 0.6234834271453427}, {0.5, 0.6234337874475282}}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.5, 0.6234834271453427}], 
-           Offset[{-1.5, 0}, {0.5, 0.6234834271453427}]}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.5, 0.6234337874475282}], 
-           Offset[{-1.5, 0}, {0.5, 0.6234337874475282}]}]}, {
-         LineBox[{{0.3333333333333333, 0.5992938153317735}, {
-          0.3333333333333333, 0.5991961250205724}}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.3333333333333333, 0.5992938153317735}], 
-           Offset[{-1.5, 0}, {0.3333333333333333, 0.5992938153317735}]}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.3333333333333333, 0.5991961250205724}], 
-           Offset[{-1.5, 0}, {0.3333333333333333, 0.5991961250205724}]}]}, {
-         LineBox[{{0.25, 0.5804617621385726}, {0.25, 0.5802262417454567}}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.25, 0.5804617621385726}], 
-           Offset[{-1.5, 0}, {0.25, 0.5804617621385726}]}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.25, 0.5802262417454567}], 
-           Offset[{-1.5, 0}, {0.25, 0.5802262417454567}]}]}, {
-         LineBox[{{0.2, 0.5683319602923474}, {0.2, 0.5677024189558161}}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.2, 0.5683319602923474}], 
-           Offset[{-1.5, 0}, {0.2, 0.5683319602923474}]}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.2, 0.5677024189558161}], 
-           Offset[{-1.5, 0}, {0.2, 0.5677024189558161}]}]}, {
-         LineBox[{{0.16666666666666666`, 0.5600403069893231}, {
-          0.16666666666666666`, 0.55829154486253}}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.16666666666666666`, 0.5600403069893231}], 
-           Offset[{-1.5, 0}, {0.16666666666666666`, 0.5600403069893231}]}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.16666666666666666`, 0.55829154486253}], 
-           Offset[{-1.5, 0}, {0.16666666666666666`, 0.55829154486253}]}]}, {
-         LineBox[{{0.14285714285714285`, 0.5491814997120728}, {
-          0.14285714285714285`, 0.5440549772472827}}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.14285714285714285`, 0.5491814997120728}], 
-           Offset[{-1.5, 0}, {0.14285714285714285`, 0.5491814997120728}]}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.14285714285714285`, 0.5440549772472827}], 
-           Offset[{-1.5, 0}, {0.14285714285714285`, 0.5440549772472827}]}]}, {
-         LineBox[{{0.125, 0.5477264867565494}, {0.125, 0.5333537205121381}}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.125, 0.5477264867565494}], 
-           Offset[{-1.5, 0}, {0.125, 0.5477264867565494}]}], 
-         LineBox[{
-          Offset[{1.5, 0}, {0.125, 0.5333537205121381}], 
-           Offset[{-1.5, 0}, {0.125, 0.5333537205121381}]}]}}}, {}}}}, {{{}, 
-     {RGBColor[1., 0.7, 0.7], PointSize[0.02], 
-      PointBox[{{0., 0.48797999999999997`}, {0.5, 0.6234}, {1., 
-       0.6853}}]}, {}}, {{}, 
-     {RGBColor[1, 0, 0], PointSize[0.01], 
-      PointBox[{{1., 0.6547898181818183}, {0.5, 0.5867130727272728}, {
-       0.3333333333333333, 0.5544467454545454}, {0.25, 0.5350296363636363}, {
-       0.2, 0.5230027272727273}, {0.16666666666666666`, 0.5146047272727273}, {
-       0.14285714285714285`, 0.5085420327272726}, {0.125, 
-       0.5067664181818183}}], {{
-        LineBox[{{1., 0.6724068788837958}, {1., 0.6371727574798407}}], 
-        LineBox[{
-         Offset[{1.5, 0}, {1., 0.6724068788837958}], 
-          Offset[{-1.5, 0}, {1., 0.6724068788837958}]}], 
-        LineBox[{
-         Offset[{1.5, 0}, {1., 0.6371727574798407}], 
-          Offset[{-1.5, 0}, {1., 0.6371727574798407}]}]}, {
-        LineBox[{{0.5, 0.6079769886650928}, {0.5, 0.5654491567894528}}], 
-        LineBox[{
-         Offset[{1.5, 0}, {0.5, 0.6079769886650928}], 
-          Offset[{-1.5, 0}, {0.5, 0.6079769886650928}]}], 
-        LineBox[{
-         Offset[{1.5, 0}, {0.5, 0.5654491567894528}], 
-          Offset[{-1.5, 0}, {0.5, 0.5654491567894528}]}]}, {
-        LineBox[{{0.3333333333333333, 0.5774869887757976}, {
-         0.3333333333333333, 0.5314065021332932}}], 
-        LineBox[{
-         Offset[{1.5, 0}, {0.3333333333333333, 0.5774869887757976}], 
-          Offset[{-1.5, 0}, {0.3333333333333333, 0.5774869887757976}]}], 
-        LineBox[{
-         Offset[{1.5, 0}, {0.3333333333333333, 0.5314065021332932}], 
-          Offset[{-1.5, 0}, {0.3333333333333333, 0.5314065021332932}]}]}, {
-        LineBox[{{0.25, 0.559049415045874}, {0.25, 0.5110098576813986}}], 
-        LineBox[{
-         Offset[{1.5, 0}, {0.25, 0.559049415045874}], 
-          Offset[{-1.5, 0}, {0.25, 0.559049415045874}]}], 
-        LineBox[{
-         Offset[{1.5, 0}, {0.25, 0.5110098576813986}], 
-          Offset[{-1.5, 0}, {0.25, 0.5110098576813986}]}]}, {
-        LineBox[{{0.2, 0.5484096598872539}, {0.2, 0.49759579465820075`}}], 
-        LineBox[{
-         Offset[{1.5, 0}, {0.2, 0.5484096598872539}], 
-          Offset[{-1.5, 0}, {0.2, 0.5484096598872539}]}], 
-        LineBox[{
-         Offset[{1.5, 0}, {0.2, 0.49759579465820075`}], 
-          Offset[{-1.5, 0}, {0.2, 0.49759579465820075`}]}]}, {
-        LineBox[{{0.16666666666666666`, 0.5409748670149409}, {
-         0.16666666666666666`, 0.48823458753051374`}}], 
-        LineBox[{
-         Offset[{1.5, 0}, {0.16666666666666666`, 0.5409748670149409}], 
-          Offset[{-1.5, 0}, {0.16666666666666666`, 0.5409748670149409}]}], 
-        LineBox[{
-         Offset[{1.5, 0}, {0.16666666666666666`, 0.48823458753051374`}], 
-          Offset[{-1.5, 0}, {0.16666666666666666`, 
-           0.48823458753051374`}]}]}, {
-        LineBox[{{0.14285714285714285`, 0.5363395261420654}, {
-         0.14285714285714285`, 0.4807445393124798}}], 
-        LineBox[{
-         Offset[{1.5, 0}, {0.14285714285714285`, 0.5363395261420654}], 
-          Offset[{-1.5, 0}, {0.14285714285714285`, 0.5363395261420654}]}], 
-        LineBox[{
-         Offset[{1.5, 0}, {0.14285714285714285`, 0.4807445393124798}], 
-          Offset[{-1.5, 0}, {0.14285714285714285`, 0.4807445393124798}]}]}, {
-        LineBox[{{0.125, 0.5370334624288923}, {0.125, 0.4764993739347444}}], 
-        LineBox[{
-         Offset[{1.5, 0}, {0.125, 0.5370334624288923}], 
-          Offset[{-1.5, 0}, {0.125, 0.5370334624288923}]}], 
-        LineBox[{
-         Offset[{1.5, 0}, {0.125, 0.4764993739347444}], 
-          Offset[{-1.5, 0}, {0.125, 0.4764993739347444}]}]}}}, {}}}},
-  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
-  Axes->True,
-  AxesOrigin->{0, 0},
-  DisplayFunction->Identity,
-  ImageSize->{704., Automatic},
-  PlotLabel->FormBox["\"<link>\"", TraditionalForm],
-  PlotRange->{{0., All}, {0., All}},
-  PlotRangeClipping->True,
-  PlotRangePadding->{Automatic, Automatic}]], "Output",
- CellChangeTimes->{3.6821418911211576`*^9}]
+   3.682143716515564*^9, 3.682143863255957*^9, 3.682143914832907*^9, 
+   3.6821439747383337`*^9, 3.6821441109621253`*^9, 3.6821442209244146`*^9, 
+   3.6821443117276087`*^9, 3.6821443433864193`*^9, {3.682144385062803*^9, 
+   3.6821444059139957`*^9}, 3.6821445298500843`*^9, 3.6821447283464375`*^9, 
+   3.68214487158263*^9, 3.682144910476855*^9, 3.6821449653569937`*^9, 
+   3.682145290806608*^9, 3.6821456373334284`*^9, 3.682145856732978*^9, 
+   3.68214648373584*^9, 3.682147906961244*^9, 3.6821516664222727`*^9, 
+   3.6821522253292403`*^9, 3.682153253388042*^9, 3.682154038122926*^9, 
+   3.682155995152862*^9, {3.682158572558281*^9, 3.6821585872341204`*^9}, 
+   3.6821586312546387`*^9, 3.6821589190911016`*^9, {3.682159352885913*^9, 
+   3.6821593732240763`*^9}, {3.6821594755829315`*^9, 
+   3.6821594857495127`*^9}, {3.6821596099126143`*^9, 
+   3.6821596197391768`*^9}, {3.6821596500609107`*^9, 3.6821596620055943`*^9}, 
+   3.6821597334866824`*^9, {3.6821597869997435`*^9, 3.6821598028146477`*^9}, 
+   3.6821598378716526`*^9, 3.6821598998862*^9, 3.6821599832219667`*^9, 
+   3.682160381523748*^9, 3.6821608135134563`*^9, 3.682160884261503*^9, 
+   3.6821611933401814`*^9, 3.6821612281821737`*^9, 3.682162399559173*^9, 
+   3.682162442934654*^9, 3.6822233086619744`*^9, 3.682223671351719*^9, 
+   3.682226161474146*^9, 3.6822262591217313`*^9, 3.682227815197734*^9, {
+   3.6822282204649134`*^9, 3.6822282313885384`*^9}, 3.68222827722716*^9}]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -1077,6 +1750,28 @@ Cell[BoxData[
 Cell[BoxData["0.4583309742560744`"], "Output",
  CellChangeTimes->{{3.681637841133544*^9, 3.6816378586455455`*^9}, 
    3.6817195220375843`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"N", "[", 
+  FractionBox["1", "0.3058"], "]"}]], "Input",
+ CellChangeTimes->{{3.682160427055352*^9, 3.682160432135643*^9}}],
+
+Cell[BoxData["3.2701111837802483`"], "Output",
+ CellChangeTimes->{3.68216043366073*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"N", "[", 
+  RowBox[{"3.23", "/", "8"}], "]"}]], "Input",
+ CellChangeTimes->{{3.6821606256937137`*^9, 3.682160628517875*^9}}],
+
+Cell[BoxData["0.40375`"], "Output",
+ CellChangeTimes->{3.6821606296429396`*^9}]
 }, Open  ]]
 },
 WindowSize->{1272, 761},
@@ -1096,28 +1791,33 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[579, 22, 17229, 446, 1547, "Input"],
+Cell[579, 22, 17267, 452, 1587, "Input"],
 Cell[CellGroupData[{
-Cell[17833, 472, 1621, 25, 23, "Print"],
-Cell[19457, 499, 1936, 31, 23, "Print"]
+Cell[17871, 478, 1500, 23, 23, "Print"],
+Cell[19374, 503, 28139, 836, 235, "Print"],
+Cell[47516, 1341, 1917, 30, 23, "Print"]
 }, Open  ]],
-Cell[21408, 533, 4968, 79, 243, "Output"],
-Cell[26379, 614, 5334, 99, 243, "Output"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[31750, 718, 162, 3, 31, "Input"],
-Cell[31915, 723, 11411, 222, 471, "Output"]
+Cell[49448, 1374, 7101, 109, 256, "Output"],
+Cell[56552, 1485, 7510, 133, 259, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[43363, 950, 1743, 51, 143, "Input"],
-Cell[45109, 1003, 142, 2, 30, "Output"],
-Cell[45254, 1007, 140, 2, 30, "Output"],
-Cell[45397, 1011, 142, 2, 30, "Output"]
+Cell[64099, 1623, 1743, 51, 143, "Input"],
+Cell[65845, 1676, 142, 2, 30, "Output"],
+Cell[65990, 1680, 140, 2, 30, "Output"],
+Cell[66133, 1684, 142, 2, 30, "Output"]
 }, Open  ]],
-Cell[45554, 1016, 117, 2, 31, "Input"],
+Cell[66290, 1689, 117, 2, 31, "Input"],
 Cell[CellGroupData[{
-Cell[45696, 1022, 1543, 52, 67, "Input"],
-Cell[47242, 1076, 142, 2, 30, "Output"]
+Cell[66432, 1695, 1543, 52, 67, "Input"],
+Cell[67978, 1749, 142, 2, 30, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[68157, 1756, 146, 3, 47, "Input"],
+Cell[68306, 1761, 87, 1, 30, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[68430, 1767, 148, 3, 31, "Input"],
+Cell[68581, 1772, 79, 1, 30, "Output"]
 }, Open  ]]
 }
 ]

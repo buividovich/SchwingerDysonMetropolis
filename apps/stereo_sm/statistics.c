@@ -4,23 +4,24 @@ t_observable_stat* init_observable_stat()
 {
  t_observable_stat* my_observable_stat = (t_observable_stat *)malloc(sizeof(t_observable_stat));
  
- SAFE_MALLOC(my_observable_stat->sampling_hist, int, SQR(max_alpha_order+1));
- for(int i=0; i<SQR(max_alpha_order+1); i++)
+ SAFE_MALLOC(my_observable_stat->sampling_hist, int, SQR(max_order+1));
+ for(int i=0; i<SQR(max_order+1); i++)
   my_observable_stat->sampling_hist[i] = 0;
  
  for(int s=0; s<2; s++)
  {
-  SAFE_MALLOC(my_observable_stat->Gx[s],  double,    (max_alpha_order+1));
-  SAFE_MALLOC(my_observable_stat->Gxy[s], double, LT*(max_alpha_order+1));
-  for(int ao=0; ao<=max_alpha_order; ao++)
+  SAFE_MALLOC(my_observable_stat->Gx[s],      double,       (max_order+1));
+  SAFE_MALLOC(my_observable_stat->Gx_ext[s],  double,    SQR(max_order+1));
+  SAFE_MALLOC(my_observable_stat->Gxy[s],     double,    LT*(max_order+1));
+  for(int ao=0; ao<=max_order; ao++)
   {          
    my_observable_stat->Gx[s][ao] = 0.0;
    for(int t=0; t<LT; t++)
     my_observable_stat->Gxy[s][ao*LT + t] = 0.0;
   }; 
+  for(int i=0; i<SQR(max_order+1); i++)
+   my_observable_stat->Gx_ext[s][i] = 0.0;
  };
- 
- my_observable_stat->Gtotal                 = 0.0;
  
  my_observable_stat->nstat                  = 0;
  my_observable_stat->nstat_useless          = 0;
@@ -33,17 +34,16 @@ void gather_observable_stat(t_observable_stat* stat)
 {
  if(X.top==1)
  {
-  int ao = alpha_order;
-  int no = X.len[X.top-1]/2;
   int si = (asign[ns]>0? 0 : 1);
+  int no = X.len[X.top-1]/2;
  
-  int eff_order = no + ao;
+  int eff_order = no + alpha_order - 1;
  
-  if(eff_order <= (max_alpha_order+1))
+  if(eff_order <= max_order)
   {
-   double W =  pow(cc, (double)no)*pow(alpha, -(double)ao);
-   stat->Gx[si][eff_order-1] += W;
-   stat->Gtotal += W;
+   double W =  pow(cc, (double)no)*pow(alpha, -(double)alpha_order);
+   stat->Gx[si][eff_order] += W;
+   stat->Gx_ext[si][(max_order+1)*(no-1) + alpha_order] += W;
    int Pt[4] = {0.0, 0.0, 0.0, 0.0}; 
    int sg = -1;
    for(int i=0; i<X.len[X.top-1]-1; i++)
@@ -51,17 +51,17 @@ void gather_observable_stat(t_observable_stat* stat)
     addto_momentum(Pt, +1, STACK_EL(X, i));
     reduce_torus(&(Pt[0]), lat_size[0]);
     int sgi = (sg>0? si : 1 - si);
-    stat->Gxy[sgi][(eff_order-1)*LT + Pt[0]] += W;
+    stat->Gxy[sgi][eff_order*LT + Pt[0]] += W;
     sg *= -1;
    };
   }
   else
    stat->nstat_useless ++;
   
-  if(no-1<=max_alpha_order && ao<=max_alpha_order)
-   stat->sampling_hist[(max_alpha_order+1)*(no-1) + ao] ++;
+  if(no-1<=max_order && alpha_order<=max_order)
+   stat->sampling_hist[(max_order+1)*(no-1) + alpha_order] ++;
   
-  stat->actual_max_alpha_order = MAX(ao, stat->actual_max_alpha_order);
+  stat->actual_max_alpha_order = MAX(alpha_order, stat->actual_max_alpha_order);
  }; 
  stat->nstat ++;
 }
@@ -104,7 +104,7 @@ void process_observable_stat(t_observable_stat* stat) //It is assumed that proce
  if(scalar_file==NULL)
   logs_WriteError("Could not open the file %s for writing", scalar_filename);
  
- for(int ao=0; ao<=max_alpha_order; ao++)
+ for(int ao=0; ao<=max_order; ao++)
  {
   char correlator_filename[512];
   sprintf(correlator_filename, "%s/Gxy_%s_o%i.dat", data_dir, suffix, ao);
@@ -171,19 +171,42 @@ void process_observable_stat(t_observable_stat* stat) //It is assumed that proce
   
  logs_Write(0, "\n");
  logs_Write(0, "Frequency of visits in different sectors:");
- for(int no=1; no<=max_alpha_order+1; no++)
+ for(int no=1; no<=max_order+1; no++)
  {
   printf("n = %i:\t", no);
-  for(int ao=0; ao<max_alpha_order+1; ao++)
-   if(stat->sampling_hist[(max_alpha_order+1)*(no-1) + ao]>0)
-    printf(" % 8i", stat->sampling_hist[(max_alpha_order+1)*(no-1) + ao]);
-    //printf(" % 2.2lf%%", 100.0*(double)(stat->sampling_hist[(max_alpha_order+1)*(no-1) + ao])/(double)(stat->nstat));
+  for(int ao=0; ao<max_order+1; ao++)
+   if(stat->sampling_hist[(max_order+1)*(no-1) + ao]>0)
+    printf(" % 2.2lf%%", 100.0*(double)(stat->sampling_hist[(max_order+1)*(no-1) + ao])/(double)(stat->nstat));
   printf("\n");
  };
+ printf("\n");
  
- stat->Gtotal *= NN*normalization_factor/(double)(stat->nstat);
+ logs_Write(0, "\n");
+ logs_Write(0, "Numbers of visits in different sectors:");
+ for(int no=1; no<=max_order+1; no++)
+ {
+  printf("n = %i:\t", no);
+  for(int ao=0; ao<max_order+1; ao++)
+   if(stat->sampling_hist[(max_order+1)*(no-1) + ao]>0)
+    printf(" % 8i", stat->sampling_hist[(max_order+1)*(no-1) + ao]);
+  printf("\n");
+ };
+ printf("\n");
  
- logs_Write(0, "Total G:\t%2.4E", stat->Gtotal);
+ logs_Write(0, "Contributions of different sectors to Gx:");
+ for(int no=1; no<=max_order+1; no++)
+ {
+  for(int ao=0; ao<max_order+1; ao++)
+  {
+   double Gx_contrib_plus  = stat->Gx_ext[0][(max_order+1)*(no-1) + ao]/(double)(stat->nstat);
+   double Gx_contrib_minus = stat->Gx_ext[1][(max_order+1)*(no-1) + ao]/(double)(stat->nstat);
+   Gx_contrib_plus  *= 2.0*NN*pow(fabs(stereo_alpha), (double)(no+ao));
+   Gx_contrib_minus *= 2.0*NN*pow(fabs(stereo_alpha), (double)(no+ao));
+   if(Gx_contrib_plus>0.0 || Gx_contrib_minus>0.0)
+   printf("n=%i, m=%i:\t[%2.6E - %2.6E = %+2.2E]\n", no, ao, Gx_contrib_plus, Gx_contrib_minus, Gx_contrib_plus - Gx_contrib_minus);
+  }; 
+  printf("\n");
+ };
  
  for(int s=0; s<2; s++)
   SAFE_FREE(sGxy[s]);
@@ -195,6 +218,7 @@ void free_observable_stat(t_observable_stat* stat)
  for(int s=0; s<2; s++)
  {
   SAFE_FREE(stat->Gx[s]);
+  SAFE_FREE(stat->Gx_ext[s]);
   SAFE_FREE(stat->Gxy[s]);
  };
 }

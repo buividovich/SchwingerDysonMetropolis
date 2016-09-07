@@ -25,19 +25,14 @@ void init_actions()
  action_fetcher          = &my_action_fetcher;
  
  //Initialize the lattice stack
- init_lat_stack(&X, DIM, max_stack_nel);
- init_lat_stack(&H, DIM, max_history_nel);
+ init_lat_stack(&X, DIM, 2*(max_order+1));
+ init_lat_stack(&H, DIM, 2*(max_order+1));
 }
 
 void free_actions()
 {
  free_lat_stack(&X);
  free_lat_stack(&H);
- 
- /*SAFE_FREE(alpha_order_stack);
- SAFE_FREE(alpha_order_history);
- SAFE_FREE(sign_stack);
- SAFE_FREE(sign_history);*/
  
  SAFE_FREE(action_collection_do);
  SAFE_FREE(action_collection_undo);
@@ -50,8 +45,8 @@ void free_actions()
 /************* Create new factorized-out line ****************/
 DECLARE_ACTION_AMPLITUDE(create)
 {
- int new_eo = (X.nel/2 + alpha_order) + 1;
- if((data_in==NULL) || ((*data_in)<0) || new_eo <= (max_alpha_order+1))
+ int new_eff_order = (X.nel/2 + alpha_order - 1) + 1;
+ if((data_in==NULL) || ((*data_in)<0) || new_eff_order <= max_order)
   return P.sigma/(NN*cc);
  return 0.0; 
 }
@@ -67,7 +62,7 @@ DECLARE_ACTION_DO(create)
   alpha_order     = 0;
  };
  
- RETURN_IF_FALSE(X.nel<X.max_nel-2, ERR_STACK_OVERFLOW);  
+ RETURN_IF_FALSE(X.nel<=X.max_nel-2, ERR_STACK_OVERFLOW);  
 
  X.start[ X.top] = (X.top>0? X.start[X.top-1] + X.len[X.top-1] : 0);
  X.len[   X.top] = 2; //We push a pair of momenta on the top of the stack
@@ -93,15 +88,15 @@ DECLARE_ACTION_UNDO(create)
 /************************ Create new factorized-in line *****************/
 DECLARE_ACTION_AMPLITUDE(add_line)
 {
- int new_eo = (X.nel/2 + alpha_order) + 1;
- if(new_eo <= (max_alpha_order+1))
+ int new_eff_order = (X.nel/2 + alpha_order - 1) + 1;
+ if(new_eff_order <= max_order)
   return 2.0*P.sigma/cc;
  return 0.0; 
 }
 
 DECLARE_ACTION_DO(add_line) 
 {
- RETURN_IF_FALSE(X.nel<X.max_nel-2, ERR_STACK_OVERFLOW);
+ RETURN_IF_FALSE(X.nel<=X.max_nel-2, ERR_STACK_OVERFLOW);
  
  X.len[X.top-1] += 2; //We are adding two momenta to the topmost sequence
  X.nel          += 2;
@@ -141,17 +136,17 @@ DECLARE_ACTION_AMPLITUDE(join)
 {
  if(data_in==NULL || (*data_in)<0 || X.top>1) //We can join two sequences if there are more than two elements in the stack
  {
-  int new_eo = (X.nel/2 + alpha_order) + 1;
-  if(new_eo <= (max_alpha_order+1))
+  int new_eff_order = (X.nel/2 + alpha_order - 1) + 1;
+  if(new_eff_order <= max_order)
    return NN*P.sigma/cc;
- }; 
+ };
  return 0.0;
 }
 
 DECLARE_ACTION_DO(join)
 {
  RETURN_IF_FALSE(                          X.top>1, ERR_WRONG_STATE);
- RETURN_IF_FALSE(                X.nel<X.max_nel-2, ERR_STACK_OVERFLOW);
+ RETURN_IF_FALSE(               X.nel<=X.max_nel-2, ERR_STACK_OVERFLOW);
  
  X.len[X.top-2] += (X.len[X.top-1] + 2);
  //... and now we have to remember what was the length of both sequences in order to perform undo
@@ -194,13 +189,6 @@ DECLARE_ACTION_AMPLITUDE(vertex)
 {
  int    Q[4];
  
- if(data_in==NULL || (*data_in)<0)
- {
-  //TODO: what about higher dimensions here? Makes reason to check
-  double mcc = alpha*cc;
-  return (4.0*mcc*(4.0 - 3.0*mcc + mcc*mcc)/((1.0-mcc)*(1.0-mcc)*(1.0-mcc)) + 0.25*lambda*mcc/(1.0 - mcc))/P.mass_sq;
- };
- 
  if((*data_in)>=3)
  {
   double res = vertex(&(STACK_EL(X, 0)), Q, (*data_in));
@@ -219,7 +207,7 @@ DECLARE_ACTION_DO(vertex)
  RETURN_IF_FALSE(              (*data_in)>=3, ERR_WRONG_DATA);
  RETURN_IF_FALSE(        ((*data_in)-1)%2==0, ERR_WRONG_DATA);
  RETURN_IF_FALSE(  X.len[X.top-1]>(*data_in), ERR_WRONG_DATA);
- RETURN_IF_FALSE(          H.nel<H.max_nel-2, ERR_HISTORY_OVERFLOW);
+ RETURN_IF_FALSE(         H.nel<=H.max_nel-2, ERR_HISTORY_OVERFLOW);
  
  //Push the momenta which are being joined into the H(istory)stack
  H.start[ H.top] = (H.top>0? H.start[H.top-1] + H.len[H.top-1] : 0);

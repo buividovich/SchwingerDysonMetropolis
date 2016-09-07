@@ -112,16 +112,6 @@ int   metropolis_step()
   
  gather_mc_stat(); 
  
- //Controlling the sum of amplitudes
- if(control_max_ampl_sum && (nA[ns] > (max_ampl_sum + max_ampl_sum_tol)))
- {
-  logs_WriteError("nA[%i] = %2.4E > max_ampl_sum = %2.4E", ns, nA[ns], max_ampl_sum);
-  int mdata = -1;
-  for(int i=0; i<n_actions; i++)
-   logs_WriteParameter(0, action_collection_name[action_list[i].action_id], "A = %2.4E,\t AMax = %2.4E", amplitude_list[i], (action_collection_amplitude[action_list[i].action_id])(&mdata) );
-  logs_Write(0, " ");
- }; 
- 
  //Decide whether we move forward or backward in the order of expansion
  a = rand_double(0.0, 1.0);
  if(a <= p_plus)

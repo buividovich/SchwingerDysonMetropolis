@@ -35,45 +35,29 @@ int main(int argc, char *argv[])
  init_actions();
  init_parameters();
  
- max_recursion_depth = 2*max_alpha_order;
-
+ max_recursion_depth = 2*max_order;
  init_metropolis();
+ 
  t_observable_stat* obs_stat = init_observable_stat();
- t_stack_stat* Xstack_stat = init_stack_statistics(max_stack_nel);
  
  print_parameters();
  
- logs_Write(0, "Starting thermalization process for %i MC steps", therm_mc_steps);
- for(int imc=0; imc<therm_mc_steps; imc++)
-  metropolis_step(imc);
- 
- logs_Write(0, "Starting production run for %i MC steps", prod_mc_steps);
- for(int imc=0; imc<prod_mc_steps; imc++)
+ logs_Write(0, "Running Metropolis for %i MC steps", number_mc_steps);
+ for(int imc=0; imc<number_mc_steps; imc++)
  {
   metropolis_step(imc);
-  if(imc%mc_interval==0)
-  {
-   gather_observable_stat(obs_stat); 
-   gather_stack_statistics(Xstack_stat, &X);
-  }; 
+  gather_observable_stat(obs_stat); 
  };
- 
- print_stack_statistics(Xstack_stat);
   
- char prefix[500];
- largeN_QFT_prefix(prefix);
- process_mc_stat(prefix, 1);
+ process_mc_stat();
  process_observable_stat(obs_stat);
  
  free_observable_stat(obs_stat);
- free_stack_statistics(Xstack_stat);
  SAFE_FREE(obs_stat);
- SAFE_FREE(Xstack_stat);
  
  free_metropolis();
  free_actions();
  free_lat_propagator(&P);
- free_parameters();
  
  return 0;
 }

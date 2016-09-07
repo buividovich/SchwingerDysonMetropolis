@@ -6,164 +6,73 @@
 #include <clue_logs.h>
 #include <clue_utils.h>
 
-#include <sd_metropolis.h>
-#include <sd_metropolis_parameters.h>
-#include <sd_metropolis_statistics.h>
-
 //Parameters of a generic SD equations for practically any large-N QFT
-extern double   lambda;                   //tHooft coupling constant
-extern double   meff_sq;                  //Square of the effective mass
-extern double   cc;                       //Rescaling of observables according to the number of fields in the correlator
-extern double   NN;                       //Overall rescaling of observables, also genus-dependent
-extern double   genus_A;                  //Constant A in recursion for cc[g]
-extern double   genus_nu;                 //Constant nu in recursion for cc[g]
-extern double   genus_B;                  //Constant B in recursion for NN[g]
-extern double   genus_mu;                 //Constant mu in recursion for NN[g]
-extern double   genus_f_exponent;         //This is an exponent before the gamma function in f[g] extern int      DIM;                      //Space-time dimensionality
 extern int      DIM;                      //Dimension of space
 extern int      LT;                       //Temporal size of the system
 extern int      LS;                       //Spatial size of the system
-//Parameters of a generic stack-based MC process
-extern int      max_stack_nel;            //Maximal number of elements in the stack characterizing the system state
-extern int      max_history_nel;          //Maximal number of elements in the stack containing the history of momenta contractions
-//Parameters of the statistical analysis of the MC data
-extern int      max_correlator_order;     //Maximal correlator order to trace
-extern int      min_observables_order;    //Minimal order of observables which are included into statistics in some formal expansion (e.g. SC/WC expansion)
-extern int      max_observables_order;    //Correspondingly, maximal order
-extern int      max_genus;                //Max order of 1/N^2 expansion
-//Output files
-extern char*    observables_file;         //File for the expectation values of the correlators
-extern char*    stack_stat_file;          //File for histograms characterizing the stack usage
-extern int      param_auto_tuning;        //Automatic tuning of transition amplitudes so that nAs are minimized
-extern double   param_tuning_accuracy;    //Accuracy of parameter tuning
-extern int      param_tuning_max_iter;    //Max. allowed number of iterations in param auto-tuning
+extern double   lambda;                   //tHooft coupling constant
+extern int      max_order;                //Max. order of the expansion
+//Algorithmic parameters which control statistical sampling
+extern double   alpha;                    //Rescaling of observables according to the order
+extern double   cc;                       //Rescaling of observables according to the number of fields in the correlator
+extern double   NN;                       //Overall rescaling of observables, also genus-dependent
 //In debug mode, we can also check the stack consistency at every step
-extern int      check_stack; 
-//Calculable parameters - to be filled by initialization procedures
-extern double* cc_genus;
-extern double* NN_genus;
-extern double*  f_genus;
-//Variable for genus counting
-extern int        genus;
-
-void print_largeN_QFT_parameters(int print_physical, int print_algorithmic);
-void largeN_QFT_prefix(char* prefix); //Prints lambda, meff_sq, cc, NN, LT, LS to prefix
-
-double n2an_sup(double a); //Supremum of (n+1)(n+2)/2 a^n
-
-void      param_vicinity(double epsilon, double** params,    double* data, int nparams);
-int  check_param_minimum(double epsilon, double** params,                  int nparams);
-int   find_param_minimum(double     tol, double** params, double* min_val, int nparams);
-
-void init_genus_constants(int noise_level);
-void free_genus_constants();
+extern int      check_stack;
+//Output parameters
+extern char     data_dir[512];
+extern char     suffix[512];
 
 #define LARGEN_QFT_LONG_OPTIONS                                                        \
- {                     "lambda",  required_argument,                       NULL, 'A'}, \
- {                    "meff-sq",  required_argument,                       NULL, 'B'}, \
- {                         "cc",  required_argument,                       NULL, 'C'}, \
- {                         "NN",  required_argument,                       NULL, 'D'}, \
- {                    "genus-A",  required_argument,                       NULL, 'E'}, \
- {                   "genus-nu",  required_argument,                       NULL, 'F'}, \
- {                    "genus-B",  required_argument,                       NULL, 'G'}, \
- {                   "genus-mu",  required_argument,                       NULL, 'H'}, \
- {           "genus-f-exponent",  required_argument,                       NULL, 'I'}, \
- {                        "DIM",  required_argument,                       NULL, 'J'}, \
- {                         "LT",  required_argument,                       NULL, 'K'}, \
- {                         "LS",  required_argument,                       NULL, 'L'}, \
- {              "max-stack-nel",  required_argument,                       NULL, 'M'}, \
- {            "max-history-nel",  required_argument,                       NULL, 'N'}, \
- {       "max-correlator-order",  required_argument,                       NULL, 'O'}, \
- {      "min-observables-order",  required_argument,                       NULL, 'P'}, \
- {      "max-observables-order",  required_argument,                       NULL, 'Q'}, \
- {                  "max-genus",  required_argument,                       NULL, 'R'}, \
- {      "param-tuning-accuracy",  required_argument,                       NULL, 'S'}, \
- {      "param-tuning-max-iter",  required_argument,                       NULL, 'T'}, \
- {           "observables-file",  required_argument,                       NULL, 'U'}, \
- {            "stack-stat-file",  required_argument,                       NULL, 'V'}, \
- {       "no-param-auto-tuning",        no_argument,         &param_auto_tuning,   0}, \
- {             "no-stack-check",        no_argument,               &check_stack,   0}
+ {                        "DIM",  required_argument,                       NULL, 'A'}, \
+ {                         "LT",  required_argument,                       NULL, 'B'}, \
+ {                         "LS",  required_argument,                       NULL, 'C'}, \
+ {                     "lambda",  required_argument,                       NULL, 'D'}, \
+ {                  "max-order",  required_argument,                       NULL, 'E'}, \
+ {                      "alpha",  required_argument,                       NULL, 'F'}, \
+ {                         "cc",  required_argument,                       NULL, 'G'}, \
+ {                         "NN",  required_argument,                       NULL, 'H'}, \
+ {                   "data-dir",  required_argument,                       NULL, 'I'}, \
+ {                     "suffix",  required_argument,                       NULL, 'J'}, \
+ {                "check-stack",        no_argument,               &check_stack,   1}
 
 #define PARSE_LARGEN_QFT_OPTIONS                                         \
    case 'A':                                                             \
-    SAFE_SSCANF_BREAK(optarg, "%lf", lambda);                            \
-   break;                                                                \
-   case 'B':                                                             \
-    SAFE_SSCANF_BREAK(optarg, "%lf", meff_sq);                           \
-   break;                                                                \
-   case 'C':                                                             \
-    SAFE_SSCANF_BREAK(optarg, "%lf", cc);                                \
-    param_auto_tuning = 0;                                               \
-   break;                                                                \
-   case 'D':                                                             \
-    SAFE_SSCANF_BREAK(optarg, "%lf", NN);                                \
-    param_auto_tuning = 0;                                               \
-   break;                                                                \
-   case 'E':                                                             \
-    SAFE_SSCANF_BREAK(optarg, "%lf", genus_A);                           \
-   break;                                                                \
-   case 'F':                                                             \
-    SAFE_SSCANF_BREAK(optarg, "%lf", genus_nu);                          \
-   break;                                                                \
-   case 'G':                                                             \
-    SAFE_SSCANF_BREAK(optarg, "%lf", genus_B);                           \
-   break;                                                                \
-   case 'H':                                                             \
-    SAFE_SSCANF_BREAK(optarg, "%lf", genus_mu);                          \
-   break;                                                                \
-   case 'I':                                                             \
-    SAFE_SSCANF_BREAK(optarg, "%lf", genus_f_exponent);                  \
-   break;                                                                \
-   case 'J':                                                             \
     SAFE_SSCANF_BREAK(optarg,  "%i", DIM);                               \
     ASSERT(DIM<0);                                                       \
    break;                                                                \
-   case 'K':                                                             \
+   case 'B':                                                             \
     SAFE_SSCANF_BREAK(optarg,  "%i", LT);                                \
     ASSERT(LT<0);                                                        \
    break;                                                                \
-   case 'L':                                                             \
+   case 'C':                                                             \
     SAFE_SSCANF_BREAK(optarg,  "%i", LS);                                \
     ASSERT(LS<0);                                                        \
    break;                                                                \
-   case 'M':                                                             \
-    SAFE_SSCANF_BREAK(optarg,  "%i", max_stack_nel);                     \
-    ASSERT(max_stack_nel<10);                                            \
+   case 'D':                                                             \
+    SAFE_SSCANF_BREAK(optarg, "%lf", lambda);                            \
    break;                                                                \
-   case 'N':                                                             \
-    SAFE_SSCANF_BREAK(optarg,  "%i", max_history_nel);                   \
-    ASSERT(max_history_nel<10);                                          \
+   case 'E':                                                             \
+    SAFE_SSCANF_BREAK(optarg, "%i", max_order);                          \
    break;                                                                \
-   case 'O':                                                             \
-    SAFE_SSCANF_BREAK(optarg,  "%i", max_correlator_order);              \
-    ASSERT(max_correlator_order<0);                                      \
+   case 'F':                                                             \
+    SAFE_SSCANF_BREAK(optarg, "%lf", alpha);                             \
    break;                                                                \
-   case 'P':                                                             \
-    SAFE_SSCANF_BREAK(optarg,  "%i", min_observables_order);             \
+   case 'G':                                                             \
+    SAFE_SSCANF_BREAK(optarg, "%lf", cc);                                \
    break;                                                                \
-   case 'Q':                                                             \
-    SAFE_SSCANF_BREAK(optarg,  "%i", max_observables_order);             \
+   case 'H':                                                             \
+    SAFE_SSCANF_BREAK(optarg, "%lf", NN);                                \
    break;                                                                \
-   case 'R':                                                             \
-    SAFE_SSCANF_BREAK(optarg,  "%i", max_genus);                         \
+   case 'I':                                                             \
+    strcpy(optarg, data_dir);                                            \
    break;                                                                \
-   case 'S':                                                             \
-    SAFE_SSCANF_BREAK(optarg,  "%lf", param_tuning_accuracy);            \
-    ASSERT(param_tuning_accuracy<0.0);                                   \
-   break;                                                                \
-   case 'T':                                                             \
-    SAFE_SSCANF_BREAK(optarg,   "%i", param_tuning_max_iter);            \
-    ASSERT(param_tuning_max_iter<1);                                     \
-   break;                                                                \
-   case 'U':                                                             \
-    COPY_FILE_NAME(optarg, observables_file);                            \
-   break;                                                                \
-   case 'V':                                                             \
-    COPY_FILE_NAME(optarg, stack_stat_file);                             \
+   case 'J':                                                             \
+    strcpy(optarg, suffix);                                              \
    break;
 
-static const char largeN_QFT_short_option_list[] = "A:B:C:D:E:F:G:H:I:J:K:L:M:N:O:P:Q:R:S:T:U:V:";
+static const char largeN_QFT_short_option_list[] = "A:B:C:D:E:F:G:H:I:J:";
 
-void free_largeN_QFT_parameters();
+void print_largeN_QFT_parameters();
+void       largeN_QFT_suffix(char* s);
 
 #endif
