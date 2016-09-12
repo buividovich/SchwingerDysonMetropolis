@@ -6,6 +6,8 @@
 #include <clue_logs.h>
 #include <clue_utils.h>
 
+#include <square_lattice.h>
+
 //Parameters of a generic SD equations for practically any large-N QFT
 extern int      DIM;                      //Dimension of space
 extern int      LT;                       //Temporal size of the system
@@ -21,6 +23,7 @@ extern int      check_stack;
 //Output parameters
 extern char     data_dir[512];
 extern char     suffix[512];
+extern char     label[512];
 
 #define LARGEN_QFT_LONG_OPTIONS                                                        \
  {                        "DIM",  required_argument,                       NULL, 'A'}, \
@@ -33,6 +36,7 @@ extern char     suffix[512];
  {                         "NN",  required_argument,                       NULL, 'H'}, \
  {                   "data-dir",  required_argument,                       NULL, 'I'}, \
  {                     "suffix",  required_argument,                       NULL, 'J'}, \
+ {                      "label",  required_argument,                       NULL, 'K'}, \
  {                "check-stack",        no_argument,               &check_stack,   1}
 
 #define PARSE_LARGEN_QFT_OPTIONS                                         \
@@ -64,15 +68,19 @@ extern char     suffix[512];
     SAFE_SSCANF_BREAK(optarg, "%lf", NN);                                \
    break;                                                                \
    case 'I':                                                             \
-    strcpy(optarg, data_dir);                                            \
+    strcpy(data_dir, optarg);                                            \
    break;                                                                \
    case 'J':                                                             \
-    strcpy(optarg, suffix);                                              \
+    strcpy(suffix, optarg);                                              \
+   break;                                                                \
+   case 'K':                                                             \
+    strcpy(label, optarg);                                               \
    break;
 
-static const char largeN_QFT_short_option_list[] = "A:B:C:D:E:F:G:H:I:J:";
+static const char largeN_QFT_short_option_list[] = "A:B:C:D:E:F:G:H:I:J:K:";
 
 void print_largeN_QFT_parameters();
 void       largeN_QFT_suffix(char* s);
+void init_lattice();
 
 #endif

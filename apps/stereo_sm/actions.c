@@ -192,7 +192,7 @@ DECLARE_ACTION_AMPLITUDE(vertex)
  if((*data_in)>=3)
  {
   double res = vertex(&(STACK_EL(X, 0)), Q, (*data_in));
-  res *= lat_propagator(Q, P.mass_sq);
+  res *= lat_propagator(Q, P.mass_sq, 1.0);
   res *= pow(alpha*cc, 0.5*(double)((*data_in)-1) );
   return -1.0*res; //Minus sign because we decompose in powers of (-\lambda/8)
  };

@@ -6,6 +6,7 @@ double                     dnA    = 0.0; //Expectation value of its square - nec
 double                   msign    = 0.0; //Expectation value of the sign - also necessary for recovering the correct normalization
 int                        aac    = 0;
 double                     ans    = 0.0;
+int                     max_ns    = 0;   //Can remove upon debugging
 int                        nmc    = 0;
 int*            action_counter    = NULL;
 int*                ns_history    = NULL; //MC history of sequence lengths
@@ -38,6 +39,7 @@ void init_metropolis_statistics()
  dnA      =     0.0;
  msign    =     0.0;
  ans      =     0.0;
+ max_ns   =     0;
  nmc      =     0;
  
  SAFE_MALLOC_IF_NULL(action_counter, int, action_collection_size);
@@ -71,6 +73,8 @@ void gather_mc_stat()
  anA   += nA[ns];
  dnA   += SQR(nA[ns]);
  
+ max_ns = MAX(ns, max_ns);
+ 
  maxnA  = MAX(nA[ns], maxnA);
  msign += asign[ns];
  
@@ -98,6 +102,7 @@ void process_mc_stat()
  logs_Write(0, "\nSTATISTICS ON THE MC PROCESS (over %i steps): ",       nmc);
  logs_WriteParameter(0,                                   "Acceptance rate",  "%2.4lf",            acceptance_rate);
  logs_WriteParameter(0,                              "Mean recursion depth",  "%2.4lf",            mean_recursion_depth);
+ logs_WriteParameter(0,                              "Max. recursion depth",      "%i",            max_ns);
  logs_WriteParameter(0,                                           "Mean nA",  "%2.4lf",            mean_nA);
  logs_WriteParameter(0,                            "Max A rescaling factor",  "%2.4lf",            maxnA);
  logs_WriteParameter(0,                                 "Mean config. sign",  "%2.4lf",            mean_sign);

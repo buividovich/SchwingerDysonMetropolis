@@ -13,8 +13,9 @@ double NN                  =   1.0;                    //Overall rescaling of ob
 int    max_stack_nel       =   2;            //Maximal number of elements in the stack characterizing the system state
 int    check_stack         =   0;
 //Output parameters
-char   data_dir[512]       =   "";
-char     suffix[512]       =   "";
+char   data_dir[512]       =   "";           //Directory for automatically named data files
+char     suffix[512]       =   "";           //Suffix for custom labelling
+char      label[512]       =   "";           //A label in addition to automatically generated suffix
  
 void                   print_largeN_QFT_parameters()
 {
@@ -32,9 +33,21 @@ void                   print_largeN_QFT_parameters()
  logs_Write(0, "\tOUTPUT PARAMETERS");
  logs_WriteParameter(0,                        "Data directory",       "%s",      data_dir);
  logs_WriteParameter(0,                                "Suffix",       "%s",      suffix);
+ if(strlen(label)>0)
+ logs_WriteParameter(0,                                 "Label",       "%s",      label);
 }
 
 void largeN_QFT_suffix(char* s)
 {
  sprintf(s,   "d%i_t%i_s%i_l%2.4lf", DIM, LT, LS, lambda);
+}
+
+void init_lattice()
+{
+ int my_lat_sizes[4];
+ //Initializing the square_lattice unit
+ my_lat_sizes[0] = LT;
+ for(int i=1; i<DIM; i++)
+  my_lat_sizes[i] = LS;
+ lat_init(DIM, my_lat_sizes);
 }

@@ -1,33 +1,26 @@
 #include "lattice_propagator.h"
 
-void init_lat_propagator(t_lat_propagator* P, int allocate, double mass_sq)
+void init_lat_propagator(t_lat_propagator* P, double mass_sq, double norm_factor)
 {
- int my_lat_sizes[26], m[26], i; //26 is the largest space-time dimensionality I can think of - the critical dimensionality of a bosonic string
- if(allocate)
- {
-  //Initializing the square_lattice unit
-  my_lat_sizes[0] = LT;
-  for(i=1; i<DIM; i++)
-   my_lat_sizes[i] = LS;
-  lat_init(DIM, my_lat_sizes);
- };
+ if(!lat_initialized_flag)
+  init_lattice();
  //Calculating the array of probabilities in order to initialize fast random choice
  DECLARE_AND_MALLOC(probs, double, lat_vol);
  //At the same time, calculating sigma
  P->mass_sq = mass_sq;
  P->sigma   = 0.0;
- for(i=0; i<lat_vol; i++)
+ for(int i=0; i<lat_vol; i++)
  {
+  int m[4];
   lat_idx2coords(i, m);
-  probs[i] = fabs(lat_propagator(m, mass_sq));
+  probs[i] = fabs(lat_propagator(m, mass_sq, norm_factor));
   P->sigma += probs[i];
  };
  //Finally, normalizing the probabilities to unity
- for(i=0; i<lat_vol; i++)
+ for(int i=0; i<lat_vol; i++)
   probs[i] /= P->sigma;
  //Initializing the fast random choice algorithm
- if(allocate)
-  SAFE_MALLOC(P->frc_data, t_frc_data, 1); 
+ SAFE_MALLOC(P->frc_data, t_frc_data, 1); 
  init_fast_rand_choice(probs, lat_vol, P->frc_data);
  //And the sigma itself should be normalized by volume
  P->sigma /= (double)lat_vol; 
@@ -54,9 +47,9 @@ double  lat_momentum_sq(int *m)
  return res; 
 }
 
-double  lat_propagator(int* m, double mass_sq)
+double  lat_propagator(int* m, double mass_sq, double norm_factor)
 {
- return 1.0/(mass_sq + lat_momentum_sq(m)); 
+ return norm_factor/(mass_sq + lat_momentum_sq(m)); 
 }
 
 void rand_momentum(t_lat_propagator* P, int* m)

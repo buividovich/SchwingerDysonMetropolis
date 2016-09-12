@@ -1,5 +1,9 @@
 #include "parameters.h"
 
+//Some switches
+int    save_sampling_hist   =   0; //Whether to save the histogram of sampling in sectors of different n and order
+int    save_correlators     =   0;   //Whether to save correlators <gx gy>
+
 //Useful calculable parameters
 double    stereo_alpha    = 0.0;  // -\lambda/8, expansion parameter...
 
@@ -7,10 +11,12 @@ static struct option long_options[] =
 {
  METROPOLIS_LONG_OPTIONS,
  LARGEN_QFT_LONG_OPTIONS,
- {                       0,                  0, NULL,   0}
+ {    "save-sampling-hist",        no_argument,  &save_sampling_hist,   1},
+ {      "save-correlators",        no_argument,    &save_correlators,   1},
+ {                       0,                  0,                 NULL,   0}
 };
 
-static char my_short_option_list[] = "a:b:c:d:e:f:";
+static char my_short_option_list[] = "";
 
 int parse_command_line_options(int argc, char **argv)
 {
@@ -52,7 +58,7 @@ int parse_command_line_options(int argc, char **argv)
 
 void init_parameters()
 {
- init_lat_propagator(&P, 1, 0.25*lambda);
+ init_lat_propagator(&P, 0.25*lambda, 1.0);
  
  stereo_alpha = -0.125*lambda;
  
@@ -60,6 +66,9 @@ void init_parameters()
   sprintf(data_dir, "./data/stereo_sm/");
  if(strlen(suffix)==0)
   largeN_QFT_suffix(suffix);
+ 
+ if(strlen(label)>0)
+  snprintf(&(suffix[strlen(suffix)]), 512, "_%s", label); 
 }
 
 void print_parameters()
@@ -67,6 +76,9 @@ void print_parameters()
  logs_Write(0, "\n");
  print_metropolis_parameters();
  print_largeN_QFT_parameters();
+ logs_WriteParameter(0,  "Saving the sampling histograms?",  "%s", (save_sampling_hist? "YES" : "NO"));
+ logs_WriteParameter(0,          "Saving the correlators?",  "%s", (save_correlators?   "YES" : "NO"));
+ 
  logs_Write(0, "\tPARAMETERS OF LATTICE PROPAGATOR");
  logs_WriteParameter(0,            "Sigma", "%2.4E", P.sigma);
  logs_WriteParameter(0,     "Mass squared", "%2.4E", P.mass_sq);

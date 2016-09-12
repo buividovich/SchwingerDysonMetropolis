@@ -16,10 +16,11 @@
 typedef struct 
 {
  double    astop;
- double*   Gx[2];
- double*   Gxy[2];
+ double*   G2[2];
  int*      sampling_hist;
- int       actual_max_alpha_order;
+ int       actual_max_beta_order;
+ int       max_history_nel;
+ int       max_stack_nel;
  int       nstat;
  int       nstat_useless;
 } t_observable_stat;

@@ -4,7 +4,7 @@
 int      max_recursion_depth      = 10000;   //Max. possible depth of the sequence of states
 double   p_plus                   = 0.5;     //Probability of the "Forward" move
 int      p_plus_tuning            = 1;       //If 1 (default), p_plus will be automatically tuned to maximize acceptance
-int      p_plus_tuning_interval   = 10000;   //p_plus will be updated in this interval
+int      p_plus_tuning_interval   = 50000;   //p_plus will be updated in this interval
 int      number_mc_steps          = 100000;  //Number of MC steps for production runs
 int      mc_reporting_interval    = 40000;   //The interval at which the current state of the MC process is reported
 int      exit_upon_overflow       = 0;       //Whether to stop the MC process once the history or the stack overflow is detected

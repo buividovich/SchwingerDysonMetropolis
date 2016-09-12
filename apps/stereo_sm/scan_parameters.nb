@@ -1,0 +1,248 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      9010,        239]
+NotebookOptionsPosition[      8490,        218]
+NotebookOutlinePosition[      8834,        233]
+CellTagsIndexPosition[      8791,        230]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SamplingHistFiles", "=", 
+   RowBox[{
+   "FileNames", "[", 
+    "\"\<G:\\\\LAT\\\\sd_metropolis\\\\data\\\\stereo_sm\\\\sampling_hist_d2_\
+t32_s32_l3.2300_*.dat\>\"", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Do", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Print", "[", "SamplingHistFile", "]"}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"SamplingHist", "=", 
+      RowBox[{"Import", "[", 
+       RowBox[{"SamplingHistFile", ",", "\"\<Table\>\""}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Print", "[", 
+      RowBox[{"ListDensityPlot", "[", "SamplingHist", "]"}], "]"}], ";"}], 
+    "\[IndentingNewLine]", ",", 
+    RowBox[{"{", 
+     RowBox[{"SamplingHistFile", ",", "SamplingHistFiles"}], "}"}]}], "]"}], 
+  ";"}]}], "Input",
+ CellChangeTimes->{{3.68224725218178*^9, 3.682247258003113*^9}, {
+  3.6822472982744164`*^9, 3.6822473681944156`*^9}, {3.6822474048025093`*^9, 
+  3.682247514562787*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"(*", " ", 
+    RowBox[{"Some", " ", "useful", " ", "stuff"}], " ", "*)"}],
+   FontColor->RGBColor[0, 0, 1]], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"$HistoryLength", "=", "0"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"fsndig", "[", 
+      RowBox[{"x_", ",", "n_"}], "]"}], ":=", 
+     RowBox[{"ToString", "[", 
+      RowBox[{"PaddedForm", "[", 
+       RowBox[{"x", ",", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"n", "+", "2"}], ",", "n"}], "}"}], ",", 
+        RowBox[{"NumberPadding", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{"\"\<\>\"", ",", "\"\<0\>\""}], "}"}]}]}], "]"}], "]"}]}], 
+    ";"}], "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{"Basic", " ", "Manipulate", " ", "routine"}], " ", "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"SamplingHistFile", "=", 
+       RowBox[{
+       "\"\<G:\\\\LAT\\\\sd_metropolis\\\\data\\\\stereo_sm\\\\sampling_hist_\
+d2_t32_s32_l3.2300_a\>\"", "<>", 
+        RowBox[{"fsndig", "[", 
+         RowBox[{"a", ",", "2"}], "]"}], "<>", "\"\<_c\>\"", "<>", 
+        RowBox[{"fsndig", "[", 
+         RowBox[{"cc", ",", "2"}], "]"}], "<>", "\"\<_n\>\"", "<>", 
+        RowBox[{"fsndig", "[", 
+         RowBox[{"NN", ",", "2"}], "]"}], "<>", "\"\<.dat\>\""}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"SamplingHist", "=", 
+       RowBox[{"Import", "[", 
+        RowBox[{"SamplingHistFile", ",", "\"\<Table\>\""}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"ListDensityPlot", "[", 
+       RowBox[{"SamplingHist", ",", 
+        RowBox[{"PlotRange", "\[Rule]", "All"}], ",", 
+        RowBox[{"InterpolationOrder", "\[Rule]", "0"}]}], "]"}]}], 
+     "\[IndentingNewLine]", ",", 
+     RowBox[{"{", 
+      RowBox[{"a", ",", 
+       RowBox[{"{", 
+        RowBox[{"0.5", ",", "1.0", ",", "1.5"}], "}"}]}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"cc", ",", 
+       RowBox[{"{", 
+        RowBox[{"0.5", ",", "1.0", ",", "1.5"}], "}"}]}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"NN", ",", 
+       RowBox[{"{", 
+        RowBox[{"0.5", ",", "1.0", ",", "1.5"}], "}"}]}], "}"}]}], 
+    "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.6822475471876535`*^9, 3.6822477445299406`*^9}, {
+  3.682247775713724*^9, 3.6822477884654536`*^9}, {3.6822478518420787`*^9, 
+  3.6822479176488423`*^9}}],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`a$$ = 0.5, $CellContext`cc$$ = 
+    1.5, $CellContext`NN$$ = 1.5, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{
+      Hold[$CellContext`a$$], {0.5, 1., 1.5}}, {
+      Hold[$CellContext`cc$$], {0.5, 1., 1.5}}, {
+      Hold[$CellContext`NN$$], {0.5, 1., 1.5}}}, Typeset`size$$ = {
+    441., {2., 8.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`a$7373$$ = 
+    0, $CellContext`cc$7374$$ = 0, $CellContext`NN$7375$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`a$$ = 0.5, $CellContext`cc$$ = 
+        0.5, $CellContext`NN$$ = 0.5}, "ControllerVariables" :> {
+        Hold[$CellContext`a$$, $CellContext`a$7373$$, 0], 
+        Hold[$CellContext`cc$$, $CellContext`cc$7374$$, 0], 
+        Hold[$CellContext`NN$$, $CellContext`NN$7375$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> ($CellContext`SamplingHistFile = 
+        StringJoin[
+         "G:\\LAT\\sd_metropolis\\data\\stereo_sm\\sampling_hist_d2_t32_s32_\
+l3.2300_a", 
+          $CellContext`fsndig[$CellContext`a$$, 2], "_c", 
+          $CellContext`fsndig[$CellContext`cc$$, 2], "_n", 
+          $CellContext`fsndig[$CellContext`NN$$, 2], 
+          ".dat"]; $CellContext`SamplingHist = 
+        Import[$CellContext`SamplingHistFile, "Table"]; 
+       ListDensityPlot[$CellContext`SamplingHist, PlotRange -> All, 
+         InterpolationOrder -> 0]), 
+      "Specifications" :> {{$CellContext`a$$, {0.5, 1., 
+         1.5}}, {$CellContext`cc$$, {0.5, 1., 1.5}}, {$CellContext`NN$$, {0.5,
+          1., 1.5}}}, "Options" :> {}, "DefaultOptions" :> {}],
+     ImageSizeCache->{486., {72., 77.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{
+  3.6822477471100883`*^9, 3.6822477899175367`*^9, {3.6822478556862984`*^9, 
+   3.682247918876913*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Import", "::", "nffil"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"File not found during \[NoBreak]\\!\\(Import\\)\[NoBreak]. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/Import\\\", ButtonNote -> \
+\\\"Import::nffil\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6822494030818043`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"ListDensityPlot", "::", "arrayerr"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"\[NoBreak]\\!\\($Failed\\)\[NoBreak] must be a valid \
+array. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/ListDensityPlot\\\", ButtonNote -> \
+\\\"ListDensityPlot::arrayerr\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6822494031368074`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Import", "::", "nffil"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"File not found during \[NoBreak]\\!\\(Import\\)\[NoBreak]. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/Import\\\", ButtonNote -> \
+\\\"Import::nffil\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6822494031498084`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"ListDensityPlot", "::", "arrayerr"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"\[NoBreak]\\!\\($Failed\\)\[NoBreak] must be a valid \
+array. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/ListDensityPlot\\\", ButtonNote -> \
+\\\"ListDensityPlot::arrayerr\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6822494031538086`*^9}]
+}, Open  ]]
+},
+WindowSize->{1272, 908},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"8.0 for Microsoft Windows (64-bit) (February 23, 2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[557, 20, 1001, 25, 132, "Input"],
+Cell[CellGroupData[{
+Cell[1583, 49, 2527, 66, 252, "Input"],
+Cell[4113, 117, 2573, 52, 166, "Output"],
+Cell[6689, 171, 426, 9, 21, "Message"],
+Cell[7118, 182, 462, 10, 21, "Message"],
+Cell[7583, 194, 426, 9, 21, "Message"],
+Cell[8012, 205, 462, 10, 21, "Message"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

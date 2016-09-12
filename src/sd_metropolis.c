@@ -83,7 +83,8 @@ int   metropolis_step()
  
  if(ns>max_recursion_depth)
  {
-  logs_WriteError("Step %08i:\tOverflow detected - size of action_history (ns = %i) is larger than max_recursion_depth=%i !!! %s", step_number, ns, max_recursion_depth, (exit_upon_overflow? "Stopping the MC process" : "Resetting the state of the system"));
+  logs_WriteError("Step %08i:\tOverflow detected - size of action_history (ns = %i) is larger than max_recursion_depth=%i !!! %s\n", step_number, ns, max_recursion_depth, (exit_upon_overflow? "Stopping the MC process" : "Resetting the state of the system"));
+  print_action_history();
   ns = 0;
   if(exit_upon_overflow)
    exit(EXIT_FAILURE);
@@ -147,7 +148,8 @@ int   metropolis_step()
     };
     if(res==ERR_HISTORY_OVERFLOW || res==ERR_STACK_OVERFLOW)
     {
-     logs_WriteError("Action %s [id = %i] with action_data_in %i caused %s overflow at mc step %i!!! %s!!!", action_collection_name[action_list[todo].action_id], action_list[todo].action_id, action_list[todo].action_data_in, (res==ERR_HISTORY_OVERFLOW? "history" : "state"), step_number, (exit_upon_overflow? "Stopping the MC process" : "Resetting the state of the system"));
+     logs_WriteError("Action %s [id = %i] with action_data_in %i caused %s overflow at mc step %i!!! %s!!!\n", action_collection_name[action_list[todo].action_id], action_list[todo].action_id, action_list[todo].action_data_in, (res==ERR_HISTORY_OVERFLOW? "history" : "state"), step_number, (exit_upon_overflow? "Stopping the MC process" : "Resetting the state of the system"));
+     print_action_history();
      if(exit_upon_overflow)
       exit(EXIT_FAILURE);
      ns = 0;
@@ -217,7 +219,7 @@ void  print_action_history()
  logs_Write(0, "\nAction history at step %i:", step_number);
  for(int ins=0; ins<=ns; ins++)
   if(action_history[ins].action_id>=0 && action_history[ins].action_id<=action_collection_size)
-   logs_Write(0, "ins=%i, action \"%s\"(id=%i), action_data_in = %i", ins, action_collection_name[action_history[ins].action_id], action_history[ins].action_id, action_history[ins].action_data_in);
+   logs_Write(0, "\tins=%02i,\t action \"%20s\"(id=%i),\t action_data_in = %+03i", ins, action_collection_name[action_history[ins].action_id], action_history[ins].action_id, action_history[ins].action_data_in);
   else
    logs_WriteError("ins=%i, action id=%i is out of range...", ins, action_history[ins].action_id);
  logs_Write(0, "");      

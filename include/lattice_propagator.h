@@ -16,11 +16,11 @@ typedef struct
  double      mass_sq;       //Squared mass
 } t_lat_propagator;
 
-void    init_lat_propagator(t_lat_propagator* P, int allocate, double mass_sq);
+void    init_lat_propagator(t_lat_propagator* P, double mass_sq, double norm_factor);
 void    free_lat_propagator(t_lat_propagator* P);
 
 double  lat_momentum_sq(int *m);
-double  lat_propagator(int* m, double mass_sq);
+double  lat_propagator(int* m, double mass_sq, double norm_factor);
 
 void    rand_momentum(t_lat_propagator* P, int* m);
 

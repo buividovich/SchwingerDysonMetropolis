@@ -6,24 +6,30 @@
 
 $counter = 0;
 
-while(0==0 && $counter<1)
+while(0==0 || $counter<1)
 {
  for($i=0; $i<scalar(@lambdas); $i++)
  {
   $lambda = $lambdas[$i];
-  $alpha  = $lambda/8.0;
+  
+  $alpha  = 1.0*($lambda/8.0);
+  $cc     = 1.0;
+  $NN     = 0.5;
+  
   #system("G:\\LAT\\sd_metropolis\\bin\\stereo_sm.exe --lambda $lambdas[$i] --alpha $alphas[$i] --average-seq-len 1.5 --average-num-seq 1.1 --no-stack-check --max-alpha-order 7 --prod-mc-steps 10000000 --DIM 2 --LT 32 --LS 32 --data-dir ./data/stereo_sm --logs-noise-level 1 ");
   system("G:\\LAT\\sd_metropolis\\bin\\stereo_sm.exe --logs-noise-level 1 --exit-upon-overflow \
   --lambda              $lambda             \
   --alpha               $alpha              \
-  --cc                  1.0                 \
-  --NN                  1.0                 \
-  --max-order           9                   \
+  --cc                  $cc                 \
+  --NN                  $NN                 \
+  --max-order           11                  \
   --number-mc-steps     20000000            \
   --DIM                 2                   \
   --LT                  32                  \
   --LS                  32                  \
-  --data-dir            ./data/stereo_sm/   ");
+  --data-dir            ./data/stereo_sm/   \
+  --save-sampling-hist                      \
+  --save-correlators                        ");
  };
  $counter ++;
 };
