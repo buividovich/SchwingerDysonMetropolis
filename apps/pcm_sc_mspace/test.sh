@@ -1,6 +1,6 @@
 while true
 do
- G:\\LAT\\sd_metropolis\\bin\\sc_sm.exe --logs-noise-level 1 --exit-upon-overflow \
+ G:\\LAT\\sd_metropolis\\bin\\pcm_sc_mspace.exe --logs-noise-level 1 --exit-upon-overflow \
   --lambda              4.0                 \
   --meff-sq            -1.0                 \
   --alpha               0.25                \

@@ -82,7 +82,7 @@ void init_parameters()
   sigma = 1.0;
  
  if(strlen(data_dir)==0)
-  sprintf(data_dir, "./data/sc_sm/");
+  sprintf(data_dir, "./data/pcm_sc_mspace/");
  if(strlen(suffix)==0)
   largeN_QFT_suffix(suffix);
   
