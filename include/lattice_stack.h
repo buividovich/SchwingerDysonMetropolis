@@ -16,7 +16,17 @@ typedef struct
  int*   len;         //seq_length[i] is the length of i'th sequence in the stack
  int    top;         //Number of sequences in the stack
  int    nel;         //Total number of elements in the stack
-} t_lat_stack;
+} t_lat_momentum_stack;
+
+typedef struct 
+{
+ int max_nel;
+ int* stack;
+ int* start;
+ int* len;
+ int  top;
+ int  nel;       
+} t_lat_coordinate_stack;
 
 //Some useful macro for addressing stack elements
 //_S is the stack, _i is the number of element in the topmost sequence, 0 is the topmost element (first element in the sequence), 1 is the next element etc.
@@ -24,9 +34,12 @@ typedef struct
 #define STACK_EL(_S, _i)      (_S).stack[(_S).start[(_S).top - 1] + (_S).len[(_S).top - 1] - (_i) - 1]
 #define STACK_EL_PREV(_S, _i) (_S).stack[(_S).start[(_S).top - 2] + (_S).len[(_S).top - 2] - (_i) - 1]
 
-void init_lat_stack(t_lat_stack* lat_stack, int dim, int max_nel);
-void free_lat_stack(t_lat_stack* lat_stack);
+void init_lat_momentum_stack(t_lat_momentum_stack* lat_stack, int dim, int max_nel);
+void free_lat_momentum_stack(t_lat_momentum_stack* lat_stack);
 
-int   check_stack_consistency(t_lat_stack* lat_stack, const char* stack_name);
+void init_lat_coordinate_stack(t_lat_coordinate_stack* lat_stack, int max_nel);
+void free_lat_coordinate_stack(t_lat_coordinate_stack* lat_stack);
+
+int   check_stack_consistency(t_lat_momentum_stack* lat_stack, const char* stack_name);
 
 #endif

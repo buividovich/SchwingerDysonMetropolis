@@ -22,8 +22,9 @@ int main(int argc, char *argv[])
  ansi_colors = 1;
  print_errors_to_stderr = 0;
   
- logs_Write(0, "\n\nDIAGRAMMATIC MONTE-CARLO FOR SU(N) SIGMA MODEL IN THE PLANAR LIMIT - BASED ON THE STRONG-COUPLING EXPANSION\n");
- 
+ logs_Write(0, "\n\nDIAGRAMMATIC MONTE-CARLO FOR SU(N) SIGMA MODEL IN THE PLANAR LIMIT");
+ logs_Write(0, "BASED ON THE STRONG-COUPLING EXPANSION IN MOMENTUM SPACE\n");
+
  init_rand(time(NULL));
  
  parse_command_line_options(argc, argv);

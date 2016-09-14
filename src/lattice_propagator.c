@@ -112,7 +112,7 @@ void    add3momenta(int* m, int* m1, int* m2, int* m3)
   m[mu] = m1[mu] + m2[mu] + m3[mu];
 }
 
-int   check_momentum_conservation(t_lat_stack* lat_stack, const char* stack_name)
+int   check_momentum_conservation(t_lat_momentum_stack* lat_stack, const char* stack_name)
 {
  int iseq, i, mu, res_seq, res = 1;
  

@@ -7,7 +7,6 @@
 
 #include <sd_metropolis.h>
 #include <square_lattice.h>
-#include <lattice_propagator.h>
 
 #include "parameters.h"
 #include "actions.h"
@@ -22,7 +21,8 @@ int main(int argc, char *argv[])
  ansi_colors = 1;
  print_errors_to_stderr = 0;
   
- logs_Write(0, "\n\nDIAGRAMMATIC MONTE-CARLO FOR SU(N) SIGMA MODEL IN THE PLANAR LIMIT - BASED ON THE STRONG-COUPLING EXPANSION\n");
+ logs_Write(0, "\n\nDIAGRAMMATIC MONTE-CARLO FOR SU(N) SIGMA MODEL IN THE PLANAR LIMIT");
+ logs_Write(0, "BASED ON THE STRONG-COUPLING EXPANSION IN THE COORDINATE SPACE\n");
  
  init_rand(time(NULL));
  
@@ -50,9 +50,7 @@ int main(int argc, char *argv[])
  
  free_metropolis();
  free_actions();
- 
- if(resummation)
- free_lat_propagator(&P);
+
  lat_free();
  
  return 0;

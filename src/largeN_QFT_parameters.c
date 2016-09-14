@@ -10,7 +10,6 @@ int    max_order         = 1;
 double alpha               =   1.0;                    //Rescaling of observables according to the order
 double cc                  =   1.0;                    //Rescaling of observables according to the number of fields in the correlator
 double NN                  =   1.0;                    //Overall rescaling of observables, also genus-dependent
-int    max_stack_nel       =   2;            //Maximal number of elements in the stack characterizing the system state
 int    check_stack         =   0;
 //Output parameters
 char   data_dir[512]       =   "";           //Directory for automatically named data files
@@ -28,7 +27,6 @@ void                   print_largeN_QFT_parameters()
  logs_Write(0, "\tALGORITHMIC PARAMETERS OF A GENERIC SIMULATION OF LARGE-N QFT");
  logs_WriteParameter(0,                                    "cc",    "%2.4E",      cc);
  logs_WriteParameter(0,                                    "NN",    "%2.4E",      NN);
- logs_WriteParameter(0,      "Max. no of elements in the stack",       "%i",      max_stack_nel);
  logs_WriteParameter(0, "Check stack consistency at every step",       "%s",      (check_stack? "YES" : "NO"));
  logs_Write(0, "\tOUTPUT PARAMETERS");
  logs_WriteParameter(0,                        "Data directory",       "%s",      data_dir);

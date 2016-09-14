@@ -67,30 +67,23 @@ int parse_command_line_options(int argc, char **argv)
 void init_parameters()
 {
  beta = 1.0/lambda;
- if(!resummation)
-  meff_sq = -2.0*(double)(DIM);
- 
- mass2 = lambda + meff_sq;     
- 
- init_lattice();    
- if(resummation)
- {
-  init_lat_propagator(&P, mass2, lambda);
-  sigma = P.sigma;
- }
- else
-  sigma = 1.0;
- 
+ /*if(!resummation)
+  meff_sq = -2.0*(double)(DIM);*/
+
+ mass2 = lambda + meff_sq;
+
+ init_lattice();
+
  if(strlen(data_dir)==0)
-  sprintf(data_dir, "./data/pcm_sc_mspace/");
+  sprintf(data_dir, "./data/pcm_sc_cspace/");
  if(strlen(suffix)==0)
   largeN_QFT_suffix(suffix);
-  
- if(resummation) 
-  snprintf(&(suffix[strlen(suffix)]), 512, "_rsm"); 
- 
+
+ if(resummation)
+  snprintf(&(suffix[strlen(suffix)]), 512, "_rsm");
+
  if(strlen(label)>0)
-  snprintf(&(suffix[strlen(suffix)]), 512, "_%s", label); 
+  snprintf(&(suffix[strlen(suffix)]), 512, "_%s", label);
 }
 
 void print_parameters()
@@ -108,12 +101,6 @@ void print_parameters()
  logs_WriteParameter(0,      "Resumming the kinetic term?",       "%s", (resummation?        "YES" : "NO"));
  logs_WriteParameter(0,  "Saving the sampling histograms?",       "%s", (save_sampling_hist? "YES" : "NO"));
  logs_WriteParameter(0,          "Saving the correlators?",       "%s", (save_correlators?   "YES" : "NO"));
- 
- if(resummation)
- {
-  logs_Write(0, "\tPARAMETERS OF LATTICE PROPAGATOR");
-  logs_WriteParameter(0,            "Sigma", "%2.4E", P.sigma);
-  logs_WriteParameter(0,     "Mass squared", "%2.4E", P.mass_sq);
- };
+  
  logs_Write(0, "\n"); 
 }

@@ -34,6 +34,6 @@ void     addto2momenta(int* m, int s1, int* m1, int s2, int* m2); //m += s1*m1 +
 void    add2momenta(int* m, int* m1, int* m2);          //m = m1 + m2
 void    add3momenta(int* m, int* m1, int* m2, int* m3); //m = m1 + m2 + m3
 
-int     check_momentum_conservation(t_lat_stack* lat_stack, const char* stack_name);
+int     check_momentum_conservation(t_lat_momentum_stack* lat_stack, const char* stack_name);
 
 #endif

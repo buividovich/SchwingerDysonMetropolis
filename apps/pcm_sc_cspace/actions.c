@@ -1,22 +1,8 @@
 #include "actions.h"
 
-t_lat_stack      X; //This stack is the current state of the system
-t_lat_stack      H; //This stack will contain the data related to the sequence of actions
+t_lat_coordinate_stack      X; //This stack is the current state of the system
 
 int  beta_order         = 0; 
-
-t_lat_propagator P;
-
-void my_rand_momentum(int* m)
-{
- if(resummation)
-  rand_momentum(&P, m);
- else
- {
-  for(int mu=0; mu<DIM; mu++)
-   m[mu] = rand_int(lat_size[mu]);
- }; 
-}
 
 void init_actions()
 {
@@ -30,7 +16,7 @@ void init_actions()
  ADD_TO_ACTION_COLLECTION(            create, 0);
  ADD_TO_ACTION_COLLECTION(          add_line, 1); 
  ADD_TO_ACTION_COLLECTION(              join, 2);
- ADD_TO_ACTION_COLLECTION(  exchange_momenta, 3);
+ ADD_TO_ACTION_COLLECTION(      join_contact, 3);
  ADD_TO_ACTION_COLLECTION(            vertex, 4);
  if(!resummation)
   ADD_TO_ACTION_COLLECTION(      random_walk, 5);
@@ -38,16 +24,14 @@ void init_actions()
  state_initializer       = &action_create_do;
  action_fetcher          = &my_action_fetcher;
  
- //Initialize the lattice stack
- init_lat_stack(&X, DIM, 2*(max_order+1));
- init_lat_stack(&H, DIM, 3*max_order    );
+ //Initialize the lattice stack with sequences
+ init_lat_coordinate_stack(&X, 2*(max_order+1));
 }
 
 void free_actions()
 {
- free_lat_stack(&X);
- free_lat_stack(&H);
- 
+ free_lat_coordinate_stack(&X);
+
  SAFE_FREE(action_collection_do);
  SAFE_FREE(action_collection_undo);
  SAFE_FREE(action_collection_amplitude);
@@ -60,9 +44,9 @@ void free_actions()
 DECLARE_ACTION_AMPLITUDE(create)
 {
  int new_eff_order = (X.nel/2 + beta_order - 1) + 1;
- if((data_in==NULL) || ((*data_in)<0) || new_eff_order <= max_order)
-  return sigma/(NN*cc);
- return 0.0; 
+ if(new_eff_order <= max_order)
+  return 1.0/(NN*cc);
+ return 0.0;
 }
 
 DECLARE_ACTION_DO(create)
@@ -71,8 +55,6 @@ DECLARE_ACTION_DO(create)
  {
   X.top  = 0; //If called with NULL, should completely reset the state
   X.nel  = 0;
-  H.top  = 0;
-  H.nel  = 0;
   beta_order     = 0;
  };
  
@@ -83,8 +65,8 @@ DECLARE_ACTION_DO(create)
  X.top ++;
  X.nel += 2;
  
- my_rand_momentum(STACK_EL(X, 0));
- invert_momentum(  STACK_EL(X, 1), STACK_EL(X, 0));
+ STACK_EL(X, 0) = rand_int(lat_vol);
+ STACK_EL(X, 1) = STACK_EL(X, 0);
  
  return ACTION_SUCCESS; 
 }
@@ -104,7 +86,7 @@ DECLARE_ACTION_AMPLITUDE(add_line)
 {
  int new_eff_order = (X.nel/2 + beta_order - 1) + 1;
  if(new_eff_order <= max_order)
-  return 2.0*sigma/cc;
+  return 2.0/cc;
  return 0.0; 
 }
 
@@ -121,17 +103,17 @@ DECLARE_ACTION_DO(add_line)
  {
   //Shift the momentum sequence
   for(int i=0; i<X.len[X.top-1]-2; i++)
-   assign_momentum(STACK_EL(X, i), STACK_EL(X, i+2) );
-  assign_momentum(STACK_EL(X, X.len[X.top-1]-2), STACK_EL(X, 0));
+   STACK_EL(X, i) = STACK_EL(X, i+2);
+  STACK_EL(X, X.len[X.top-1]-2) = STACK_EL(X, 0);
  };  
- 
- my_rand_momentum(STACK_EL(X, 0));
+
+ STACK_EL(X, 0) = rand_int(lat_vol);
  
  if((*data_in)==1)
-  invert_momentum(STACK_EL(X, 1), STACK_EL(X, 0));
+  STACK_EL(X, 1) = STACK_EL(X, 0);
  
  if((*data_in)==0)
-  invert_momentum(STACK_EL(X, X.len[X.top-1]-1), STACK_EL(X, 0)); 
+  STACK_EL(X, X.len[X.top-1]-1) = STACK_EL(X, 0); 
  
  return ACTION_SUCCESS;
 }
@@ -144,9 +126,9 @@ DECLARE_ACTION_UNDO(add_line)
  if((*data_in)==0)
  {
   //Back-shifting the sequence of momenta
-  assign_momentum(STACK_EL(X,0), STACK_EL(X, X.len[X.top-1]-2));
+  STACK_EL(X,0) = STACK_EL(X, X.len[X.top-1]-2);
   for(int i=X.len[X.top-1]-1; i>=2; i--)
-   assign_momentum(STACK_EL(X, i), STACK_EL(X, i-2) );
+   STACK_EL(X, i) = STACK_EL(X, i-2);
  };
    
  X.len[X.top-1] -= 2;
@@ -158,11 +140,11 @@ DECLARE_ACTION_UNDO(add_line)
 /************************** Join two sets of lines **********************/
 DECLARE_ACTION_AMPLITUDE(join)
 {
- if(data_in==NULL || (*data_in)<0 || X.top>1) //We can join two sequences if there are more than two elements in the stack
+ if(X.top>1) //We can join two sequences if there are more than two elements in the stack
  {
   int new_eff_order = (X.nel/2 + beta_order - 1) + 1;
   if(new_eff_order <= max_order)
-   return NN*sigma/cc;
+   return NN/cc;
  };
  return 0.0;
 }
@@ -181,10 +163,10 @@ DECLARE_ACTION_DO(join)
  
  //Shift and Exchange the momenta in the ex-topmost sequence
  for(int i=0; i<(*data_in); i++)
-  assign_momentum(STACK_EL(X, i), STACK_EL(X,i+2));
- assign_momentum(STACK_EL(X, (*data_in)), STACK_EL(X, 0));
- my_rand_momentum(STACK_EL(X, 0));
- invert_momentum(STACK_EL(X, (*data_in)+1), STACK_EL(X, 0));
+  STACK_EL(X, i) = STACK_EL(X,i+2);
+ STACK_EL(X, (*data_in)) = STACK_EL(X, 0);
+ STACK_EL(X, 0) = rand_int(lat_vol);
+ STACK_EL(X, (*data_in)+1) = STACK_EL(X, 0);
  
  return ACTION_SUCCESS;
 }
@@ -194,12 +176,12 @@ DECLARE_ACTION_UNDO(join)
  RETURN_IF_FALSE(                        (*data_in) >= 2, ERR_WRONG_DATA);
  RETURN_IF_FALSE(X.len[X.top-1] >= ((*data_in) + 2) +  2, ERR_WRONG_STATE);
  
- //First bringing the topmost sequence into the form which is easy to split = {_, _, p1, q1, ..., p_m, q_m, pt_1, qt_1, ..., pt_n, qt_n}
- assign_momentum(STACK_EL(X, 0), STACK_EL(X, (*data_in))); //now we have {p1, q1, ..., p_m, q_m, _, _, ...}
+ //First bringing the topmost sequence into the form which is easy to split = {_, _, x1, y1, ..., p_m, q_m, pt_1, qt_1, ..., pt_n, qt_n}
+ STACK_EL(X, 0) = STACK_EL(X, (*data_in)); //now we have {x1, y1, ..., x_m, y_m, _, _, ...}
  
  //Shifting by two elements
  for(int i=(*data_in)+1; i>=2; i--)
-  assign_momentum(STACK_EL(X, i), STACK_EL(X,i-2));
+  STACK_EL(X, i) = STACK_EL(X,i-2);
  
  X.len[X.top-1] -= ((*data_in) + 2);
  X.len[X.top]    = (*data_in);
@@ -212,14 +194,14 @@ DECLARE_ACTION_UNDO(join)
 }
 
 /************************** Join two sets of lines **********************/
-DECLARE_ACTION_AMPLITUDE(exchange_momenta)
+DECLARE_ACTION_AMPLITUDE(join_contact)
 {
- if(data_in==NULL || (*data_in)<0 || X.top>1) //We can join two sequences if there are more than two elements in the stack
-  return -1.0*NN*sigma;
+ if(X.top>1 && STACK_EL(X, 0) == STACK_EL_PREV(X, 0) ) //We can join two sequences if there are more than two elements in the stack
+  return -1.0*NN;
  return 0.0;
 }
 
-DECLARE_ACTION_DO(exchange_momenta)
+DECLARE_ACTION_DO(join_contact)
 {
  RETURN_IF_FALSE(                          X.top>1, ERR_WRONG_STATE);
  
@@ -231,36 +213,15 @@ DECLARE_ACTION_DO(exchange_momenta)
  (*data_in) = X.len[X.top-1];
  
  X.top --;
-  
- //Save p_1 to the history stack
- H.start[ H.top] = (H.top>0? H.start[H.top-1] + H.len[H.top-1] : 0);
- H.len[   H.top] = 1; //We push just one momentum on the top of the stack
- H.top ++;
- H.nel += 1;
- assign_momentum(STACK_EL(H, 0), STACK_EL(X, 0));
- 
- //Now flip the momenta
- addto_momentum(STACK_EL(X, (*data_in)), +1, STACK_EL(X, 0));
- my_rand_momentum(STACK_EL(X, 0));
- addto_momentum(STACK_EL(X, (*data_in)), -1, STACK_EL(X, 0)); 
  
  return ACTION_SUCCESS;
 }
 
-DECLARE_ACTION_UNDO(exchange_momenta)
+DECLARE_ACTION_UNDO(join_contact)
 {
  RETURN_IF_FALSE(                   (*data_in) >= 2, ERR_WRONG_DATA);
  RETURN_IF_FALSE(X.len[X.top-1] >= ((*data_in) + 2), ERR_WRONG_STATE);
- 
-  //First bringing the sequences back to the form p1, q1, ..., p_m, q_m, pt_1, pt_2, ..., qt_1, qt_2
- addto_momentum(STACK_EL(X, (*data_in)), +1, STACK_EL(X, 0));
- 
- assign_momentum(STACK_EL(X, 0), STACK_EL(H, 0));
- H.top --;
- H.nel --;
-
- addto_momentum(STACK_EL(X, (*data_in)), -1, STACK_EL(X, 0));
- 
+  
  //And now split the sequences
  X.len[X.top-1] -= (*data_in);
  X.start[X.top] = X.start[X.top-1] + X.len[X.top-1];
@@ -275,41 +236,20 @@ DECLARE_ACTION_UNDO(exchange_momenta)
 /*************************** Create new vertex ****************************/
 DECLARE_ACTION_AMPLITUDE(vertex)
 {
- if(X.len[X.top-1]>=4)
+ if(X.len[X.top-1]>=4 && (STACK_EL(X, 0)==STACK_EL(X, 2)))
  {
-  if(resummation)
-  {
-   int    Q[4];
-   add3momenta(Q, STACK_EL(X, 0), STACK_EL(X, 1), STACK_EL(X, 2));
-   double res = lat_propagator(Q, mass2, lambda)*(lat_momentum_sq(STACK_EL(X, 1)) + meff_sq); 
-   return cc*alpha*res;
-  }
-  else
-  {
-   return cc*alpha*(lat_momentum_sq(STACK_EL(X, 1)) + meff_sq); //TODO: potential speedup here if custom kinetic term
-  }; 
- };
- 
+  (*data_in) = are_neighbors(STACK_EL(X, 0), STACK_EL(X, 1));
+  if((*data_in)>=0) 
+   return -cc*alpha*lat_vol;
+ }; 
  return 0.0;
 }
 
 DECLARE_ACTION_DO(vertex)
 {
- RETURN_IF_FALSE(          X.len[X.top-1]>=4, ERR_WRONG_STATE);
- RETURN_IF_FALSE(         H.nel<=H.max_nel-2, ERR_HISTORY_OVERFLOW);
- 
- //Push the momenta which are being joined into the H(istory)stack
- H.start[ H.top] = (H.top>0? H.start[H.top-1] + H.len[H.top-1] : 0);
- H.len[   H.top] = 2; //We push a pair of momenta on the top of the stack
- H.top ++;
- H.nel += 2;
- 
- assign_momentum(STACK_EL(H, 0), STACK_EL(X, 0)); //p_1
- assign_momentum(STACK_EL(H, 1), STACK_EL(X, 1)); //q_1
+ RETURN_IF_FALSE(                 X.len[X.top-1]>=4, ERR_WRONG_STATE);
+ RETURN_IF_FALSE( (*data_in)>=0 && (*data_in)<2*DIM, ERR_WRONG_DATA);
   
- //Now modify the stack
- addto2momenta(STACK_EL(X, 2), +1, STACK_EL(X, 1), +1, STACK_EL(X, 0)); //p2 -> p2 + p1 + q1
- 
  X.len[X.top-1] -= 2;
  X.nel          -= 2;
  
@@ -320,20 +260,15 @@ DECLARE_ACTION_DO(vertex)
 
 DECLARE_ACTION_UNDO(vertex)
 {
- RETURN_IF_FALSE(             H.top>0, ERR_WRONG_STATE);
- RETURN_IF_FALSE(   H.len[H.top-1]==2, ERR_WRONG_STATE);
+ RETURN_IF_FALSE( (*data_in)>=0 && (*data_in)<2*DIM, ERR_WRONG_DATA);
  
  X.len[X.top-1] += 2;
  X.nel          += 2;
  
- //Pop the momenta incoming to the vertex from the H(istory)stack
- assign_momentum(STACK_EL(X, 0), STACK_EL(H, 0));
- assign_momentum(STACK_EL(X, 1), STACK_EL(H, 1));
- H.top --;
- H.nel -= 2;
+ //Restore the original sequence of coordinates
+ STACK_EL(X, 0) = STACK_EL(X, 2);
+ STACK_EL(X, 1) = ((*data_in)<DIM? lat_shift_fwd(STACK_EL(X, 0), (*data_in)) : lat_shift_bwd(STACK_EL(X, 0), (*data_in)-DIM) );
 
- addto2momenta(STACK_EL(X, 2), -1, STACK_EL(X, 0), -1, STACK_EL(X, 1)); //p2 -> p2 - p1 - q1
- 
  beta_order --;
  
  return ACTION_SUCCESS;
@@ -344,19 +279,33 @@ DECLARE_ACTION_AMPLITUDE(random_walk)
 {
  int new_eff_order = (X.nel/2 + beta_order - 1) + 1;
  if(new_eff_order<=max_order)
-  return -alpha*(lat_momentum_sq(STACK_EL(X, 0)) + meff_sq);
+  return alpha*(double)(2*DIM);
  return 0.0; 
 }
 
 DECLARE_ACTION_DO(random_walk)
 {
- beta_order ++;  
+ (*data_in) = rand_int(2*DIM);
+ 
+ if((*data_in)<DIM)
+  STACK_EL(X, 0) = lat_shift_fwd(STACK_EL(X, 0), (*data_in));
+ else
+  STACK_EL(X, 0) = lat_shift_bwd(STACK_EL(X, 0), (*data_in)-DIM);
+ beta_order ++; 
+ 
  return ACTION_SUCCESS;
 }
 
 DECLARE_ACTION_UNDO(random_walk)
 {
+ RETURN_IF_FALSE( (*data_in)>=0 && (*data_in)<2*DIM, ERR_WRONG_DATA);
+ 
+ if((*data_in)<DIM)
+  STACK_EL(X, 0) = lat_shift_bwd(STACK_EL(X, 0), (*data_in));
+ else
+  STACK_EL(X, 0) = lat_shift_fwd(STACK_EL(X, 0), (*data_in)-DIM);
  beta_order --;
+
  return ACTION_SUCCESS;
 }
 
@@ -366,22 +315,17 @@ int my_action_fetcher(t_action_data** action_list, double** amplitude_list, int 
  int nact = 0, adata = 0;
  double ampl;
  
- logs_Write((step_number%mc_reporting_interval==0? 1 : 2), "Step %08i:\t X.top = % 5i, X.len[X.top-1] = % 5i,  X.nel = % 5i, H.top = % 5i, H.nel = % 5i, beta_order = % 3i, ns = % 3i", step_number, X.top, X.len[X.top-1], X.nel, H.top, H.nel, beta_order, ns);
+ logs_Write((step_number%mc_reporting_interval==0? 1 : 2), "Step %08i:\t X.top = % 5i, X.len[X.top-1] = % 5i,  X.nel = % 5i, beta_order = % 3i, ns = % 3i", step_number, X.top, X.len[X.top-1], X.nel, beta_order, ns);
  
- if(check_stack)
- {
-  check_stack_consistency(    &X, "X");
-  check_stack_consistency(    &H, "H");
-  check_momentum_conservation(&X, "X");
- }; 
+ //if(check_stack)
+ // check_stack_consistency(    &X, "X"); TODO: still implement for debugging purposes
  
  FETCH_ACTION(            create, 0, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
  FETCH_ACTION(          add_line, 1, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
  FETCH_ACTION(              join, 2, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
- FETCH_ACTION(  exchange_momenta, 3, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
+ FETCH_ACTION(      join_contact, 3, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
  FETCH_ACTION(            vertex, 4, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
- if(!resummation)
-  FETCH_ACTION(      random_walk, 5, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
+ FETCH_ACTION(       random_walk, 5, (*action_list), (*amplitude_list), list_length, nact, adata, ampl);
  
  return nact;
 }

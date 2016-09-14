@@ -87,7 +87,7 @@ void init_parameters()
   largeN_QFT_suffix(suffix);
   
  if(resummation) 
-  snprintf(&(suffix[strlen(suffix)]), 512, "_rsm"); 
+  snprintf(&(suffix[strlen(suffix)]), 512, "_m%2.2lf_rsm", meff_sq); 
  
  if(strlen(label)>0)
   snprintf(&(suffix[strlen(suffix)]), 512, "_%s", label); 
