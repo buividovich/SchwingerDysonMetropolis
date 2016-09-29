@@ -240,7 +240,7 @@ DECLARE_ACTION_AMPLITUDE(vertex)
  {
   (*data_in) = are_neighbors(STACK_EL(X, 0), STACK_EL(X, 1));
   if((*data_in)>=0) 
-   return -cc*alpha*lat_vol;
+   return -coord_factor*cc*alpha*lat_vol;
  }; 
  return 0.0;
 }

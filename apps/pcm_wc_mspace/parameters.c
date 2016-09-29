@@ -1,8 +1,9 @@
 #include "parameters.h"
 
 //Some switches
-int    save_sampling_hist   =   0; //Whether to save the histogram of sampling in sectors of different n and order
-int    save_correlators     =   0;   //Whether to save correlators <gx gy>
+int    save_sampling_hist   =   0;  //Whether to save the histogram of sampling in sectors of different n and order
+int    save_correlators     =   0;  //Whether to save correlators <gx gy>
+int    save_metropolis_stat =   0;  //Whether to save the data on the performance of Metropolis algorithm
 
 //Useful calculable parameters
 double    stereo_alpha    = 0.0;  // -\lambda/8, expansion parameter...
@@ -11,9 +12,10 @@ static struct option long_options[] =
 {
  METROPOLIS_LONG_OPTIONS,
  LARGEN_QFT_LONG_OPTIONS,
- {    "save-sampling-hist",        no_argument,  &save_sampling_hist,   1},
- {      "save-correlators",        no_argument,    &save_correlators,   1},
- {                       0,                  0,                 NULL,   0}
+ {    "save-sampling-hist",        no_argument,    &save_sampling_hist,   1},
+ {      "save-correlators",        no_argument,      &save_correlators,   1},
+ {  "save-metropolis-stat",        no_argument,  &save_metropolis_stat,   1},
+ {                       0,                  0,                   NULL,   0}
 };
 
 static char my_short_option_list[] = "";
@@ -63,7 +65,7 @@ void init_parameters()
  stereo_alpha = -0.125*lambda;
  
  if(strlen(data_dir)==0)
-  sprintf(data_dir, "./data/stereo_sm/");
+  sprintf(data_dir, "./data/pcm_wc_mspace/");
  if(strlen(suffix)==0)
   largeN_QFT_suffix(suffix);
  
@@ -76,8 +78,9 @@ void print_parameters()
  logs_Write(0, "\n");
  print_metropolis_parameters();
  print_largeN_QFT_parameters();
- logs_WriteParameter(0,  "Saving the sampling histograms?",  "%s", (save_sampling_hist? "YES" : "NO"));
- logs_WriteParameter(0,          "Saving the correlators?",  "%s", (save_correlators?   "YES" : "NO"));
+ logs_WriteParameter(0,  "Saving the sampling histograms?",  "%s", (save_sampling_hist?     "YES" : "NO"));
+ logs_WriteParameter(0,          "Saving the correlators?",  "%s", (save_correlators?       "YES" : "NO"));
+ logs_WriteParameter(0,    "Saving Metropolis statistics?",  "%s", (save_metropolis_stat?   "YES" : "NO"));
  
  logs_Write(0, "\tPARAMETERS OF LATTICE PROPAGATOR");
  logs_WriteParameter(0,            "Sigma", "%2.4E", P.sigma);

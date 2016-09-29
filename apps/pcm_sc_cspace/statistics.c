@@ -17,7 +17,7 @@ t_observable_stat* init_observable_stat()
     my_observable_stat->G2[s][ao*lat_vol + x] = 0.0;
   }; 
  };
-
+ 
  my_observable_stat->nstat                  = 0;
  my_observable_stat->nstat_useless          = 0;
  my_observable_stat->actual_max_beta_order  = 0;
@@ -75,24 +75,18 @@ void process_observable_stat(t_observable_stat* stat) //It is assumed that proce
  if(scalar_file==NULL)
   logs_WriteError("Could not open the file %s for writing", scalar_filename);
   
- //Fixing the overall scale by the order 0 result for the unitarity 
- double order_zero_unitarity_num   = 0.0;
- order_zero_unitarity_num += (stat->G2[0][0] - stat->G2[1][0])/(double)(stat->nstat);
- 
- double normalization_factor = 1.0/order_zero_unitarity_num; 
-
  for(int bo=0; bo<=max_order; bo++)
  {
   double sml[2] = {0.0, 0.0};
   double sun[2] = {0.0, 0.0};
   for(int s=0; s<2; s++)
   {
-   sun[s] = normalization_factor*stat->G2[s][bo*lat_vol + 0]/(double)(stat->nstat);
+   sun[s] = stat->G2[s][bo*lat_vol + 0]/(double)(stat->nstat);
    sml[s] = 0.0;
    for(int mu=0; mu<DIM; mu++)
    {
-    sml[s] += normalization_factor*stat->G2[s][bo*lat_vol + lat_shift_fwd(0, mu)]/(double)(stat->nstat);
-    sml[s] += normalization_factor*stat->G2[s][bo*lat_vol + lat_shift_bwd(0, mu)]/(double)(stat->nstat);
+    sml[s] += stat->G2[s][bo*lat_vol + lat_shift_fwd(0, mu)]/(double)(stat->nstat);
+    sml[s] += stat->G2[s][bo*lat_vol + lat_shift_bwd(0, mu)]/(double)(stat->nstat);
    };
    sml[s] /= (double)(2*DIM);
   }; 
@@ -108,8 +102,7 @@ void process_observable_stat(t_observable_stat* stat) //It is assumed that proce
   if(scalar_file!=NULL)
    fprintf(scalar_file, "%i %+2.4E %+2.4E %+2.4E %+2.4E\n", bo, aun, spun, aml, spml);
   logs_Write(0, "Order %03i: link = %+2.4E (sp=%+2.2E), unitarity = %+2.4E (sp = %2.2E)", bo, aml, spml, aun, spun);
-  
- }; //End of loop over ao
+ }; //End of loop over bo
  
  if(scalar_file!=NULL)
   fclose(scalar_file);

@@ -21,14 +21,17 @@ t_action_data* action_list        = NULL; //List of currently possible actions a
 double*        amplitude_list     = NULL; //List of the amplitudes of currently possible actions
 double*        probability_list   = NULL; //List of the probabilities of currently possible actions
 int            action_list_length = 0;
+int*           stop               = NULL;
 
-void   init_metropolis()
+void   init_metropolis(int* stack_top_var)
 {
  step_number    = 0;
  ns             = 0;
  SAFE_MALLOC_IF_NULL(             nA,        double, (max_recursion_depth+1));
  SAFE_MALLOC_IF_NULL(          asign,           int, (max_recursion_depth+1));
  SAFE_MALLOC_IF_NULL( action_history, t_action_data, (max_recursion_depth+1));
+ 
+ stack_top = stack_top_var;
  
  init_metropolis_statistics();
  

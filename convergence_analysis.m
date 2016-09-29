@@ -37,3 +37,9 @@ ErrorListPlot[DataToPlot,PlotStyle->{col,PointSize[0.01]},PlotRange->{{0.0,All},
 ];
 (* Useful functions for formatting *)
 fsndig[x_,n_]:=ToString[PaddedForm[x,{n+2,n},NumberPadding->{"","0"}]];
+(* Column statistics *)
+PrintStatistics[data_,label_]:=Module[{mean,error},
+mean=Mean[data];
+error=StandardDeviation[data]/Sqrt[Length[data]-1];
+Print[label," = ",mean," +/- ",error];
+];

@@ -40,6 +40,8 @@ void free_lat_momentum_stack(t_lat_momentum_stack* lat_stack);
 void init_lat_coordinate_stack(t_lat_coordinate_stack* lat_stack, int max_nel);
 void free_lat_coordinate_stack(t_lat_coordinate_stack* lat_stack);
 
+void print_lat_coordinate_stack(const t_lat_coordinate_stack lat_stack);
+
 int   check_stack_consistency(t_lat_momentum_stack* lat_stack, const char* stack_name);
 
 #endif

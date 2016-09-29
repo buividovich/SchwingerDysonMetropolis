@@ -73,3 +73,15 @@ void free_lat_coordinate_stack(t_lat_coordinate_stack* lat_stack)
  SAFE_FREE(lat_stack->start);
  SAFE_FREE(lat_stack->len);
 }
+
+void print_lat_coordinate_stack(const t_lat_coordinate_stack lat_stack)
+{
+ printf("\n\t|");
+ for(int si=lat_stack.top-1; si>=0; si--)
+ {
+  for(int i=0; i<lat_stack.len[lat_stack.top-1]; i++)
+   printf("%i", STACK_EL(lat_stack, i));
+  printf("|"); 
+ };
+ printf("\n");
+}

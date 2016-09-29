@@ -83,8 +83,9 @@ extern int            ns;               //Counter of the sequence depth
 extern double*        nA;               //Contains the probability normalization factor on every step
 extern int*           asign;            //Reweighting signs of every configuration
 extern t_action_data* action_history;   //History of actions, elements up to ns are referenced
+int*                  stack_top;
 
-void  init_metropolis();
+void  init_metropolis(int* stack_top_var);
 void  free_metropolis();
 int   metropolis_step();
 

@@ -7,6 +7,8 @@ double                   msign    = 0.0; //Expectation value of the sign - also 
 int                        aac    = 0;
 double                     ans    = 0.0;
 int                     max_ns    = 0;   //Can remove upon debugging
+double                   astop    = 0.0;
+int                   max_stop    = 0;
 int                        nmc    = 0;
 int*            action_counter    = NULL;
 int*                ns_history    = NULL; //MC history of sequence lengths
@@ -27,6 +29,7 @@ double  mean_return_time          = 0.0;
 //These are the variables which are only set by process_mc_stat
 double acceptance_rate            = 0.0;
 double mean_recursion_depth       = 0.0;
+double mean_stack_top             = 0.0;
 double mean_nA                    = 0.0;
 double mean_sign                  = 0.0;
 
@@ -41,6 +44,8 @@ void init_metropolis_statistics()
  ans      =     0.0;
  max_ns   =     0;
  nmc      =     0;
+ astop    =     0.0;
+ max_stop =     0;
  
  SAFE_MALLOC_IF_NULL(action_counter, int, action_collection_size);
  for(int i=0; i<action_collection_size; i++)
@@ -72,6 +77,9 @@ void gather_mc_stat()
  ans   += (double)ns;
  anA   += nA[ns];
  dnA   += SQR(nA[ns]);
+ astop += (double)(*stack_top);
+ 
+ max_stop = MAX(max_stop, (*stack_top));
  
  max_ns = MAX(ns, max_ns);
  
@@ -95,6 +103,7 @@ void process_mc_stat()
  //Summarizing the post-run properties of the MC process
  acceptance_rate      = (double)aac/(double)nmc;
  mean_recursion_depth =         ans/(double)nmc;
+ mean_stack_top       =       astop/(double)nmc;
  mean_nA              =         anA/(double)nmc;
  mean_sign            =       msign/(double)nmc;
  mean_return_time     = (double)nmc/(double)n_returns;
@@ -103,10 +112,12 @@ void process_mc_stat()
  logs_WriteParameter(0,                                   "Acceptance rate",  "%2.4lf",            acceptance_rate);
  logs_WriteParameter(0,                              "Mean recursion depth",  "%2.4lf",            mean_recursion_depth);
  logs_WriteParameter(0,                              "Max. recursion depth",      "%i",            max_ns);
- logs_WriteParameter(0,                                           "Mean nA",  "%2.4lf",            mean_nA);
- logs_WriteParameter(0,                            "Max A rescaling factor",  "%2.4lf",            maxnA);
- logs_WriteParameter(0,                                 "Mean config. sign",  "%2.4lf",            mean_sign);
- logs_WriteParameter(0,                                  "Mean return time",  "%2.4lf",            mean_return_time);
+ logs_WriteParameter(0,                                    "Mean stack top",  "%2.4lf",            mean_stack_top);
+ logs_WriteParameter(0,                                    "Max. stack top",      "%i",            max_stop);
+ logs_WriteParameter(0,                                       "1 - Mean nA",  "%+2.4E",            1.0 - mean_nA);
+ logs_WriteParameter(0,                                            "Max nA",  "%2.4lf",            maxnA);
+ logs_WriteParameter(0,                                 "Mean config. sign",  "%+2.4E",            mean_sign);
+ logs_WriteParameter(0,                                  "Mean return time",   "%2.4E",            mean_return_time);
  logs_Write(0, "\n");
  
  int action_counter_total = 0;
@@ -120,6 +131,32 @@ void process_mc_stat()
   logs_Write(0, "   %30s [id = %i]: \t %2.4E \t (%02i%% of all actions, %i calls)", action_collection_name[i], i, act_prob, (int)(round(100.0*act_prob)), action_counter[i]);
  };
 }
+
+void save_mc_stat()
+{ 
+ char metropolis_stat_filename[512];
+ sprintf(metropolis_stat_filename, "%s/metropolis_stat_%s.dat", data_dir, suffix);
+ FILE* metropolis_stat_file = fopen(metropolis_stat_filename, "a");
+ if(metropolis_stat_file==NULL)
+ {
+  logs_WriteError("Could not open the file %s for writing", metropolis_stat_filename);
+  return;
+ }; 
+ 
+ fprintf(metropolis_stat_file, "%+2.4E ",  acceptance_rate);           //Col 1               
+ fprintf(metropolis_stat_file, "%+2.4E ",  mean_recursion_depth);      //Col 2
+ fprintf(metropolis_stat_file,   "%03i ",  max_ns);                    //Col 3
+ fprintf(metropolis_stat_file, "%+2.4E ",  mean_stack_top);            //Col 4
+ fprintf(metropolis_stat_file,   "%03i ",  max_stop);                  //Col 5
+ fprintf(metropolis_stat_file, "%+2.4E ",  1.0 - mean_nA);             //Col 6
+ fprintf(metropolis_stat_file, "%+2.4E ",  maxnA);                     //Col 7
+ fprintf(metropolis_stat_file, "%+2.4E ",  mean_sign);                 //Col 8
+ fprintf(metropolis_stat_file, "%+2.4E ",  mean_return_time);          //Col 9
+ 
+ fprintf(metropolis_stat_file, "\n");
+ fclose(metropolis_stat_file);
+} 
+ 
 
 void init_pplus_tuning()
 {

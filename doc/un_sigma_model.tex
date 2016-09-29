@@ -549,10 +549,12 @@ from which we immediately get
 
 Basic operations:
 \begin{description}
+  \item[Create single trace:] $\lrc{n_1, \ldots, n_m} \rightarrow \lrc{2, n_1, n_2, \ldots, n_m}$
+  \item[Create two traces:]
   \item[Insert line:] $\lrc{n_1, \ldots, n_m} \rightarrow \lrc{n_1 + 2, n_2, \ldots, n_m}$
-  \item[Merge two singlet operators:] $\lrc{n_1, \ldots, n_m} \rightarrow \lrc{n_1 + n_2 + 2, n_3, \ldots, n_m}$
+  \item[Merge two traces:] $\lrc{n_1, \ldots, n_m} \rightarrow \lrc{n_1 + n_2 + 2, n_3, \ldots, n_m}$
   \item[Create vertex:] $\lrc{n_1, \ldots, n_m} \rightarrow \lrc{n_1 - 2, n_2, \ldots, n_m}$
-  \item[Split singlet operator:] $\lrc{n_1, \ldots, n_m} \rightarrow \lrc{a, n_1, \ldots, n_{A-1}, n_A + 2 - a, n_{A+1}, \ldots, n_m}$
+  \item[Split single trace operator:] $\lrc{n_1, \ldots, n_m} \rightarrow \lrc{a, n_1, \ldots, n_{A-1}, n_A + 2 - a, n_{A+1}, \ldots, n_m}$
 \end{description}
 
 \begin{acknowledgments}

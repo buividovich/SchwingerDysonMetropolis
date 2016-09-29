@@ -20,8 +20,6 @@
  #include "test_stereo_vertex.h"
 #endif
 
-//A good set ob parameters: bin\stereo_sm.exe  --alpha 0.030 --average-seq-len 1.5 --average-num-seq 1.1 --no-stack-check --max-alpha-order 5 --prod-mc-steps 1000000 --DIM 2 --LT 16 --LS 16
-
 int main(int argc, char *argv[])
 {
  ansi_colors = 1;
@@ -36,7 +34,7 @@ int main(int argc, char *argv[])
  init_parameters();
  
  max_recursion_depth = 2*max_order;
- init_metropolis();
+ init_metropolis(&(X.top));
  
  t_observable_stat* obs_stat = init_observable_stat();
  
@@ -45,11 +43,13 @@ int main(int argc, char *argv[])
  logs_Write(0, "Running Metropolis for %i MC steps", number_mc_steps);
  for(int imc=0; imc<number_mc_steps; imc++)
  {
-  metropolis_step(imc);
+  metropolis_step();
   gather_observable_stat(obs_stat); 
  };
   
  process_mc_stat();
+ save_mc_stat();
+ 
  process_observable_stat(obs_stat);
  
  free_observable_stat(obs_stat);

@@ -1,7 +1,7 @@
 #include "actions.h"
 
-t_lat_stack      X; //This stack is the current state of the system
-t_lat_stack      H; //This stack will contain the data related to the sequence of actions
+t_lat_momentum_stack      X; //This stack is the current state of the system
+t_lat_momentum_stack      H; //This stack will contain the data related to the sequence of actions
 
 int  alpha_order         = 0; //This is necessary to make the full use of factorization
 
@@ -25,14 +25,14 @@ void init_actions()
  action_fetcher          = &my_action_fetcher;
  
  //Initialize the lattice stack
- init_lat_stack(&X, DIM, 2*(max_order+1));
- init_lat_stack(&H, DIM, 2*(max_order+1));
+ init_lat_momentum_stack(&X, DIM, 2*(max_order+1));
+ init_lat_momentum_stack(&H, DIM, 2*(max_order+1));
 }
 
 void free_actions()
 {
- free_lat_stack(&X);
- free_lat_stack(&H);
+ free_lat_momentum_stack(&X);
+ free_lat_momentum_stack(&H);
  
  SAFE_FREE(action_collection_do);
  SAFE_FREE(action_collection_undo);

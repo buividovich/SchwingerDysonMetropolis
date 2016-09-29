@@ -2,7 +2,7 @@
 # MinGW+MSYS are assumed for Windows
 
 CC		    :=	gcc
-CCFLAGS		:=	-std=gnu99 -Wall -pedantic -D NATIVE_COMPLEX
+CCFLAGS		:=	-std=gnu99 -Wall -pedantic
 
 ifeq ($(OS),Windows_NT)
  CCFLAGS	+=	-fmax-errors=2
@@ -30,7 +30,7 @@ CLUE_DIR  = ../clue
 
 #Include and source directories
 INC_DIRS := ./include
-CLUE_INC_DIRS := $(CLUE_DIR)/include $(CLUE_DIR)/complex
+CLUE_INC_DIRS := $(CLUE_DIR)/include
 SRC_DIRS = ./src
 
 #Some additional things which should be there for testing
@@ -38,10 +38,6 @@ ifeq ($(TESTS), 1)
  INC_DIRS += ./tests
  SRC_DIRS += ./tests
  CCFLAGS     +=  -DTESTS
-endif
-
-ifeq ($(OS),Windows_NT)
- CLUE_INC_DIRS	+=	$(CLUE_DIR)/complex/my_complex_sys
 endif
 
 INCLUDE	         := $(addprefix -I, $(INC_DIRS))
@@ -55,7 +51,7 @@ CLUE_INCLUDE_FILES := $(wildcard $(addsuffix /*.h, $(CLUE_INC_DIRS)))
 SRC_FILES := $(wildcard $(addsuffix /*.c, $(SRC_DIRS)))
 
 #Manually add some files from CLUE
-CLUE_SRC   = clue_logs.c rand_num_generators.c ranlxd.c square_lattice.c clue_io.c
+CLUE_SRC   = clue_logs.c rand_num_generators.c ranlxd.c square_lattice.c
 CLUE_SRC_FILES = $(addprefix $(CLUE_DIR)/src/, $(CLUE_SRC))
 
 #Object directory

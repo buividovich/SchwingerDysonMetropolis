@@ -15,7 +15,6 @@
 
 typedef struct 
 {
- double    astop;
  double*   Gx[2];
  double*   Gxy[2];
  int*      sampling_hist;

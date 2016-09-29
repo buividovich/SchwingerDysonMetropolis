@@ -9,6 +9,7 @@ int    resummation          =   0; //Whether to re-sum the kinetic "random walk"
 double beta                 =   0.0; // == 1/\lambda, strong-coupling expansion parameter
 double sigma                =   0.0; // Self-energy, is trivial without resummation
 double mass2                =   0.0;   //Squared mass determining the pole of the bare propagator
+double coord_factor         =   1.0;
 
 static struct option long_options[] =
 {
@@ -71,6 +72,13 @@ void init_parameters()
   meff_sq = -2.0*(double)(DIM);*/
 
  mass2 = lambda + meff_sq;
+ 
+ if(DIM==1 && LT==2)
+  coord_factor = 2.0;
+ if(DIM==2 && ((LT==2 && LS>2 ) || (LT>2 && LS==2)))
+  coord_factor = 2.0;
+ if(DIM==2 && LT==2 && LS==2)
+  coord_factor = 4.0;
 
  init_lattice();
 

@@ -64,23 +64,6 @@ void gather_observable_stat(t_observable_stat* stat)
 
 void process_observable_stat(t_observable_stat* stat) //It is assumed that process_mc_stat was already called!!!
 {
- double source_norm          = action_create_amplitude(NULL);
- logs_Write(0, "Source norm:\t %+2.6E", source_norm);
- double normalization_factor = source_norm/(1.0 - mean_nA);
- //logs_Write(0, "Normalization factor of multiple-trace correlators: %2.4E\n", normalization_factor);
- //normalization_factor = normalization_factor/(1.0 + normalization_factor);
- 
- logs_Write(0, "Normalization factor of factorized single-trace correlators: %2.4E\n", normalization_factor);
- logs_Write(0, "Total %i calls to gather(), %s%i useless (%2.2lf%%)", stat->nstat, ANSI_COLOR(red), stat->nstat_useless, 100.0*(double)stat->nstat_useless/(double)stat->nstat);
- 
- char mean_nA_filename[512];
- sprintf(mean_nA_filename, "%s/mean_nA_%s.dat", data_dir, suffix);
- FILE* mean_nA_file = fopen(mean_nA_filename, "a");
- if(mean_nA_file==NULL)
-  logs_WriteError("Could not open the file %s for writing", mean_nA_filename);
- fprintf(mean_nA_file, "%+2.8E\n", 1.0 - mean_nA);
- fclose(mean_nA_file);
-  
  logs_Write(0, "Collected data for G2 (up to alpha_order = %i):", stat->actual_max_alpha_order);
  
  double f = stereo_alpha;
@@ -108,9 +91,9 @@ void process_observable_stat(t_observable_stat* stat) //It is assumed that proce
   {
    char correlator_filename[512];
    sprintf(correlator_filename, "%s/Gxy_%s_o%i.dat", data_dir, suffix, ao);
-   correlator_file = fopen(correlator_filename, "a");
+   correlator_file = fopen(correlator_filename, "ab");
    if(correlator_file==NULL)
-    logs_WriteError("Could not open the file %s for writing", correlator_filename);
+    logs_WriteError("Could not open the file %s for binary appending", correlator_filename); 
   };  
   
   for(int s=0; s<2; s++)
@@ -148,16 +131,19 @@ void process_observable_stat(t_observable_stat* stat) //It is assumed that proce
   
   if(scalar_file!=NULL)
    fprintf(scalar_file, "%i %+2.4E %+2.4E %+2.4E %+2.4E\n", ao, aGx, spGx, aml, spml);
-  logs_Write(0, "Order %03i: Gx = %+2.4lf (sp=%+2.2lf), link = %+2.4lf (sp=%+2.2lf)", ao, aGx, spGx, aml, spml);
+  logs_Write(0, "Order %03i: Gx = %+2.4E (sp=%+2.2E), link = %+2.4E (sp=%+2.2E)", ao, aGx, spGx, aml, spml);
   
   if(save_correlators && correlator_file!=NULL)
   {
    for(int pt=0; pt<LT; pt++)
    {
     double aGxy  = sGxy[0][pt] - sGxy[1][pt];
-    double rGxy  = sGxy[0][pt] + sGxy[1][pt];
-    double spGxy = (fabs(rGxy)>1.0E-10? aGxy/rGxy : 0.0);
-    fprintf(correlator_file, "%i %+2.4E %+2.4E\n", pt, aGxy, spGxy);
+    //double rGxy  = sGxy[0][pt] + sGxy[1][pt]; //We do not need this so far...
+    //double spGxy = (fabs(rGxy)>1.0E-10? aGxy/rGxy : 0.0);
+    float buf    = (float)(aGxy);
+    int res = fwrite(&(buf), sizeof(float), 1, correlator_file);
+    if(res!=1)
+     logs_WriteError("Could not write binary data to the correlator file");
    };
    fclose(correlator_file);
   }; 

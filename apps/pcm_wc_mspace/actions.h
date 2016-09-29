@@ -8,8 +8,8 @@
 
 #include "parameters.h"
 
-extern t_lat_stack      X; //This stack is the current state of the system
-extern t_lat_stack      H; //This stack will contain the data related to the sequence of actions
+extern t_lat_momentum_stack      X; //This stack is the current state of the system
+extern t_lat_momentum_stack      H; //This stack will contain the data related to the sequence of actions
 
 extern int alpha_order;
 
