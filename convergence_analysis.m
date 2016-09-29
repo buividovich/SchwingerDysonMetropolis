@@ -1,42 +1,39 @@
 (* ::Package:: *)
 
 $HistoryLength=0;
-GetConvergenceData[fname_,ocol_,dcol_,add_,norm_,maxord_]:=Module[{oX,oX2,np,FData,i, io,Res,mX,eX},
-(* Exporting the data *)
-oX=Table[0,{io,1,maxord}];
-oX2=Table[0, {i0,1,maxord}];
-np=Table[0, {i0,1,maxord}];
-FData=Import[fname,"Table"];
-(*oXh=Table[{},{io,1,MaxOrder}];*)
-For[i=1,i<=Length[FData],i++,
-io=FData[[i,ocol]]+1;
-np[[io]]++;
-oX[[io]]+=FData[[i,dcol]];
-oX2[[io]]+=FData[[i,dcol]]^2;
+(* Useful function for formatting - double number with n digits after the comma *)
+fsndig[x_,n_]:=ToString[PaddedForm[x,{n+2,n},NumberPadding->{"","0"}]];
+(* Assuming that X are integers from 0 to xmax-1, calculate vevs and autocorrs *)
+XYCorrelatedDataStatistics::wrongdata = "Wrong number of data points provided: `1`";
+XYCorrelatedDataStatistics[data_,ycol_,xmax_]:=Module[{np,aX,cXX,ip,x,x1,x2},
+	np=Quotient[Length[data],xmax]; 
+	If[Mod[Length[data],xmax]!=0,Message[XYCorrelatedDataStatistics::wrongdata,Length[data]]];
+	aX = 1/np Sum[Table[data[[ip xmax + x+1,ycol]],{x,0,xmax-1}],{ip,0,np-1}];
+    cXX= 1/np Sum[Table[data[[ip xmax + x1+1,ycol]]data[[ip xmax + x2+1,ycol]],{x1,0,xmax-1},{x2,0,xmax-1}],{ip,0,np-1}] - KroneckerProduct[aX,aX];
+	{aX,cXX/(np-1)}
 ];
-Res={};
-For[io=1,io<=maxord,io++,
-If[np[[io]]>1,
-mX=oX[[io]]/np[[io]];
-eX=Sqrt[(oX2[[io]]/np[[io]]-mX^2)/(np[[io]]-1)];
-AppendTo[Res,{N[1/io],add +norm mX,norm eX}];
-];
-];
-Res
-];
-LinearTransformColumn[t_,c_,a_,b_]:=Module[{st},
-st=Transpose[t];
-st[[c]]=a+b  st[[c]];
-Transpose[st]
+(* Fitting with autocorrelation matrix taken into account *)
+FitCorrelatedData[x_,y_,cyy_,funcs_,arg_]:=Module[{nf,nd,pars,cyyi,y0,i,j,m,m1,m2,mFit,pcm},
+    nf = Length[funcs];
+    nd = Min[Length[x],Length[y],Min[Dimensions[cyy]]];
+	pars = Table[Symbol["p"<>ToString[i]],{i,1,nf}];
+    cyyi = Inverse[cyy];
+	y0   = Table[Sum[pars[[i]](funcs[[i]]/.{arg->x[[m]]}),{i,1,nf}],{m,1,nd}];
+	mFit = NMinimize[(y - y0).cyyi.(y-y0),pars];
+    pcm  = Table[Sum[(funcs[[i]]/.{arg->x[[m1]]})cyyi[[m1,m2]](funcs[[j]]/.{arg->x[[m2]]}),{m1,1,nd},{m2,1,nd}],{i,1,nf},{j,1,nf}];
+	{pars/.mFit[[2]],Inverse[pcm]}
 ];
 (* Useful functions for plotting *)
 Needs["ErrorBarPlots`"];
-PlotWithErrors[data_,col_]:=Module[{DataToPlot,i},
-DataToPlot=Table[{{data[[i,1]],data[[i,2]]},ErrorBar[data[[i,3]]]},{i,1,Length[data]}];
-ErrorListPlot[DataToPlot,PlotStyle->{col,PointSize[0.01]},PlotRange->{{0.0,All},All}]
+PlotWithErrors::wrongdata = "Lengths of x, y, and e columns not equal `1` `2` `3`";
+PlotWithErrors[x_,y_,e_,opts:OptionsPattern[]]:=Module[{DataToPlot,MinLength,i},
+	If[!(Length[x]==Length[y] && Length[y]==Length[e]),
+		Message[PlotWithErrors::wrongdata, Length[x],Length[y],Length[e]];
+	];
+	MinLength = Min[Min[Length[x],Length[y]],Length[e]];
+	DataToPlot=Table[{{x[[i]],y[[i]]},ErrorBar[e[[i]]]},{i,1,Length[x]}];
+	ErrorListPlot[DataToPlot,Evaluate[FilterRules[{opts},Options[ErrorListPlot]]]]
 ];
-(* Useful functions for formatting *)
-fsndig[x_,n_]:=ToString[PaddedForm[x,{n+2,n},NumberPadding->{"","0"}]];
 (* Column statistics *)
 PrintStatistics[data_,label_]:=Module[{mean,error},
 mean=Mean[data];

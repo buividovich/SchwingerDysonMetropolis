@@ -24,7 +24,7 @@ while(0==0 || $counter<1)
   --max-order           11                      \
   --number-mc-steps     20000000                \
   --DIM                 2                       \
-  --LT                  108                     \
+  --LT                  54                      \
   --LS                  108                     \
   --data-dir            ./data/pcm_wc_mspace/   \
   --save-correlators                            ");

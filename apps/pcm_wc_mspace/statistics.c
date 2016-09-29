@@ -10,13 +10,13 @@ t_observable_stat* init_observable_stat()
  
  for(int s=0; s<2; s++)
  {
-  SAFE_MALLOC(my_observable_stat->Gx[s],      double,       (max_order+1));
-  SAFE_MALLOC(my_observable_stat->Gxy[s],     double,    LT*(max_order+1));
+  SAFE_MALLOC(my_observable_stat->Gx[s],      double,                 (max_order+1));
+  SAFE_MALLOC(my_observable_stat->Gxy[s],     double, lat_size[DIM-1]*(max_order+1));
   for(int ao=0; ao<=max_order; ao++)
   {          
    my_observable_stat->Gx[s][ao] = 0.0;
-   for(int t=0; t<LT; t++)
-    my_observable_stat->Gxy[s][ao*LT + t] = 0.0;
+   for(int ps=0; ps<lat_size[DIM-1]; ps++)
+    my_observable_stat->Gxy[s][ao*lat_size[DIM-1] + ps] = 0.0;
   }; 
  };
  
@@ -40,14 +40,14 @@ void gather_observable_stat(t_observable_stat* stat)
   {
    double W =  pow(cc, (double)no)*pow(alpha, -(double)alpha_order);
    stat->Gx[si][eff_order] += W;
-   int Pt[4] = {0.0, 0.0, 0.0, 0.0}; 
+   int Ps[4] = {0.0, 0.0, 0.0, 0.0}; 
    int sg = -1;
    for(int i=0; i<X.len[X.top-1]-1; i++)
    {
-    addto_momentum(Pt, +1, STACK_EL(X, i));
-    reduce_torus(&(Pt[0]), lat_size[0]);
+    addto_momentum(Ps, +1, STACK_EL(X, i));
+    reduce_torus(&(Ps[DIM-1]), lat_size[DIM-1]);
     int sgi = (sg>0? si : 1 - si);
-    stat->Gxy[sgi][eff_order*LT + Pt[0]] += W;
+    stat->Gxy[sgi][eff_order*lat_size[DIM-1] + Ps[DIM-1]] += W;
     sg *= -1;
    };
   }
@@ -71,9 +71,9 @@ void process_observable_stat(t_observable_stat* stat) //It is assumed that proce
  double* sGxy[2] = {NULL, NULL};
  for(int s=0; s<2; s++)
  {
-  SAFE_MALLOC(sGxy[s], double, LT);
-  for(int pt=0; pt<LT; pt++)
-   sGxy[s][pt] = 0.0;
+  SAFE_MALLOC(sGxy[s], double, lat_size[DIM-1]);
+  for(int ps=0; ps<lat_size[DIM-1]; ps++)
+   sGxy[s][ps] = 0.0;
  };  
  sGxy[0][0] = 0.0; //1.0
  
@@ -105,20 +105,20 @@ void process_observable_stat(t_observable_stat* stat) //It is assumed that proce
    sGx[sg] += 2.0*fabs(f)*aGx;
    sGxy[sg][0] += 4.0*fabs(f)*aGx; 
    
-   for(int pt=0; pt<LT; pt++)
+   for(int ps=0; ps<lat_size[DIM-1]; ps++)
    {
-    double aGxy  = (stat->Gxy[s][ao*LT + pt])/(double)(stat->nstat);
-    sGxy[sg][pt] += 4.0*fabs(f)*aGxy;
+    double aGxy  = (stat->Gxy[s][ao*lat_size[DIM-1] + ps])/(double)(stat->nstat);
+    sGxy[sg][ps] += 4.0*fabs(f)*aGxy;
    };
   };
 
   double sml[2] = {0.0, 0.0};
   for(int s=0; s<2; s++)
-   for(int pt=0; pt<LT; pt++)
+   for(int ps=0; ps<lat_size[DIM-1]; ps++)
    {
-    double link_phase = cos(2.0*M_PI*(double)pt/(double)LT);
+    double link_phase = cos(2.0*M_PI*(double)ps/(double)lat_size[DIM-1]);
     int sg = (link_phase>0? s : 1 - s);
-    sml[sg] += sGxy[s][pt]*fabs(link_phase);
+    sml[sg] += sGxy[s][ps]*fabs(link_phase);
    }; 
   
   double aGx  = sGx[0] - sGx[1];
@@ -135,10 +135,10 @@ void process_observable_stat(t_observable_stat* stat) //It is assumed that proce
   
   if(save_correlators && correlator_file!=NULL)
   {
-   for(int pt=0; pt<LT; pt++)
+   for(int ps=0; ps<lat_size[DIM-1]; ps++)
    {
-    double aGxy  = sGxy[0][pt] - sGxy[1][pt];
-    //double rGxy  = sGxy[0][pt] + sGxy[1][pt]; //We do not need this so far...
+    double aGxy  = sGxy[0][ps] - sGxy[1][ps];
+    //double rGxy  = sGxy[0][ps] + sGxy[1][ps]; //We do not need this so far...
     //double spGxy = (fabs(rGxy)>1.0E-10? aGxy/rGxy : 0.0);
     float buf    = (float)(aGxy);
     int res = fwrite(&(buf), sizeof(float), 1, correlator_file);
