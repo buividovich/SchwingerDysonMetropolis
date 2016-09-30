@@ -16,7 +16,8 @@ XYCorrelatedDataStatistics[data_,ycol_,xmax_]:=Module[{np,aX,cXX,ip,x,x1,x2},
 FitCorrelatedData[x_,y_,cyy_,funcs_,arg_]:=Module[{nf,nd,pars,cyyi,y0,i,j,m,m1,m2,mFit,pcm},
     nf = Length[funcs];
     nd = Min[Length[x],Length[y],Min[Dimensions[cyy]]];
-	pars = Table[Symbol["p"<>ToString[i]],{i,1,nf}];
+	(*For[i=1,i<=nf,i++,Clear[Symbol["fcdp"<>ToString[i]]]];*)
+	pars = Table[Symbol["fcdp"<>ToString[i]],{i,1,nf}];
     cyyi = Inverse[cyy];
 	y0   = Table[Sum[pars[[i]](funcs[[i]]/.{arg->x[[m]]}),{i,1,nf}],{m,1,nd}];
 	mFit = NMinimize[(y - y0).cyyi.(y-y0),pars];
