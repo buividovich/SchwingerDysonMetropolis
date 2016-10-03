@@ -17,15 +17,19 @@ NoisyScalarDataExtrapolation[data_,col_,nord_,{exact0_,exact1_},fitfuncs_,arg_]:
 PrintScalarDataExtrapolation[exdata_,label_]:=Module[{},
 	Print[label," = ",exdata[[1,1]]," +/- ",exdata[[1,2]],", NFactor = ",exdata[[2]]];
 ];
-ImportCorrelators[Prefix_,LS_,nord_,NFactor_,{exact0_,exact1_}]:=Module[{xcs,GrS,m,r,GxyData,np,aGxy,dGxy,cGxy,ip},
+ImportCorrelators[Prefix_,LS_,nord_,NFactor_,{exact0_,exact1_},fitfuncs_,arg_]:=Module[{xcs,GrS,m,r,GxyData,np,aGxy,dGxy,cGxy,ip,midpoints,newmidpoints},
 	xcs=Table[x,{x,0,LS-1}];
 	GrS={};
+	midpoints={};
 	For[m=0,m<nord,m++,
 		r=m/(nord-1);
 		GxyData=Import[Prefix<>"_o"<>ToString[m]<>".dat","Real32"];
 		GxyData=Partition[GxyData,LS];
 		np=Length[GxyData];
-		{aGxy,dGxy}=1/np Sum[cGxy=Re[Fourier[GxyData[[ip]],FourierParameters->{1,1}]];{cGxy,cGxy^2},{ip,1,Length[GxyData]}];
+		{aGxy,dGxy}=1/np Sum[
+			cGxy=Re[Fourier[GxyData[[ip]],FourierParameters->{1,1}]];
+			AppendTo[midpoints,{m, cGxy[[Quotient[LS,2]+1]]}];
+			{cGxy,cGxy^2},{ip,1,Length[GxyData]}];
 		dGxy=Sqrt[(dGxy-aGxy^2)/(np-1)];
 		aGxy=1 + NFactor aGxy;
 		dGxy = NFactor dGxy;
@@ -33,5 +37,8 @@ ImportCorrelators[Prefix_,LS_,nord_,NFactor_,{exact0_,exact1_}]:=Module[{xcs,GrS
 		If[m==0,AppendTo[GrS,ListPlot[Transpose[{xcs,exact0}],PlotStyle->{RGBColor[0.7+0.3 r,0.7,0.7+0.3(1-r)],Thickness[0.01]},PlotRange->{0.0,1.0},Joined->True]]];
 		If[m==1,AppendTo[GrS,ListPlot[Transpose[{xcs,exact1}],PlotStyle->{RGBColor[0.7+0.3 r,0.7,0.7+0.3(1-r)],Thickness[0.01]},PlotRange->{0.0,1.0},Joined->True]]];
 	];
-	Show[Reverse[GrS]]
+    midpoints = Partition[midpoints,np];
+    newmidpoints = Table[midpoints[[m,i]],{i,1,np},{m,1,nord}];
+	newmidpoints=Flatten[newmidpoints,1];
+	{Show[Reverse[GrS]],NoisyScalarDataExtrapolation[newmidpoints,2,nord,{exact0[[Quotient[LS,2]+1]],exact1[[Quotient[LS,2]+1]]},fitfuncs,arg]}
 ];
