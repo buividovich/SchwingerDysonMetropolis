@@ -35,6 +35,10 @@ PlotWithErrors[x_,y_,e_,opts:OptionsPattern[]]:=Module[{DataToPlot,MinLength,i},
 	DataToPlot=Table[{{x[[i]],y[[i]]},ErrorBar[e[[i]]]},{i,1,Length[x]}];
 	ErrorListPlot[DataToPlot,Evaluate[FilterRules[{opts},Options[ErrorListPlot]]]]
 ];
+PlotWithErrorsTranspose[xye_,opts:OptionsPattern[]]:=Module[{xyet},
+	xyet=Transpose[xye];
+	PlotWithErrors[xyet[[1]],xyet[[2]],xyet[[3]],opts]
+];
 (* Column statistics *)
 PrintStatistics[data_,label_]:=Module[{mean,error},
 mean=Mean[data];

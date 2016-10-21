@@ -22,7 +22,9 @@ ifeq ($(PROFILE), 1)
 endif
 
 #choice of remote hosts - lrz in munich
-RHOST_CODE = di72kov@lxlogin5.lrz.de://home/hpc/b3101/di72kov/
+#RHOST_CODE = di72kov@lxlogin5.lrz.de://home/hpc/b3101/di72kov/
+#RHOST_CODE = bup58975@pcph00131.uni-regensburg.de:/lurch/home/bup58975/
+RHOST_CODE = buividovich@rrcmpi-a.itep.ru:/home/clusters/01/buividovich/
 
 ############## COMMON DEFINITIONS FOR ALL APPLICATIONS ##############################
 

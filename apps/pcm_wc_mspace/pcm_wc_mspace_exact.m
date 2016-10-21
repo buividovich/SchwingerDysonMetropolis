@@ -22,3 +22,41 @@ ExactCorrelators[LT_,LS_,\[Lambda]_]:=Module[{P2,G0,\[CapitalSigma]0,\[CapitalSi
 	 {SpaceCorrelator0,SpaceCorrelator1}
 	}
 ];
+(* Numerical results of Vicari and Rossi from hep-lat/9307014 *)
+VicariRossi\[Lambda]s={5.0,4.0,3.57,3.45,3.33,3.23,3.0120};
+VicariRossiFiniteNData={
+{{1/6,0.77592},{1/9,0.78087},{1/15,0.781395}},
+{{1/6,0.68234},{1/9,0.70339},{1/15,0.70846}},
+{{1/6,0.58690},{1/9,0.62920},{1/15,0.64990}},
+{{1/6,0.54730},{1/9,0.58801},{1/15,0.62134}},
+{{1/6,0.51139},{1/9,0.53847},{1/15,0.56809}},
+{{1/6,0.48186},{1/9,0.50035},{1/15,0.51202}},
+{{1/6,0.43327},{1/9,0.44558}}
+};
+VicariRossiN6Data =  {{5.`,0.22407999999999995`},{4.`,0.31766000000000005`},{3.57`,0.4131`},{3.45`,0.4527`},{3.33`,0.48861`},{3.23`,0.51814`},{3.012`,0.56673`}};
+VicariRossiN9Data =  {{5.`,0.21913000000000005`},{4.`,0.29661000000000004`},{3.57`,0.3708`},{3.45`,0.41198999999999997`},{3.33`,0.46153`},{3.23`,0.49965000000000004`},{3.012`,0.55442`}};
+VicariRossiN15Data = {{5.`,0.21860500000000005`},{4.`,0.29154`},{3.57`,0.35009999999999997`},{3.45`,0.37866`},{3.33`,0.43191`},{3.23`,0.48797999999999997`}};
+VicariRossiExtrapolatedData = {{5.0,0.21781750000000022},{4.0,0.28393499999999994}, {3.57,0.31904999999999983},{3.45,0.3286650000000003}, {3.33,0.38748000000000005}, {3.23,0.470475},{3.012,0.5298}};
+(* Importing Semen's numerical results for finite temperature *)
+Get["G:\\LAT\\sd_metropolis\\convergence_analysis.m"];
+N6Data=Import["G:\\LAT\\sd_metropolis\\data\\pcm_wc_mspace\\N6_normal_L108_correlator.txt","Table"];
+N9Data=Import["G:\\LAT\\sd_metropolis\\data\\pcm_wc_mspace\\N9_normal_L108_correlator.txt","Table"];
+MCLTS=DeleteDuplicates[Join[Transpose[N6Data][[1]],Transpose[N9Data][[1]]]];
+MCLTS=Sort[MCLTS];
+N6Data=Partition[N6Data,108];
+N9Data=Partition[N9Data,108];
+MCCorrelatorPlots=Table[{},{LT,MCLTS}];
+GeneratePlots[data_,color_]:=Module[{MyData,Gr1,Gr2,LT,ilt},
+For[it=1,it<=Length[data],it++,
+LT=data[[it]][[1,1]];
+ilt=Position[MCLTS,LT][[1,1]];
+MyData=Drop[data[[it]],0,1];
+PrependTo[MyData,{0,1,0}];
+(*Gr1=PlotWithErrorsTranspose[MyData,PlotRange->All,PlotStyle->{color}];*)
+Gr2=ListPlot[Drop[MyData,0,-1 ],PlotRange->All,Joined->True,PlotStyle->{color,Opacity[0.3],Thickness[0.01]}];
+AppendTo[MCCorrelatorPlots[[ilt]],Gr2];
+(*AppendTo[MCCorrelatorPlots[[ilt]],Gr1];*)
+];
+];
+GeneratePlots[N6Data,Green];
+GeneratePlots[N9Data,Blue];
