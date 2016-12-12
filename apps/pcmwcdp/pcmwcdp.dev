@@ -1,7 +1,7 @@
 [Project]
-FileName=pcm_wc_mspace.dev
-Name=pcm_wc_mspace
-UnitCount=35
+FileName=pcmwcdp.dev
+Name=pcmwcdp
+UnitCount=15
 Type=1
 Ver=1
 ObjFiles=
@@ -20,7 +20,7 @@ ObjectOutput=
 OverrideOutput=0
 OverrideOutputName=hmm.exe
 HostApplication=
-Folders=clue_include,clue_src,sd_metropolis_include,sd_metropolis_src,tests
+Folders=clue_include,clue_src
 CommandLine=
 UseCustomMakefile=0
 CustomMakefile=..\..\Makefile
@@ -29,20 +29,10 @@ SupportXPThemes=0
 CompilerSet=0
 CompilerSettings=0000000000000000000000
 
-[Unit1]
-FileName=..\..\include\lattice_stack.h
-CompileCpp=0
-Folder=sd_metropolis_include
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit2]
-FileName=..\..\include\sd_metropolis.h
+FileName=..\..\..\clue\include\clue_logs.h
 CompileCpp=0
-Folder=sd_metropolis_include
+Folder=clue_include
 Compile=1
 Link=1
 Priority=1000
@@ -50,9 +40,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=..\..\src\lattice_stack.c
+FileName=..\..\..\clue\include\clue_utils.h
 CompileCpp=0
-Folder=sd_metropolis_src
+Folder=clue_include
 Compile=1
 Link=1
 Priority=1000
@@ -60,9 +50,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit4]
-FileName=..\..\src\sd_metropolis.c
+FileName=..\..\..\clue\include\rand_num_generators.h
 CompileCpp=0
-Folder=sd_metropolis_src
+Folder=clue_include
 Compile=1
 Link=1
 Priority=1000
@@ -70,7 +60,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit5]
-FileName=..\..\..\clue\include\clue_errors.h
+FileName=..\..\..\clue\include\ranlxd.h
 CompileCpp=0
 Folder=clue_include
 Compile=1
@@ -80,7 +70,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=..\..\..\clue\include\clue_logs.h
+FileName=..\..\..\clue\include\ranlxs.h
 CompileCpp=0
 Folder=clue_include
 Compile=1
@@ -110,37 +100,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=..\..\..\clue\include\ranlxd.h
-CompileCpp=0
-Folder=clue_include
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit10]
-FileName=..\..\..\clue\include\ranlxs.h
-CompileCpp=0
-Folder=clue_include
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit11]
-FileName=..\..\..\clue\include\square_lattice.h
-CompileCpp=0
-Folder=clue_include
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit12]
-FileName=..\..\..\clue\src\clue_logs.c
+FileName=..\..\..\clue\src\rand_num_generators.c
 CompileCpp=0
 Folder=clue_src
 Compile=1
@@ -149,7 +109,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit14]
+[Unit10]
 FileName=..\..\..\clue\src\ranlxd.c
 CompileCpp=0
 Folder=clue_src
@@ -159,7 +119,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit15]
+[Unit11]
 FileName=..\..\..\clue\src\ranlxs.c
 CompileCpp=0
 Folder=clue_src
@@ -169,20 +129,10 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit16]
+[Unit12]
 FileName=..\..\..\clue\src\square_lattice.c
 CompileCpp=0
 Folder=clue_src
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit17]
-FileName=..\..\include\sd_metropolis_parameters.h
-CompileCpp=0
-Folder=sd_metropolis_include
 Compile=1
 Link=1
 Priority=1000
@@ -223,26 +173,6 @@ BuildCmd=
 FileName=..\..\src\largeN_QFT_parameters.c
 CompileCpp=0
 Folder=sd_metropolis_src
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit22]
-FileName=..\..\include\largeN_QFT_parameters.h
-CompileCpp=0
-Folder=sd_metropolis_include
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit23]
-FileName=actions.c
-CompileCpp=0
-Folder=
 Compile=1
 Link=1
 Priority=1000
@@ -328,7 +258,7 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit7]
-FileName=..\..\..\clue\include\clue_utils.h
+FileName=..\..\..\clue\include\square_lattice.h
 CompileCpp=0
 Folder=clue_include
 Compile=1
@@ -338,17 +268,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit8]
-FileName=..\..\..\clue\include\rand_num_generators.h
-CompileCpp=0
-Folder=clue_include
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit13]
-FileName=..\..\..\clue\src\rand_num_generators.c
+FileName=..\..\..\clue\src\clue_logs.c
 CompileCpp=0
 Folder=clue_src
 Compile=1
@@ -421,6 +341,46 @@ BuildCmd=
 FileName=..\..\tests\test_rand_momentum.h
 CompileCpp=0
 Folder=tests
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit1]
+FileName=..\..\..\clue\include\clue_errors.h
+CompileCpp=0
+Folder=clue_include
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit13]
+FileName=data_processor.c
+CompileCpp=0
+Folder=pcm_wc_mspace
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit15]
+FileName=parameters.h
+CompileCpp=0
+Folder=pcmwcdp
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit14]
+FileName=parameters.c
+CompileCpp=0
+Folder=pcmwcdp
 Compile=1
 Link=1
 Priority=1000

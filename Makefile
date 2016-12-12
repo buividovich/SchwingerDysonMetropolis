@@ -64,7 +64,7 @@ OBJ_FILES := $(patsubst %.c, $(OBJ_DIR)/$(SUFF)%.o, $(notdir $(SRC_FILES)))
 OBJ_FILES += $(patsubst %.c, $(OBJ_DIR)/$(SUFF)%.o, $(notdir $(CLUE_SRC_FILES)))
 
 #List of libraries to be linked with every executable
-LIBS        = -lm
+LIBS        = -lm -lfftw3
 
 #Binary directory
 BIN_DIR     =   ./bin

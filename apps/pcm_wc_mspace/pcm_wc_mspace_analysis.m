@@ -30,7 +30,10 @@ ImportCorrelators[Prefixes_,LS_,nord_,NFactor_,{exact0_,exact1_},fitfuncs_,arg_]
 		r=m/(nord-1);
 		GxyData={};
 		Do[
-			If[FileExistsQ[Prefix<>"_o"<>ToString[m]<>".dat"],GxyData = Join[GxyData,Import[Prefix<>"_o"<>ToString[m]<>".dat","Real32"]];];,
+			If[FileExistsQ[Prefix<>"_o"<>ToString[m]<>".dat"],
+				GxyData = Join[GxyData,Import[Prefix<>"_o"<>ToString[m]<>".dat","Real32"]];
+				Print[Prefix<>"_o"<>ToString[m]<>".dat"," imported!"];
+			];,
 		{Prefix,Prefixes}];
 		GxyData=Partition[GxyData,LS];
 		np=Length[GxyData];
