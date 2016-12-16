@@ -225,7 +225,7 @@ int main(int argc, char *argv[])
  FILE* SignsFile = fopen(SignsFileName, "w");
  ASSERT(SignsFile==NULL);
  
- double GxNFactor, linkNFactor, mpntNFactor, NFactor;
+ double GxNFactor = 0.0, linkNFactor = 0.0, mpntNFactor = 0.0, NFactor = 0.0;
  
  for(int order=0; order<MMAX; order++)
  {
@@ -248,7 +248,9 @@ int main(int argc, char *argv[])
    logs_WriteParameter(0, "NFactor from mpnt", "%+2.4E", mpntNFactor);
    logs_WriteParameter(0, "NFactor to use   ", "%+2.4E",     NFactor);
   };
-  
+ }; 
+ 
+ for(int order=0; order<MMAX; order++)
   for(int order1=0; order1<MMAX; order1++)
   {
      GxCovariance[order][order1] = (  GxCovariance[order][order1]/(double)num_data_points -   Gx[order]*  Gx[order1])/(double)(num_data_points-1);
@@ -258,7 +260,20 @@ int main(int argc, char *argv[])
      GxCovariance[order][order1] *= SQR(NFactor);
    linkCovariance[order][order1] *= SQR(NFactor);
    mpntCovariance[order][order1] *= SQR(NFactor);
+  };
    
+ for(int order=0; order<MMAX; order++)
+ {  
+    Gx[order] = 1.0 + NFactor*  Gx[order];
+  link[order] = 1.0 + NFactor*link[order];
+  mpnt[order] = 1.0 + NFactor*mpnt[order];
+ }; 
+ 
+ //Finally, saving to files
+ for(int order=0; order<MMAX; order++)
+ {
+  for(int order1=0; order1<MMAX; order1++)
+  {         
    fprintf(  GxCovarianceFile, "%+2.6E ",   GxCovariance[order][order1]);
    fprintf(linkCovarianceFile, "%+2.6E ", linkCovariance[order][order1]);
    fprintf(mpntCovarianceFile, "%+2.6E ", mpntCovariance[order][order1]);
@@ -266,10 +281,6 @@ int main(int argc, char *argv[])
   fprintf(  GxCovarianceFile, "\n");
   fprintf(linkCovarianceFile, "\n");
   fprintf(mpntCovarianceFile, "\n");
-  
-    Gx[order] = 1.0 + NFactor*  Gx[order];
-  link[order] = 1.0 + NFactor*link[order];
-  mpnt[order] = 1.0 + NFactor*mpnt[order];
   
   fprintf(  GxMeanFile, "%2.4E %+2.4E %2.4E\n", 1.0/(double)(order+1),   Gx[order], sqrt(fabs(  GxCovariance[order][order])) );
   fprintf(linkMeanFile, "%2.4E %+2.4E %2.4E\n", 1.0/(double)(order+1), link[order], sqrt(fabs(linkCovariance[order][order])) );
