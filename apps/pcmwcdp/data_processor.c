@@ -14,10 +14,10 @@ static const char exact_data_dir[] = "G:\\LAT\\sd_metropolis\\data\\pcm_wc_mspac
 static const char * const cluster_data_suffixes[] = {"", "_idc", "_idc1", "_itep1", "_itep2"}; //
 #define NCLUSTERS (5)
 #define MMAX      (12)
-#define LS        (108)
 
-//TODO: all exact + MC data should be in the .dat file
-//TODO: extrapolations
+#ifndef LS
+#define LS        (108)
+#endif
 
 int main(int argc, char *argv[])
 {

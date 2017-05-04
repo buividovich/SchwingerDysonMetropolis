@@ -68,28 +68,31 @@ set ylabel "Gx"
 plot \
 for [io=0:11] \
 'Gx_summary_'.suffix.'.dat' using ($1):(column(2+2*io)):(column(3+2*io)) notitle with yerrorbars lt 1 lc rgbcolor word(blueredcolortable, io+1) lw 4 pt 7,\
-'Gx_summary_'.suffix.'.ext' using ($1):($2):($3) notitle with yerrorbars ls 5
+'Gx_summary_'.suffix.'.sex' using ($1):($2):($3) title 'Sqrt ext'  with yerrorbars ls 5,\
+'Gx_summary_'.suffix.'.lex' using ($1):($2):($3) title 'Log ext'   with yerrorbars ls 6
 
 set key right bottom
 set out sprintf("%s\\link_summary_%s.eps", plot_dir, suffix)
 set ylabel "Mean link"
 plot \
-'..\\pcm_wc_mspace_exact\\link_summary_'.suffix.'.nc6'  using ($1):($2) notitle with points ls 2 lc rgb '#AAFFAA' ps 3,\
-'..\\pcm_wc_mspace_exact\\link_summary_'.suffix.'.nc9'  using ($1):($2) notitle with points ls 2 lc rgb '#77FF77' ps 3,\
-'..\\pcm_wc_mspace_exact\\link_summary_'.suffix.'.nc15' using ($1):($2) notitle with points ls 2 lc rgb '#22FF22' ps 3,\
+'..\\pcm_wc_mspace_exact\\link_summary_'.suffix.'.nc6'  using ($1):($2) title 'N=6'  with points ls 2 lc rgb '#AAFFAA' ps 3,\
+'..\\pcm_wc_mspace_exact\\link_summary_'.suffix.'.nc9'  using ($1):($2) title 'N=9'  with points ls 3 lc rgb '#77FF77' ps 3,\
+'..\\pcm_wc_mspace_exact\\link_summary_'.suffix.'.nc15' using ($1):($2) title 'N=15' with points ls 4 lc rgb '#22FF22' ps 3,\
 for [io=0:11] \
 'link_summary_'.suffix.'.dat'                           using ($1):(column(2+2*io)):(column(3+2*io)) notitle with yerrorbars lt 1 lc rgbcolor word(blueredcolortable, io+1) lw 4 pt 7,\
-'link_summary_'.suffix.'.ext' using ($1):($2):($3) notitle with yerrorbars ls 5
+'link_summary_'.suffix.'.sex' using ($1):($2):($3) title 'Sqrt ext' with yerrorbars ls 5,\
+'link_summary_'.suffix.'.lex' using ($1):($2):($3) title 'Log ext'  with yerrorbars ls 6
 
 set key right bottom
 set out sprintf("%s\\mpnt_summary_%s.eps", plot_dir, suffix)
 set ylabel "Correlator midpoint"
 plot \
-'..\\pcm_wc_mspace_exact\\mpnt_summary_'.suffix.'.nc6'  using ($1):($2) notitle with points ls 2 lc rgb '#AAFFAA' ps 3,\
-'..\\pcm_wc_mspace_exact\\mpnt_summary_'.suffix.'.nc9'  using ($1):($2) notitle with points ls 2 lc rgb '#77FF77' ps 3,\
-'..\\pcm_wc_mspace_exact\\mpnt_summary_'.suffix.'.nc15' using ($1):($2) notitle with points ls 2 lc rgb '#22FF22' ps 3,\
+'..\\pcm_wc_mspace_exact\\mpnt_summary_'.suffix.'.nc6'  using ($1):($2) title 'N=6'  with points ls 2 lc rgb '#AAFFAA' ps 3,\
+'..\\pcm_wc_mspace_exact\\mpnt_summary_'.suffix.'.nc9'  using ($1):($2) title 'N=9'  with points ls 3 lc rgb '#77FF77' ps 3,\
+'..\\pcm_wc_mspace_exact\\mpnt_summary_'.suffix.'.nc15' using ($1):($2) title 'N=15' with points ls 4 lc rgb '#22FF22' ps 3,\
 for [io=0:11] \
 'mpnt_summary_'.suffix.'.dat'                           using ($1):(column(2+2*io)):(column(3+2*io)) notitle with yerrorbars lt 1 lc rgbcolor word(blueredcolortable, io+1) lw 4 pt 7,\
-'mpnt_summary_'.suffix.'.ext' using ($1):($2):($3) notitle with yerrorbars ls 5
+'mpnt_summary_'.suffix.'.sex' using ($1):($2):($3) title 'Sqrt ext'  with yerrorbars ls 5,\
+'mpnt_summary_'.suffix.'.lex' using ($1):($2):($3) title 'Log ext'   with yerrorbars ls 6
 
 quit
