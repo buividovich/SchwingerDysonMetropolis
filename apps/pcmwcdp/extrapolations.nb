@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       157,          7]
-NotebookDataLength[     22999,        562]
-NotebookOptionsPosition[     22753,        549]
-NotebookOutlinePosition[     23097,        564]
-CellTagsIndexPosition[     23054,        561]
+NotebookDataLength[     24648,        601]
+NotebookOptionsPosition[     24402,        588]
+NotebookOutlinePosition[     24746,        603]
+CellTagsIndexPosition[     24703,        600]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -476,46 +476,84 @@ plt\>\""}], ";"}], "\[IndentingNewLine]",
     RowBox[{"{", 
      RowBox[{"LT", ",", "LTs"}], "}"}]}], "]"}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
+  RowBox[{
+   RowBox[{"Do", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Suffix", "=", 
+       RowBox[{"\"\<d2_t108_s108_l\>\"", "<>", 
+        RowBox[{"fsndig", "[", 
+         RowBox[{"\[Lambda]", ",", "4"}], "]"}]}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Print", "[", "Suffix", "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"Do", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"ObservableExtrapolation", "[", 
+          RowBox[{
+           RowBox[{"MyPrefix", "<>", "Suffix"}], ",", "mfuncs1", ",", 
+           "gfuncs1", ",", "\"\<sqrt_\>\"", ",", "x", ",", 
+           "ExtrapolationsFile", ",", "False", ",", 
+           RowBox[{
+           "DataDir", "<>", "MyPrefix", "<>", "\"\<summary_lambda.sex\>\""}], 
+           ",", 
+           RowBox[{"ToString", "[", "\[Lambda]", "]"}]}], "]"}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"ObservableExtrapolation", "[", 
+          RowBox[{
+           RowBox[{"MyPrefix", "<>", "Suffix"}], ",", "mfuncs2", ",", 
+           "gfuncs2", ",", "\"\<log_\>\"", ",", "x", ",", 
+           "ExtrapolationsFile", ",", "False", ",", 
+           RowBox[{
+           "DataDir", "<>", "MyPrefix", "<>", "\"\<summary_lambda.lex\>\""}], 
+           ",", 
+           RowBox[{"ToString", "[", "\[Lambda]", "]"}]}], "]"}], ";"}], 
+        "\[IndentingNewLine]", ",", 
+        RowBox[{"{", 
+         RowBox[{"MyPrefix", ",", 
+          RowBox[{"{", 
+           RowBox[{
+           "\"\<link_\>\"", ",", "\"\<mpnt_\>\"", ",", "\"\<Gx_\>\""}], 
+           "}"}]}], "}"}]}], "]"}], ";"}], "\[IndentingNewLine]", ",", 
+     RowBox[{"{", 
+      RowBox[{"\[Lambda]", ",", "\[Lambda]s"}], "}"}]}], "]"}], ";"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"And", " ", "the", " ", "large"}], "-", 
+    RowBox[{"volume", " ", "run"}]}], " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Suffix", "=", "\"\<d2_t256_s256_l3.1000\>\""}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", "Suffix", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
   RowBox[{"Do", "[", "\[IndentingNewLine]", 
    RowBox[{
     RowBox[{
-     RowBox[{"Suffix", "=", 
-      RowBox[{"\"\<d2_t108_s108_l\>\"", "<>", 
-       RowBox[{"fsndig", "[", 
-        RowBox[{"\[Lambda]", ",", "4"}], "]"}]}]}], ";", 
-     "\[IndentingNewLine]", 
-     RowBox[{"Print", "[", "Suffix", "]"}], ";", "\[IndentingNewLine]", 
-     RowBox[{"Do", "[", "\[IndentingNewLine]", 
+     RowBox[{"ObservableExtrapolation", "[", 
       RowBox[{
-       RowBox[{
-        RowBox[{"ObservableExtrapolation", "[", 
-         RowBox[{
-          RowBox[{"MyPrefix", "<>", "Suffix"}], ",", "mfuncs1", ",", 
-          "gfuncs1", ",", "\"\<sqrt_\>\"", ",", "x", ",", 
-          "ExtrapolationsFile", ",", "False", ",", 
-          RowBox[{
-          "DataDir", "<>", "MyPrefix", "<>", "\"\<summary_lambda.sex\>\""}], 
-          ",", 
-          RowBox[{"ToString", "[", "\[Lambda]", "]"}]}], "]"}], ";", 
-        "\[IndentingNewLine]", 
-        RowBox[{"ObservableExtrapolation", "[", 
-         RowBox[{
-          RowBox[{"MyPrefix", "<>", "Suffix"}], ",", "mfuncs2", ",", 
-          "gfuncs2", ",", "\"\<log_\>\"", ",", "x", ",", "ExtrapolationsFile",
-           ",", "False", ",", 
-          RowBox[{
-          "DataDir", "<>", "MyPrefix", "<>", "\"\<summary_lambda.lex\>\""}], 
-          ",", 
-          RowBox[{"ToString", "[", "\[Lambda]", "]"}]}], "]"}], ";"}], 
-       "\[IndentingNewLine]", ",", 
-       RowBox[{"{", 
-        RowBox[{"MyPrefix", ",", 
-         RowBox[{"{", 
-          RowBox[{"\"\<link_\>\"", ",", "\"\<mpnt_\>\"", ",", "\"\<Gx_\>\""}],
-           "}"}]}], "}"}]}], "]"}], ";"}], "\[IndentingNewLine]", ",", 
+       RowBox[{"MyPrefix", "<>", "Suffix"}], ",", "mfuncs1", ",", "gfuncs1", 
+       ",", "\"\<sqrt_\>\"", ",", "x", ",", "ExtrapolationsFile", ",", 
+       "False", ",", 
+       RowBox[{"DataDir", "<>", "MyPrefix", "<>", "\"\<summary_vol.sex\>\""}],
+        ",", 
+       RowBox[{"ToString", "[", "\[Lambda]", "]"}]}], "]"}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"ObservableExtrapolation", "[", 
+      RowBox[{
+       RowBox[{"MyPrefix", "<>", "Suffix"}], ",", "mfuncs2", ",", "gfuncs2", 
+       ",", "\"\<log_\>\"", ",", "x", ",", "ExtrapolationsFile", ",", "False",
+        ",", 
+       RowBox[{"DataDir", "<>", "MyPrefix", "<>", "\"\<summary_vol.lex\>\""}],
+        ",", 
+       RowBox[{"ToString", "[", "\[Lambda]", "]"}]}], "]"}], ";"}], 
+    "\[IndentingNewLine]", ",", 
     RowBox[{"{", 
-     RowBox[{"\[Lambda]", ",", "\[Lambda]s"}], "}"}]}], "]"}], 
-  ";"}]}], "Input",
+     RowBox[{"MyPrefix", ",", 
+      RowBox[{"{", 
+       RowBox[{"\"\<link_\>\"", ",", "\"\<mpnt_\>\"", ",", "\"\<Gx_\>\""}], 
+       "}"}]}], "}"}]}], "]"}], ";"}]}], "Input",
  CellChangeTimes->{{3.6907884544685087`*^9, 3.690788496928938*^9}, {
    3.69078853771327*^9, 3.6907885483528786`*^9}, {3.690788607696273*^9, 
    3.690788712351259*^9}, {3.690788748597332*^9, 3.6907887608040304`*^9}, {
@@ -545,7 +583,8 @@ plt\>\""}], ";"}], "\[IndentingNewLine]",
    3.6909737609876137`*^9}, {3.690973951499881*^9, 3.6909739557098866`*^9}, {
    3.6909740164199715`*^9, 3.6909740410000057`*^9}, {3.6909741111001043`*^9, 
    3.6909742340602765`*^9}, {3.6911322037085905`*^9, 3.691132209803939*^9}, {
-   3.691144582015589*^9, 3.691144620388784*^9}}]
+   3.691144582015589*^9, 3.691144620388784*^9}, {3.703223316065776*^9, 
+   3.7032234006226125`*^9}, {3.703224529723193*^9, 3.7032245332983975`*^9}}]
 },
 WindowSize->{1272, 908},
 WindowMargins->{{0, Automatic}, {Automatic, 0}},
@@ -563,7 +602,7 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[557, 20, 22192, 527, 1601, "Input"]
+Cell[557, 20, 23841, 566, 1741, "Input"]
 }
 ]
 *)

@@ -1,7 +1,7 @@
 [Project]
 FileName=pcmwcdp.dev
 Name=pcmwcdp
-UnitCount=15
+UnitCount=17
 Type=1
 Ver=1
 ObjFiles=
@@ -379,6 +379,26 @@ BuildCmd=
 
 [Unit14]
 FileName=parameters.c
+CompileCpp=0
+Folder=pcmwcdp
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit16]
+FileName=..\..\src\largeN_QFT_parameters.c
+CompileCpp=0
+Folder=pcmwcdp
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit17]
+FileName=..\..\include\largeN_QFT_parameters.h
 CompileCpp=0
 Folder=pcmwcdp
 Compile=1

@@ -2,27 +2,20 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <clue_utils.h>
 #include <clue_logs.h>
 #include <fftw3.h>
 
 #include "parameters.h"
 
-static const char   raw_data_dir[] = "C:\\DATA\\pcm_wc_mspace_raw_data";
-static const char       data_dir[] = "G:\\LAT\\sd_metropolis\\data\\pcm_wc_mspace";
-static const char exact_data_dir[] = "G:\\LAT\\sd_metropolis\\data\\pcm_wc_mspace_exact";
-
-static const char * const cluster_data_suffixes[] = {"", "_idc", "_idc1", "_itep1", "_itep2"}; //
-#define NCLUSTERS (5)
-#define MMAX      (12)
-
-#ifndef LS
-#define LS        (108)
-#endif
-
 int main(int argc, char *argv[])
 {
- ansi_colors = 1;  print_errors_to_stderr = 0;
+ //Setting default values
+ ansi_colors = 1;  print_errors_to_stderr = 0; print_errors_to_stdout = 1;
  logs_noise_level = 1;
+ sprintf(data_dir, "G:\\LAT\\sd_metropolis\\data\\pcm_wc_mspace");
+ //End setting default values
+
  logs_Write(0, "");
  
  parse_command_line_options(argc, argv);
@@ -46,21 +39,32 @@ int main(int argc, char *argv[])
  
  /*********** Reading in the numerical data ****************/
  
- int num_data_points_from_cluster[NCLUSTERS], num_data_points = 0;
+ DECLARE_AND_MALLOC(num_data_points_from_cluster, int, number_of_clusters);
+ int num_data_points = 0;
+ int itmp;
  
- double   Gx[MMAX],   GxCovariance[MMAX][MMAX];
- double link[MMAX], linkCovariance[MMAX][MMAX];
- double mpnt[MMAX], mpntCovariance[MMAX][MMAX];
+ DECLARE_AND_MALLOC(  Gx, double, max_order+1);
+ DECLARE_AND_MALLOC(link, double, max_order+1);
+ DECLARE_AND_MALLOC(mpnt, double, max_order+1);
  
- double   Gx_sign[MMAX],   Gx_sign_error[MMAX];
- double link_sign[MMAX], link_sign_error[MMAX];
+ DECLARE_AND_MALLOC_2D(  GxCovariance, double, max_order+1, max_order+1, itmp);
+ DECLARE_AND_MALLOC_2D(linkCovariance, double, max_order+1, max_order+1, itmp);
+ DECLARE_AND_MALLOC_2D(mpntCovariance, double, max_order+1, max_order+1, itmp);
  
- for(int order=0; order<MMAX; order++)
+ DECLARE_AND_MALLOC(  Gx_sign, double, max_order+1);
+ DECLARE_AND_MALLOC(link_sign, double, max_order+1);
+ DECLARE_AND_MALLOC(mpnt_sign, double, max_order+1);
+ 
+ DECLARE_AND_MALLOC(  Gx_sign_error, double, max_order+1);
+ DECLARE_AND_MALLOC(link_sign_error, double, max_order+1);
+ DECLARE_AND_MALLOC(mpnt_sign_error, double, max_order+1);
+ 
+ for(int order=0; order<=max_order; order++)
  {
   Gx[order] = 0.0; link[order] = 0.0; mpnt[order] = 0.0;
     Gx_sign[order] = 0.0;   Gx_sign_error[order] = 0.0;
   link_sign[order] = 0.0; link_sign_error[order] = 0.0;
-  for(int order1=0; order1<MMAX; order1++)
+  for(int order1=0; order1<(max_order+1); order1++)
   {
      GxCovariance[order][order1] = 0.0;
    linkCovariance[order][order1] = 0.0;
@@ -68,10 +72,16 @@ int main(int argc, char *argv[])
   };        
  };
  
+ DECLARE_AND_MALLOC( aGx, double, max_order+1);
+ DECLARE_AND_MALLOC(spGx, double, max_order+1);
+ DECLARE_AND_MALLOC( aml, double, max_order+1);
+ DECLARE_AND_MALLOC(spml, double, max_order+1);
+ 
  logs_Write(0, "Loading the scalar data... ");
- for(int icluster=0; icluster<NCLUSTERS; icluster++)
+ for(int icluster=0; icluster<number_of_clusters; icluster++)
  {
   char scalars_filename[512];
+  
   sprintf(scalars_filename, "%s\\scalars_%s%s.dat", raw_data_dir, data_suffix, cluster_data_suffixes[icluster]);
   FILE* scalars_file = fopen(scalars_filename, "r");
   if(scalars_file==NULL)
@@ -80,22 +90,24 @@ int main(int argc, char *argv[])
   {
    int order_count = 0, line_count = 0, data_count = 0, error_flag = 0;
    char buf[512];
+   
    while(fgets(buf, 512, scalars_file)!=NULL)
    {
-    double aGx[MMAX], spGx[MMAX], aml[MMAX], spml[MMAX]; int ao;
+    int ao;
+    
     sscanf(buf, "%i %lf %lf %lf %lf\n", &ao, &(aGx[order_count]), &(spGx[order_count]), &(aml[order_count]), &(spml[order_count]));
     if(ao!=order_count)
     {
      logs_WriteError("ao=%i is not the expected order %i at line %i of file %s", ao, order_count, line_count, scalars_filename);
      error_flag = 1;
     };
-    if(order_count==MMAX-1)
+    if(order_count==max_order)
     {
      //Calculating the mean and the covariance matrix
-     for(int order=0; order<MMAX; order++)
+     for(int order=0; order<=max_order; order++)
      {
       Gx[order] += aGx[order]; link[order] += aml[order];
-      for(int order1=0; order1<MMAX; order1++)
+      for(int order1=0; order1<=max_order; order1++)
       {
          GxCovariance[order][order1] += aGx[order]*aGx[order1];
        linkCovariance[order][order1] += aml[order]*aml[order1];
@@ -112,6 +124,7 @@ int main(int argc, char *argv[])
      order_count ++; 
     line_count++;
    };
+ 
    fclose(scalars_file);
    num_data_points_from_cluster[icluster] = data_count;
    if(!error_flag)
@@ -120,87 +133,95 @@ int main(int argc, char *argv[])
  };
  logs_Write(0, "");
  
- //Preparing the FFTW3 stuff
- fftw_complex fftw_in[LS], fftw_out[LS];
- fftw_plan p = fftw_plan_dft_1d(LS, fftw_in, fftw_out, FFTW_FORWARD, FFTW_ESTIMATE);
+ DECLARE_AND_MALLOC_2D(correlatorMean,  double, max_order+1, LS, itmp);
+ DECLARE_AND_MALLOC_2D(correlatorError, double, max_order+1, LS, itmp); 
  
- double correlatorMean[MMAX][LS], correlatorError[MMAX][LS];
- for(int order=0; order<MMAX; order++)
-  for(int x=0; x<LS; x++)
-  {
-   correlatorMean[order][x]  = 0.0;
-   correlatorError[order][x] = 0.0;
-  }; 
- 
- logs_Write(0, "Loading the correlators... ");
- for(int icluster=0; icluster<NCLUSTERS; icluster++)
+ if(calculate_correlators)
  {
-  //Open files for all orders
-  FILE* correlator_files[MMAX];
-  char correlator_filename_mask[512];
-  sprintf(correlator_filename_mask, "%s\\Gxy_%s%s_o", raw_data_dir, data_suffix, cluster_data_suffixes[icluster]);
-  int error_flag = 0;
-  for(int order=0; order<MMAX; order++)
-  {
-   char correlator_filename[512];
-   sprintf(correlator_filename, "%s%i.dat", correlator_filename_mask, order);
-   correlator_files[order] = fopen(correlator_filename, "rb");
-   if(correlator_files[order]==NULL)
+  //Preparing the FFTW3 stuff
+  DECLARE_AND_MALLOC(fftw_in , fftw_complex, LS);
+  DECLARE_AND_MALLOC(fftw_out, fftw_complex, LS);
+  fftw_plan p = fftw_plan_dft_1d(LS, fftw_in, fftw_out, FFTW_FORWARD, FFTW_ESTIMATE);
+  
+  for(int order=0; order<=max_order; order++)
+   for(int x=0; x<LS; x++)
    {
-    logs_WriteError("The file %s could not be opened for reading...", correlator_filename);
-    error_flag = 1;
+    correlatorMean[order][x]  = 0.0;
+    correlatorError[order][x] = 0.0;
    }; 
-  };
-  //Now reading all orders in parallel  
-  if(!error_flag)
+
+  DECLARE_AND_MALLOC(correlator_files, FILE*, max_order+1); 
+  DECLARE_AND_MALLOC_2D(float_buf,          float, max_order+1, LS, itmp);
+  DECLARE_AND_MALLOC_2D(correlator_xspace, double, max_order+1, LS, itmp);
+  DECLARE_AND_MALLOC(ampnt, double, max_order+1); 
+ 
+  logs_Write(0, "Loading the correlators... ");
+  for(int icluster=0; icluster<number_of_clusters; icluster++)
   {
-   int eof_not_reached = 1, data_count = 0;
-   float float_buf[MMAX][LS];
-   double correlator_xspace[MMAX][LS];
-   double ampnt[MMAX];
-   while(eof_not_reached)
+   //Open files for all orders
+   char correlator_filename_mask[512];
+   sprintf(correlator_filename_mask, "%s\\Gxy_%s%s_o", raw_data_dir, data_suffix, cluster_data_suffixes[icluster]);
+   int error_flag = 0;
+   for(int order=0; order<=max_order; order++)
    {
-    for(int order=0; order<MMAX; order++)
-     eof_not_reached = eof_not_reached && (fread(float_buf[order], sizeof(float), LS, correlator_files[order])==LS);
-    if(eof_not_reached)
+    char correlator_filename[512];
+    sprintf(correlator_filename, "%s%i.dat", correlator_filename_mask, order);
+    correlator_files[order] = fopen(correlator_filename, "rb");
+    if(correlator_files[order]==NULL)
     {
-     //FFT of data for all orders
-     for(int order=0; order<MMAX; order++)
-     {
-      for(int x=0; x<LS; x++)
-       fftw_in[x] = (double)(float_buf[order][x]) + I*0.0;
-      fftw_execute(p);
-      for(int x=0; x<LS; x++)
-       correlator_xspace[order][x] = creal(fftw_out[x]);
-      ampnt[order] = correlator_xspace[order][LS/2];
-     };
-     //Correlator mean and covariance
-     for(int order=0; order<MMAX; order++)
-     {
-      mpnt[order] += ampnt[order];
-      for(int order1=0; order1<MMAX; order1++)
-       mpntCovariance[order][order1] += ampnt[order]*ampnt[order1];
-      for(int x=0; x<LS; x++)
-      {
-       correlatorMean[order][x]  += correlator_xspace[order][x];
-       correlatorError[order][x] += SQR(correlator_xspace[order][x]);
-      }; 
-     };
-     //Increasing data counter
-     data_count ++;
+     logs_WriteError("The file %s could not be opened for reading...", correlator_filename);
+     error_flag = 1;
     }; 
    };
-   for(int order=0; order<MMAX; order++)
-    fclose(correlator_files[order]);
-   if(data_count!=num_data_points_from_cluster[icluster])
-    logs_WriteError("%i data points in files %s*.dat, expected %i", data_count, correlator_filename_mask, num_data_points_from_cluster[icluster]);
-   else 
-    logs_Write(1, "Done for %.70s*.dat\t\t [%7d data points]", correlator_filename_mask, data_count);
+   //Now reading all orders in parallel  
+   if(!error_flag)
+   {
+    int eof_not_reached = 1, data_count = 0;
+   
+    while(eof_not_reached)
+    {
+     for(int order=0; order<=max_order; order++)
+      eof_not_reached = eof_not_reached && (fread(float_buf[order], sizeof(float), LS, correlator_files[order])==LS);
+     if(eof_not_reached)
+     {
+      //FFT of data for all orders
+      for(int order=0; order<=max_order; order++)
+      {
+       for(int x=0; x<LS; x++)
+        fftw_in[x] = (double)(float_buf[order][x]) + I*0.0;
+       fftw_execute(p);
+       for(int x=0; x<LS; x++)
+        correlator_xspace[order][x] = creal(fftw_out[x]);
+       ampnt[order] = correlator_xspace[order][LS/2];
+      };
+      //Correlator mean and covariance
+      for(int order=0; order<=max_order; order++)
+      {
+       mpnt[order] += ampnt[order];
+       for(int order1=0; order1<=max_order; order1++)
+        mpntCovariance[order][order1] += ampnt[order]*ampnt[order1];
+       for(int x=0; x<LS; x++)
+       {
+        correlatorMean[order][x]  += correlator_xspace[order][x];
+        correlatorError[order][x] += SQR(correlator_xspace[order][x]);
+       }; 
+      };
+      //Increasing data counter
+      data_count ++;
+     }; 
+    };
+    for(int order=0; order<=max_order; order++)
+     fclose(correlator_files[order]);
+    if(data_count!=num_data_points_from_cluster[icluster])
+     logs_WriteError("%i data points in files %s*.dat, expected %i", data_count, correlator_filename_mask, num_data_points_from_cluster[icluster]);
+    else 
+     logs_Write(1, "Done for %.70s*.dat\t\t [%7d data points]", correlator_filename_mask, data_count);
+   };
   };
- };
- logs_Write(0, "");
+  logs_Write(0, "");
  
- fftw_destroy_plan(p);
+  fftw_destroy_plan(p);
+ }; //End of if(calculate_correlators)
  
  //Processing Gx, link and midpoint data
  char   GxMeanFileName[512],   GxCovarianceFileName[512];
@@ -214,11 +235,13 @@ int main(int argc, char *argv[])
  sprintf(mpntCovarianceFileName, "%s\\mpnt_%s.cov",  data_dir, data_suffix);
  FILE*   GxMeanFile              = fopen(  GxMeanFileName       , "w"); 
  FILE* linkMeanFile              = fopen(linkMeanFileName       , "w");
- FILE* mpntMeanFile              = fopen(mpntMeanFileName       , "w");
  FILE*   GxCovarianceFile        = fopen(  GxCovarianceFileName , "w");
  FILE* linkCovarianceFile        = fopen(linkCovarianceFileName , "w");
- FILE* mpntCovarianceFile        = fopen(mpntCovarianceFileName , "w");
- ASSERT(GxMeanFile==NULL || linkMeanFile==NULL || mpntMeanFile==NULL || GxCovarianceFile==NULL || linkCovarianceFile==NULL || mpntCovarianceFile==NULL);
+ 
+ ASSERT(GxMeanFile==NULL || linkMeanFile==NULL || GxCovarianceFile==NULL || linkCovarianceFile==NULL);
+ 
+ FILE* mpntMeanFile              = (calculate_correlators? fopen(mpntMeanFileName       , "w") : NULL); 
+ FILE* mpntCovarianceFile        = (calculate_correlators? fopen(mpntCovarianceFileName , "w") : NULL);
  
  char SignsFileName[512];
  sprintf(SignsFileName, "%s\\signs_%s.mean", data_dir, data_suffix);
@@ -227,7 +250,7 @@ int main(int argc, char *argv[])
  
  double GxNFactor = 0.0, linkNFactor = 0.0, mpntNFactor = 0.0, NFactor = 0.0;
  
- for(int order=0; order<MMAX; order++)
+ for(int order=0; order<=max_order; order++)
  {
     Gx[order] /= (double)num_data_points; 
   link[order] /= (double)num_data_points;
@@ -237,7 +260,7 @@ int main(int argc, char *argv[])
   {
      GxNFactor=(  GxExact0 - 1.0)/  Gx[0];
    linkNFactor=(linkExact0 - 1.0)/link[0];
-   mpntNFactor=(mpntExact0 - 1.0)/mpnt[0];
+   mpntNFactor=(calculate_correlators? (mpntExact0 - 1.0)/mpnt[0] : 0.0);
    
    NFactor = 0.5*(GxNFactor + linkNFactor);
    
@@ -250,8 +273,8 @@ int main(int argc, char *argv[])
   };
  }; 
  
- for(int order=0; order<MMAX; order++)
-  for(int order1=0; order1<MMAX; order1++)
+ for(int order=0; order<=max_order; order++)
+  for(int order1=0; order1<=max_order; order1++)
   {
      GxCovariance[order][order1] = (  GxCovariance[order][order1]/(double)num_data_points -   Gx[order]*  Gx[order1])/(double)(num_data_points-1);
    linkCovariance[order][order1] = (linkCovariance[order][order1]/(double)num_data_points - link[order]*link[order1])/(double)(num_data_points-1);
@@ -262,7 +285,7 @@ int main(int argc, char *argv[])
    mpntCovariance[order][order1] *= SQR(NFactor);
   };
    
- for(int order=0; order<MMAX; order++)
+ for(int order=0; order<=max_order; order++)
  {  
     Gx[order] = 1.0 + NFactor*  Gx[order];
   link[order] = 1.0 + NFactor*link[order];
@@ -270,21 +293,21 @@ int main(int argc, char *argv[])
  }; 
  
  //Finally, saving to files
- for(int order=0; order<MMAX; order++)
+ for(int order=0; order<=max_order; order++)
  {
-  for(int order1=0; order1<MMAX; order1++)
+  for(int order1=0; order1<=max_order; order1++)
   {         
    fprintf(  GxCovarianceFile, "%+2.6E ",   GxCovariance[order][order1]);
    fprintf(linkCovarianceFile, "%+2.6E ", linkCovariance[order][order1]);
-   fprintf(mpntCovarianceFile, "%+2.6E ", mpntCovariance[order][order1]);
+   if(calculate_correlators){fprintf(mpntCovarianceFile, "%+2.6E ", mpntCovariance[order][order1]);};
   };
   fprintf(  GxCovarianceFile, "\n");
   fprintf(linkCovarianceFile, "\n");
-  fprintf(mpntCovarianceFile, "\n");
+  if(calculate_correlators){fprintf(mpntCovarianceFile, "\n");};
   
   fprintf(  GxMeanFile, "%2.4E %+2.4E %2.4E\n", 1.0/(double)(order+1),   Gx[order], sqrt(fabs(  GxCovariance[order][order])) );
   fprintf(linkMeanFile, "%2.4E %+2.4E %2.4E\n", 1.0/(double)(order+1), link[order], sqrt(fabs(linkCovariance[order][order])) );
-  fprintf(mpntMeanFile, "%2.4E %+2.4E %2.4E\n", 1.0/(double)(order+1), mpnt[order], sqrt(fabs(mpntCovariance[order][order])) );
+  if(calculate_correlators){fprintf(mpntMeanFile, "%2.4E %+2.4E %2.4E\n", 1.0/(double)(order+1), mpnt[order], sqrt(fabs(mpntCovariance[order][order])) );};
   
   //Processing and saving average signs
     Gx_sign[order]       /= (double)num_data_points;
@@ -299,35 +322,40 @@ int main(int argc, char *argv[])
  
  fclose(   GxMeanFile      ); 
  fclose( linkMeanFile      );
- fclose( mpntMeanFile      );
  fclose(   GxCovarianceFile);
  fclose( linkCovarianceFile);
- fclose( mpntCovarianceFile);
+
  fclose(SignsFile);
  
- //Processing and saving the correlators data
- for(int x=0; x<LS; x++)
-  for(int order=0; order<MMAX; order++)
-  {
-   correlatorMean[order][x]  /= (double)num_data_points;
-   correlatorError[order][x]  = sqrt(fabs((correlatorError[order][x]/(double)num_data_points - SQR(correlatorMean[order][x]))/(double)(num_data_points-1)));
-   //Rescaling with NFactor
-   correlatorMean[order][x]   = 1.0 + NFactor*correlatorMean[order][x];
-   correlatorError[order][x] *= NFactor;
-  };
- 
- char CorrelatorFileName[512];
- sprintf(CorrelatorFileName, "%s\\Gxy_%s.dat", data_dir, data_suffix);
- FILE* CorrelatorFile = fopen(CorrelatorFileName, "w");
- ASSERT(CorrelatorFile==NULL);
- for(int x=0; x<=LS; x++)
+ if(calculate_correlators)
  {
-  fprintf(CorrelatorFile, "%03i ", x);
-  for(int order=0; order<MMAX; order++)
-   fprintf(CorrelatorFile, "%+2.4E %+2.4E ", correlatorMean[order][x%LS], correlatorError[order][x%LS]);
-  fprintf(CorrelatorFile, "\n");       
- };
- fclose(CorrelatorFile);
+  fclose( mpntMeanFile      );
+  fclose( mpntCovarianceFile); 
+  
+  //Processing and saving the correlators data
+  for(int x=0; x<LS; x++)
+   for(int order=0; order<=max_order; order++)
+   {
+    correlatorMean[order][x]  /= (double)num_data_points;
+    correlatorError[order][x]  = sqrt(fabs((correlatorError[order][x]/(double)num_data_points - SQR(correlatorMean[order][x]))/(double)(num_data_points-1)));
+    //Rescaling with NFactor
+    correlatorMean[order][x]   = 1.0 + NFactor*correlatorMean[order][x];
+    correlatorError[order][x] *= NFactor;
+   };
+ 
+  char CorrelatorFileName[512];
+  sprintf(CorrelatorFileName, "%s\\Gxy_%s.dat", data_dir, data_suffix);
+  FILE* CorrelatorFile = fopen(CorrelatorFileName, "w");
+  ASSERT(CorrelatorFile==NULL);
+  for(int x=0; x<=LS; x++)
+  {
+   fprintf(CorrelatorFile, "%03i ", x);
+   for(int order=0; order<=max_order; order++)
+    fprintf(CorrelatorFile, "%+2.4E %+2.4E ", correlatorMean[order][x%LS], correlatorError[order][x%LS]);
+   fprintf(CorrelatorFile, "\n");       
+  };
+  fclose(CorrelatorFile);
+ }; 
  
  if(!save_summary)
   return EXIT_SUCCESS; 
@@ -338,7 +366,7 @@ int main(int argc, char *argv[])
  //Now reading in the mcstat files and averaging MC characteristics
  logs_Write(0, "");
  logs_Write(0, "Loading the MC stat files...");
- for(int icluster=0; icluster<NCLUSTERS; icluster++)
+ for(int icluster=0; icluster<number_of_clusters; icluster++)
  {
   char MCStatFilename[512];
   sprintf(MCStatFilename, "%s\\metropolis_stat_%s%s.dat", raw_data_dir, data_suffix, cluster_data_suffixes[icluster]);
@@ -377,9 +405,9 @@ int main(int argc, char *argv[])
     data_count ++;
    };
    if(data_count!=num_data_points_from_cluster[icluster])
-    logs_WriteError("%i data points in file %s, expected %i", data_count, MCStatFilename, num_data_points_from_cluster[icluster]);
-   else 
-    logs_Write(1, "Done for %.70s\t\t [%7d data points]", MCStatFilename, data_count);
+    logs_WriteWarning("%i data points in file %s, expected %i", data_count, MCStatFilename, num_data_points_from_cluster[icluster]);
+    
+   logs_Write(1, "Done for %.70s\t\t [%7d data points]", MCStatFilename, data_count);
    fclose(MCStatFile); 
   };
  };
@@ -427,7 +455,7 @@ int main(int argc, char *argv[])
   fprintf(  GxSummaryFile, "%s ", scan_label);
   fprintf(linkSummaryFile, "%s ", scan_label);
   fprintf(mpntSummaryFile, "%s ", scan_label);
-  for(int order=0; order<MMAX; order++)
+  for(int order=0; order<=max_order; order++)
   {
    fprintf(  GxSummaryFile, "%+2.4E %2.4E ",   Gx[order], sqrt(fabs(  GxCovariance[order][order])) );
    fprintf(linkSummaryFile, "%+2.4E %2.4E ", link[order], sqrt(fabs(linkCovariance[order][order])) );

@@ -25,4 +25,8 @@ pcmwcdp - additional small code for processing the data produced by the
 pcm_wc_mspace code, includes the fast Fourier transform for calculating the 
 correlators of U(N)-valued variables in coordinate space (see Section V.A of 
 ArXiv:1705.XXXXX). 
+
+Unfortunately, I did not have time to properly document the code so far. 
+However, I've tried at least to structurize it in such a way that the usage 
+of basic routines and macroses is self-explanatory. 
  
