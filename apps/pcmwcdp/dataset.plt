@@ -101,7 +101,7 @@ set arrow from 0.0,sun_link_ext(0.0) to 10.0/(6*6),sun_link_ext(1.0/(6*6)) nohea
 
 set autoscale y
 set out sprintf("%s\\link_convergence_%s.eps", plot_dir, suffix)
-set ylabel "<1/N tr(g_1^+g_0)>_M"
+set ylabel "<1/N tr(g_1^+g_0)>"
 set xlabel "1/M,   10/N^2"
 set label sprintf("{/Symbol l} = %2.4f", lambda) at graph 0.5,0.9 center
 plot \
@@ -158,7 +158,7 @@ set key top right maxrows 3
 set yrange [-0.2:1.1]
 set xrange [-0.2:25.2]
 set xlabel "x"
-set ylabel "<1/N tr(g_x^+g_0)>_M"
+set ylabel "<1/N tr(g_x^+g_0)>"
 plot \
 '+' using (0.0):(2.0):(0.0) title 'DiagMC,M=1'  with yerrorbars lt 1 lc rgbcolor word(blueredcolortable, 1)  lw 4 pt 7,\
 '+' using (0.0):(2.0):(0.0) title 'DiagMC,M=12' with yerrorbars lt 1 lc rgbcolor word(blueredcolortable, 12) lw 4 pt 7,\

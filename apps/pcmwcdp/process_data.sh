@@ -4,39 +4,39 @@ lambdas="3.0120 3.1000 3.2300 3.3300 3.4500 3.5700 4.0000 5.0000"
 
 rm -v /g/LAT/sd_metropolis/data/pcm_wc_mspace/*summary*.dat
 
-#for LT in $LTs
-#do
-#  suffix="d2_t"$LT"_s108_l3.0120"
-#  echo -e "\x1b[1;36m $suffix \x1b[0m"
-#  /g/LAT/sd_metropolis/bin/pcmwcdp.exe \
-#  --data-suffix                $suffix \
-#  --scan-suffix                     LT \
-#  --scan-label                     $LT \
-#  --max-order                       11 \
-#  --LS                             108 \
-#  --calculate-correlators              \
-#  --cluster-label                  idc \
-#  --cluster-label                 idc1 \
-#  --cluster-label                itep1 \
-#  --cluster-label                itep2
-#done
-#
-#for lambda in $lambdas
-#do
-#  suffix="d2_t108_s108_l"$lambda
-#  echo -e "\x1b[1;36m $suffix \x1b[0m"
-#  /g/LAT/sd_metropolis/bin/pcmwcdp.exe \
-#  --data-suffix                $suffix \
-#  --scan-suffix                 lambda \
-#  --scan-label                 $lambda \
-#  --max-order                       11 \
-#  --LS                             108 \
-#  --calculate-correlators              \
-#  --cluster-label                  idc \
-#  --cluster-label                 idc1 \
-#  --cluster-label                itep1 \
-#  --cluster-label                itep2
-#done
+for LT in $LTs
+do
+  suffix="d2_t"$LT"_s108_l3.0120"
+  echo -e "\x1b[1;36m $suffix \x1b[0m"
+  /g/LAT/sd_metropolis/bin/pcmwcdp.exe \
+  --data-suffix                $suffix \
+  --scan-suffix                     LT \
+  --scan-label                     $LT \
+  --max-order                       11 \
+  --LS                             108 \
+  --calculate-correlators              \
+  --cluster-label                  idc \
+  --cluster-label                 idc1 \
+  --cluster-label                itep1 \
+  --cluster-label                itep2
+done
+
+for lambda in $lambdas
+do
+  suffix="d2_t108_s108_l"$lambda
+  echo -e "\x1b[1;36m $suffix \x1b[0m"
+  /g/LAT/sd_metropolis/bin/pcmwcdp.exe \
+  --data-suffix                $suffix \
+  --scan-suffix                 lambda \
+  --scan-label                 $lambda \
+  --max-order                       11 \
+  --LS                             108 \
+  --calculate-correlators              \
+  --cluster-label                  idc \
+  --cluster-label                 idc1 \
+  --cluster-label                itep1 \
+  --cluster-label                itep2
+done
 
 #And now the special large-volume run
 
@@ -49,6 +49,7 @@ echo -e "\x1b[1;36m $suffix \x1b[0m"
 --scan-label                 $lambda \
 --max-order                       11 \
 --LS                             256 \
+--calculate-correlators              \
 --cluster-label                vol00 \
 --cluster-label                vol01 \
 --cluster-label                vol02 \
@@ -89,4 +90,4 @@ echo -e "\x1b[1;36m $suffix \x1b[0m"
 --cluster-label                vol38 \
 --cluster-label                vol39
 
-#--calculate-correlators              \
+
